@@ -4,6 +4,10 @@
 
 #include <cmath>
 
+#include "Vector.hpp"
+
+const float PI{3.14159265359};
+
 class Quaternion
 {
 public:
@@ -59,230 +63,183 @@ inline Quaternion Quaternion::operator-=(const Quaternion q)
    v.z -= q.v.z;
    return *this;
 }
-    
-    
-====================================
-inline     Quaternion Quaternion::operator*=(float s)
+
+inline Quaternion Quaternion::operator*=(const float s)
 {
-     n *= s;
-     v.x *= s;
-     v.y *= s;
-     v.z *= s;
-     return *this;
-}
-    
-    
-====================================
-inline     Quaternion Quaternion::operator/=(float s)
-{
-     n /= s;
-     v.x /= s;
-     v.y /= s;
-     v.z /= s;
-     return *this;
-}
-    
-    
-====================================
-     Quaternion operator~(void) const { return Quaternion( n,
-                                                           -v.x,
-                                                           -v.y,
-                                                           -v.z);}
-    
-    
-====================================
-inline     Quaternion operator+(Quaternion q1, Quaternion q2)
-{
-     return     Quaternion(     q1.n + q2.n,
-                                   q1.v.x + q2.v.x,
-                                   q1.v.y + q2.v.y,
-                                   q1.v.z + q2.v.z);
-}
-    
-    
-====================================
-inline     Quaternion operator-(Quaternion q1, Quaternion q2)
-{
-     return     Quaternion(     q1.n - q2.n,
-                                   q1.v.x - q2.v.x,
-                                   q1.v.y - q2.v.y,
-                                   q1.v.z - q2.v.z);
-}
-    
-    
-====================================
-inline     Quaternion operator*(Quaternion q1, Quaternion q2)
-{
-     return     Quaternion(q1.n*q2.n - q1.v.x*q2.v.x
-                               - q1.v.y*q2.v.y - q1.v.z*q2.v.z,
-                           q1.n*q2.v.x + q1.v.x*q2.n
-                               + q1.v.y*q2.v.z - q1.v.z*q2.v.y,
-                           q1.n*q2.v.y + q1.v.y*q2.n
-                               + q1.v.z*q2.v.x - q1.v.x*q2.v.z,
-                           q1.n*q2.v.z + q1.v.z*q2.n
-                               + q1.v.x*q2.v.y - q1.v.y*q2.v.x);
-}
-    
-    
-====================================
-inline     Quaternion operator*(Quaternion q, float s)
-{
-     return     Quaternion(q.n*s, q.v.x*s, q.v.y*s, q.v.z*s);
+   n *= s;
+   v.x *= s;
+   v.y *= s;
+   v.z *= s;
+   return *this;
 }
 
-inline     Quaternion operator*(float s, Quaternion q)
+inline Quaternion Quaternion::operator/=(const float s)
 {
-     return     Quaternion(q.n*s, q.v.x*s, q.v.y*s, q.v.z*s);
-}
-    
-    
-====================================
-inline     Quaternion operator*(Quaternion q, Vector v)
-{
-     return     Quaternion(     -(q.v.x*v.x + q.v.y*v.y + q.v.z*v.z),
-                                   q.n*v.x + q.v.y*v.z - q.v.z*v.y,
-                                   q.n*v.y + q.v.z*v.x - q.v.x*v.z,
-                                   q.n*v.z + q.v.x*v.y - q.v.y*v.x);
-}
-inline     Quaternion operator*(Vector v, Quaternion q)
-{
-     return     Quaternion(     -(q.v.x*v.x + q.v.y*v.y + q.v.z*v.z),
-                                   q.n*v.x + q.v.z*v.y - q.v.y*v.z,
-                                   q.n*v.y + q.v.x*v.z - q.v.z*v.x,
-                                   q.n*v.z + q.v.y*v.x - q.v.x*v.y);
-}
-    
-    
-====================================
-inline     Quaternion operator/(Quaternion q, float s)
-{
-     return     Quaternion(q.n/s, q.v.x/s, q.v.y/s, q.v.z/s);
-}
-    
-    
-====================================
-inline     float QGetAngle(Quaternion q)
-{
-     return     (float) (2*acos(q.n));
-}
-    
-    
-====================================
-inline     Vector QGetAxis(Quaternion q)
-{
-     Vector v;
-     float m;
-
-     v = q.GetVector();
-     m = v.Magnitude();
-
-     if (m <= tol)
-          return Vector();
-     else
-          return v/m;
-}
-    
-    
-====================================
-inline     Quaternion QRotate(Quaternion q1, Quaternion q2)
-{
-     return     q1*q2*(~q1);
-}
-    
-    
-====================================
-inline     Vector     QVRotate(Quaternion q, Vector v)
-{
-     Quaternion t;
-
-
-     t = q*v*(~q);
-
-     return     t.GetVector();
-}
-    
-    
-====================================
-inline     Quaternion     MakeQFromEulerAngles(float x, float y, float z)
-{
-     Quaternion     q;
-     double     roll = DegreesToRadians(x);
-     double     pitch = DegreesToRadians(y);
-     double     yaw = DegreesToRadians(z);
-
-     double     cyaw, cpitch, croll, syaw, spitch, sroll;
-     double     cyawcpitch, syawspitch, cyawspitch, syawcpitch;
-
-     cyaw = cos(0.5f * yaw);
-     cpitch = cos(0.5f * pitch);
-     croll = cos(0.5f * roll);
-     syaw = sin(0.5f * yaw);
-     spitch = sin(0.5f * pitch);
-     sroll = sin(0.5f * roll);
-
-     cyawcpitch = cyaw*cpitch;
-     syawspitch = syaw*spitch;
-     cyawspitch = cyaw*spitch;
-     syawcpitch = syaw*cpitch;
-
-     q.n = (float) (cyawcpitch * croll + syawspitch * sroll);
-     q.v.x = (float) (cyawcpitch * sroll - syawspitch * croll);
-     q.v.y = (float) (cyawspitch * croll + syawcpitch * sroll);
-     q.v.z = (float) (syawcpitch * croll - cyawspitch * sroll);
-
-     return q;
-}
-    
-    
-====================================
-inline     Vector     MakeEulerAnglesFromQ(Quaternion q)
-{
-     double     r11, r21, r31, r32, r33, r12, r13;
-     double     q00, q11, q22, q33;
-     double     tmp;
-     Vector     u;
-
-     q00 = q.n * q.n;
-     q11 = q.v.x * q.v.x;
-     q22 = q.v.y * q.v.y;
-     q33 = q.v.z * q.v.z;
-
-     r11 = q00 + q11 - q22 - q33;
-     r21 = 2 * (q.v.x*q.v.y + q.n*q.v.z);
-     r31 = 2 * (q.v.x*q.v.z - q.n*q.v.y);
-     r32 = 2 * (q.v.y*q.v.z + q.n*q.v.x);
-     r33 = q00 - q11 - q22 + q33;
-
-     tmp = fabs(r31);
-     if(tmp > 0.999999)
-     {
-          r12 = 2 * (q.v.x*q.v.y - q.n*q.v.z);
-          r13 = 2 * (q.v.x*q.v.z + q.n*q.v.y);
-
-          u.x = RadiansToDegrees(0.0f); //roll
-          u.y = RadiansToDegrees((float) (-(pi/2) * r31/tmp));   // pitch
-          u.z = RadiansToDegrees((float) atan2(-r12, -r31*r13)); // yaw
-          return u;
-     }
-
-     u.x = RadiansToDegrees((float) atan2(r32, r33)); // roll
-     u.y = RadiansToDegrees((float) asin(-r31));      // pitch
-     u.z = RadiansToDegrees((float) atan2(r21, r11)); // yaw
-     return u;
-
-
-}
-    
-    
-====================================
-inline     float     DegreesToRadians(float deg)
-{
-     return deg * pi / 180.0f;
+   n /= s;
+   v.x /= s;
+   v.y /= s;
+   v.z /= s;
+   return *this;
 }
 
-inline     float     RadiansToDegrees(float rad)
+Quaternion operator~() const         { return Quaternion( n, -v.x, -v.y, -v.z); }
+
+Quaternion operator+(const Quaternion q1, const Quaternion q2)
 {
-     return rad * 180.0f / pi;
+   return Quaternion(q1.n   + q2.n,
+                     q1.v.x + q2.v.x,
+                     q1.v.y + q2.v.y,
+                     q1.v.z + q2.v.z);
+}
+
+inline Quaternion operator-(const Quaternion q1, const Quaternion q2)
+{
+   return Quaternion(q1.n   - q2.n,
+                     q1.v.x - q2.v.x,
+                     q1.v.y - q2.v.y,
+                     q1.v.z - q2.v.z);
+}
+
+inline Quaternion operator*(const Quaternion q1, const Quaternion q2)
+{
+   return Quaternion(q1.n*q2.n - q1.v.x*q2.v.x - q1.v.y*q2.v.y - q1.v.z*q2.v.z,
+                     q1.n*q2.v.x + q1.v.x*q2.n + q1.v.y*q2.v.z - q1.v.z*q2.v.y,
+                     q1.n*q2.v.y + q1.v.y*q2.n + q1.v.z*q2.v.x - q1.v.x*q2.v.z,
+                     q1.n*q2.v.z + q1.v.z*q2.n + q1.v.x*q2.v.y - q1.v.y*q2.v.x);
+}
+
+inline Quaternion operator*(const Quaternion q, const float s)
+{
+   return Quaternion(q.n*s, q.v.x*s, q.v.y*s, q.v.z*s);
+}
+
+inline Quaternion operator*(const float s, const Quaternion q)
+{
+   return Quaternion(q.n*s, q.v.x*s, q.v.y*s, q.v.z*s);
+}
+
+inline Quaternion operator*(const Quaternion q, const Vector v)
+{
+   return Quaternion(-(q.v.x*v.x + q.v.y*v.y + q.v.z*v.z),
+                       q.n*v.x + q.v.y*v.z - q.v.z*v.y,
+                       q.n*v.y + q.v.z*v.x - q.v.x*v.z,
+                       q.n*v.z + q.v.x*v.y - q.v.y*v.x);
+}
+
+inline Quaternion operator*(const Vector v, const Quaternion q)
+{
+   return Quaternion(-(q.v.x*v.x + q.v.y*v.y + q.v.z*v.z),
+                       q.n*v.x + q.v.z*v.y - q.v.y*v.z,
+                       q.n*v.y + q.v.x*v.z - q.v.z*v.x,
+                       q.n*v.z + q.v.y*v.x - q.v.x*v.y);
+}
+
+inline Quaternion operator/(const Quaternion q, const float s)
+{
+   return Quaternion(q.n/s, q.v.x/s, q.v.y/s, q.v.z/s);
+}
+
+inline float QGetAngle(const Quaternion q)
+{
+   return 2.0f * std::acosf(q.n);
+}
+
+inline Vector QGetAxis(const Quaternion q)
+{
+   Vector v;
+   float m{};
+
+   v = q.GetVector();
+   m = v.Magnitude();
+
+   if (m <= tol) {
+      return Vector();
+   }
+
+   return v/m;
+}
+
+inline Quaternion QRotate(const Quaternion q1, const Quaternion q2)
+{
+   return q1*q2*(~q1);
+}
+
+inline Vector QVRotate(const Quaternion q, const Vector v)
+{
+   Quaternion t;
+
+   t = q*v*(~q);
+
+   return t.GetVector();
+}
+
+inline Quaternion MakeQFromEulerAngles(const float x, const float y, const float z)
+{
+   Quaternion q;
+   const double roll{DegreesToRadians(x)};
+   const double pitch{DegreesToRadians(y)};
+   const double yaw{DegreesToRadians(z)};
+
+   const double cyaw{std::cos(0.5f * yaw)};
+   const double cpitch{std::cos(0.5f * pitch)};
+   const double croll{std::cos(0.5f * roll)};
+
+   const double syaw{std::sin(0.5f * yaw)};
+   const double spitch{std::sin(0.5f * pitch)};
+   const double sroll{std::sin(0.5f * roll)};
+
+   const double cyawcpitch{cyaw * cpitch};
+   const double syawspitch{syaw * spitch};
+   const double cyawspitch{cyaw * spitch};
+   const double syawcpitch{syaw * cpitch};
+
+   q.n = static_cast<float>(cyawcpitch * croll + syawspitch * sroll);
+   q.v.x = static_cast<float>(cyawcpitch * sroll - syawspitch * croll);
+   q.v.y = static_cast<float>(cyawspitch * croll + syawcpitch * sroll);
+   q.v.z = static_cast<float>(syawcpitch * croll - cyawspitch * sroll);
+
+   return q;
+}
+
+inline Vector MakeEulerAnglesFromQ(const Quaternion q)
+{
+   const double q00{q.n * q.n};
+   const double q11{q.v.x * q.v.x};
+   const double q22{q.v.y * q.v.y};
+   const double q33{q.v.z * q.v.z};
+
+   const double r11{q00 + q11 - q22 - q33};
+   const double r21{2 * (q.v.x*q.v.y + q.n*q.v.z)};
+   const double r31{2 * (q.v.x*q.v.z - q.n*q.v.y)};
+   const double r32{2 * (q.v.y*q.v.z + q.n*q.v.x)};
+   const double r33{q00 - q11 - q22 + q33};
+
+   Vector u;
+   const double tmp{std::fabs(r31)};
+   if (tmp > 0.999999) {
+      const double r12 = 2 * (q.v.x*q.v.y - q.n*q.v.z);
+      const double r13 = 2 * (q.v.x*q.v.z + q.n*q.v.y);
+
+      u.x = RadiansToDegrees(0.0f);                                           // roll
+      u.y = RadiansToDegrees(static_cast<float>(-(PI/2) * r31/tmp));          // pitch
+      u.z = RadiansToDegrees(static_cast<float>(std::atan2(-r12, -r31*r13))); // yaw
+      return u;
+   }
+
+   u.x = RadiansToDegrees(static_cast<float>(std::atan2(r32, r33))); // roll
+   u.y = RadiansToDegrees(static_cast<float>(std::asin(-r31)));      // pitch
+   u.z = RadiansToDegrees(static_cast<float>(std::atan2(r21, r11))); // yaw
+   return u;
+}
+
+inline float DegreesToRadians(const float deg)
+{
+   return deg * PI / 180.0f;
+}
+
+inline float RadiansToDegrees(const float rad)
+{
+   return rad * 180.0f / PI;
 }
 
 #endif
