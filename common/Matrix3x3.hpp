@@ -21,14 +21,14 @@ public:
              const float r2c1, const float r2c2, const float r2c3,
              const float r3c1, const float r3c2, const float r3c3);
 
-   float det();
-   Matrix3x3 Transpose();
-   Matrix3x3 Inverse();
+   float det() const;
+   Matrix3x3 Transpose() const;
+   Matrix3x3 Inverse() const;
 
    Matrix3x3& operator+=(const Matrix3x3);
    Matrix3x3& operator-=(const Matrix3x3);
-   Matrix3x3& operator*=(const float s);
-   Matrix3x3& operator/=(const float s);
+   Matrix3x3& operator*=(const float);
+   Matrix3x3& operator/=(const float);
 };
 
 inline Matrix3x3::Matrix3x3(const float r1c1, const float r1c2, const float r1c3,
@@ -39,7 +39,7 @@ inline Matrix3x3::Matrix3x3(const float r1c1, const float r1c2, const float r1c3
   e31(r3c1), e32(r3c2), e33(r3c3)
 {}
 
-inline float Matrix3x3::det()
+inline float Matrix3x3::det() const
 {
    return e11*e22*e33 -
           e11*e32*e23 +
@@ -49,12 +49,12 @@ inline float Matrix3x3::det()
           e31*e22*e13;
 }
 
-inline Matrix3x3 Matrix3x3::Transpose()
+inline Matrix3x3 Matrix3x3::Transpose() const
 {
    return Matrix3x3(e11,e21,e31,e12,e22,e32,e13,e23,e33);
 }
 
-inline Matrix3x3 Matrix3x3::Inverse()
+inline Matrix3x3 Matrix3x3::Inverse() const
 {
    float d{e11*e22*e33 -
            e11*e32*e23 +
@@ -133,6 +133,10 @@ inline Matrix3x3& Matrix3x3::operator/=(const float s)
    e33 /= s;
    return *this;
 }
+
+//---------------------------------------------------------
+// operator overloads
+//---------------------------------------------------------
 
 inline Matrix3x3 operator+(const Matrix3x3 m1, const Matrix3x3 m2)
 {
