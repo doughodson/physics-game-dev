@@ -82,7 +82,7 @@ inline Quaternion Quaternion::operator/=(const float s)
    return *this;
 }
 
-Quaternion operator+(const Quaternion q1, const Quaternion q2)
+inline Quaternion operator+(const Quaternion q1, const Quaternion q2)
 {
    return Quaternion(q1.n   + q2.n,
                      q1.v.x + q2.v.x,
