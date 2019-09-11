@@ -7,9 +7,9 @@ using namespace std;
 
 int main()
 {
-   cout << "testVector...\n\n";
-
-   cout << "\nMethod tests\n";
+   cout << "--------------\n";
+   cout << "Tests: Methods\n";
+   cout << "--------------\n";
 
    {
       Vector v(1,1,1);
@@ -93,7 +93,9 @@ int main()
                                           << " v.z: " << v.z  << endl;
    }
 
-   cout << "\nOperator overload tests\n";
+   cout << "---------------------------\n";
+   cout << "Tests: Overloaded operators\n";
+   cout << "---------------------------\n";
 
    {
       Vector v(10,20,30), u(1,2,3);
