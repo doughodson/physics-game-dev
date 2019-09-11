@@ -1,4 +1,6 @@
 
+all: testVector testMatrix3x3 testQuaternion
+
 testVector: testVector.cpp
 	g++ -std=c++11 testVector.cpp -o testVector -I.
 
@@ -9,7 +11,7 @@ testQuaternion: testQuaternion.cpp
 	g++ -std=c++11 testQuaternion.cpp -o testQuaternion -I.
 
 clean:
-	rm testVector
-	rm testMatrix3x3
-	rm testQuaternion
+	rm -f testVector
+	rm -f testMatrix3x3
+	rm -f testQuaternion
 	
