@@ -28,7 +28,7 @@ public:
 };
 
 inline Quaternion::Quaternion(const float e0, const float e1, const float e2, const float e3)
-: n(e0), v.x(e1), v.y(e2), v.z(e3)
+: n(e0), v(e1, e2, e3)
 {}
 
 inline float Quaternion::Magnitude()
@@ -81,8 +81,6 @@ inline Quaternion Quaternion::operator/=(const float s)
    v.z /= s;
    return *this;
 }
-
-//Quaternion operator~() const         { return Quaternion(n, -v.x, -v.y, -v.z); }
 
 Quaternion operator+(const Quaternion q1, const Quaternion q2)
 {
