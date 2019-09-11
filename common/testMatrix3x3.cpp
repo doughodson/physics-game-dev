@@ -1,12 +1,12 @@
 
 #include <iostream>
 
-#include "Vector.hpp"
+#include "Matrix3x3.hpp"
 
 int main()
 {
-   Vector v;
-   std::cout << "hello world\n";
+   Matrix3x3 m;
+   std::cout << "testMatrix3x3...\n";
 
 
    return 0;

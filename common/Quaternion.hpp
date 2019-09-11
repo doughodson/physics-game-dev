@@ -18,7 +18,7 @@ public:
    Quaternion(const float e0,const float e1, const float e2, const float e3);
 
    float Magnitude();
-   Vector GetVector();
+   Vector GetVector()  const;
    float  GetScalar();
    Quaternion operator+=(const Quaternion);
    Quaternion operator-=(Quaternion);
@@ -28,7 +28,7 @@ public:
 };
 
 inline Quaternion::Quaternion(const float e0, const float e1, const float e2, const float e3)
-: n(e0), v.x(e1), v.y(e2), v.z(e3);
+: n(e0), v.x(e1), v.y(e2), v.z(e3)
 {}
 
 inline float Quaternion::Magnitude()
@@ -36,7 +36,7 @@ inline float Quaternion::Magnitude()
    return static_cast<float>(std::sqrt(n*n + v.x*v.x + v.y*v.y + v.z*v.z));
 }
 
-inline Vector Quaternion::GetVector()
+inline Vector Quaternion::GetVector() const
 {
    return Vector(v.x, v.y, v.z);
 }
@@ -82,7 +82,7 @@ inline Quaternion Quaternion::operator/=(const float s)
    return *this;
 }
 
-Quaternion operator~() const         { return Quaternion( n, -v.x, -v.y, -v.z); }
+//Quaternion operator~() const         { return Quaternion(n, -v.x, -v.y, -v.z); }
 
 Quaternion operator+(const Quaternion q1, const Quaternion q2)
 {
@@ -141,7 +141,7 @@ inline Quaternion operator/(const Quaternion q, const float s)
 
 inline float QGetAngle(const Quaternion q)
 {
-   return 2.0f * std::acosf(q.n);
+   return 2.0f * std::acos(q.n);
 }
 
 inline Vector QGetAxis(const Quaternion q)
@@ -171,6 +171,16 @@ inline Vector QVRotate(const Quaternion q, const Vector v)
    t = q*v*(~q);
 
    return t.GetVector();
+}
+
+inline float DegreesToRadians(const float deg)
+{
+   return deg * PI / 180.0f;
+}
+
+inline float RadiansToDegrees(const float rad)
+{
+   return rad * 180.0f / PI;
 }
 
 inline Quaternion MakeQFromEulerAngles(const float x, const float y, const float z)
@@ -230,16 +240,6 @@ inline Vector MakeEulerAnglesFromQ(const Quaternion q)
    u.y = RadiansToDegrees(static_cast<float>(std::asin(-r31)));      // pitch
    u.z = RadiansToDegrees(static_cast<float>(std::atan2(r21, r11))); // yaw
    return u;
-}
-
-inline float DegreesToRadians(const float deg)
-{
-   return deg * PI / 180.0f;
-}
-
-inline float RadiansToDegrees(const float rad)
-{
-   return rad * 180.0f / PI;
 }
 
 #endif

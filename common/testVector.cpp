@@ -6,7 +6,7 @@
 int main()
 {
    Vector v;
-   std::cout << "hello world\n";
+   std::cout << "testVector...\n";
 
 
    return 0;
