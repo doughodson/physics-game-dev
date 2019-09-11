@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-float const tol{0.0001f};
+#include "math-utils.hpp"
 
 //------------------------------------------------------------------------
 // class: Vector
@@ -20,7 +20,7 @@ public:
    Vector() = default;
    Vector(const float xi, const float yi, const float zi);
 
-   float Magnitude();
+   float Magnitude() const;
    void  Normalize();
    void  Reverse();
 
@@ -36,7 +36,7 @@ inline Vector::Vector(const float xi, const float yi, const float zi)
 : x(xi), y(yi), z(zi)
 {}
 
-inline float Vector::Magnitude()
+inline float Vector::Magnitude() const
 {
    return static_cast<float>(std::sqrt(x*x + y*y + z*z));
 }
@@ -69,12 +69,12 @@ inline void Vector::Reverse()
    z = -z;
 }
 
-inline Vector& Vector::operator+=(Vector u)
+inline Vector& Vector::operator+=(const Vector u)
 {
-     x += u.x;
-     y += u.y;
-     z += u.z;
-     return *this;
+   x += u.x;
+   y += u.y;
+   z += u.z;
+   return *this;
 }
 
 inline Vector& Vector::operator-=(const Vector u)
@@ -107,7 +107,7 @@ inline Vector Vector::operator-()
 }
 
 //---------------------------------------------------------
-// useful functions (NOT vector methods!)
+// operator overloads
 //---------------------------------------------------------
 
 inline Vector operator+(const Vector u, const Vector v)
@@ -127,9 +127,7 @@ inline Vector operator^(const Vector u, const Vector v)
                  u.x*v.y - u.y*v.x);
 }
 
-//
 // dot product
-//
 inline float operator*(const Vector u, const Vector v)
 {
    return (u.x*v.x + u.y*v.y + u.z*v.z);
@@ -149,6 +147,7 @@ inline Vector operator/(const Vector u, const float s)
 {
    return Vector(u.x/s, u.y/s, u.z/s);
 }
+
 
 inline float TripleScalarProduct(const Vector u, const Vector v, const Vector w)
 {

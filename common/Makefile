@@ -1,4 +1,6 @@
 
+.PHONY: all
+
 all: testVector testMatrix3x3 testQuaternion
 
 testVector: testVector.cpp
