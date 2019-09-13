@@ -10,11 +10,11 @@
 class Quaternion
 {
 public:
-   float  n{};   // number (scalar) part
+   float  n{};   // scalar part
    Vector v;     // vector part: v.x, v.y, v.z
 
    Quaternion() = default;
-   Quaternion(const float e0,const float e1, const float e2, const float e3);
+   Quaternion(const float e0, const float e1, const float e2, const float e3);
 
    float Magnitude();
    Vector GetVector()  const;
