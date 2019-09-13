@@ -26,10 +26,61 @@ int main()
    {  // transpose
       Matrix3x3 m1(1,2,3,4,5,6,7,8,9);
       Matrix3x3 m2{m1.Transpose()};
-      cout << "Matrix3x3: ";
+      cout << "Transpose Test: Matrix3x3:";
       print_matrix(m1);
-      cout << "Transpose: ";
+      cout << "Transpose:";
       print_matrix(m2);
+      Matrix3x3 m3{m2.Transpose()};
+      cout << "Transpose:";
+      print_matrix(m3);
+   }
+
+   {  // inverse
+      Matrix3x3 m(1,2,3,4,5,6,7,8,9);
+      cout << "Inverse Test: Matrix3x3:";
+      print_matrix(m);
+      cout << "Inverse:";
+      print_matrix(m.Inverse());
+   }
+
+   {  // operator+=
+      Matrix3x3 m1(1,2,3,1,2,3,1,2,3);
+      Matrix3x3 m2(1,2,3,1,2,3,1,2,3);
+      cout << "operator+= Test: Matrix3x3:";
+      print_matrix(m1);
+      print_matrix(m2);
+      m1 += m2;
+      cout << "m1 += m2:";
+      print_matrix(m1);
+   }
+
+   {  // operator+=
+      Matrix3x3 m1(1,2,3,1,2,3,1,2,3);
+      Matrix3x3 m2(1,2,3,1,2,3,1,2,3);
+      cout << "operator-= Test: Matrix3x3:";
+      print_matrix(m1);
+      print_matrix(m2);
+      m1 -= m2;
+      cout << "m1 += m2:";
+      print_matrix(m1);
+   }
+
+   {  // scalar multiplication
+      Matrix3x3 m(1,2,3,4,5,6,7,8,9);
+      cout << "scalar multiplication Test: Matrix3x3:";
+      print_matrix(m);
+      m *= 2;
+      cout << "m += 2:";
+      print_matrix(m);
+   }
+
+   {  // scalar division
+      Matrix3x3 m(1,2,3,4,5,6,7,8,9);
+      cout << "scalar division Test: Matrix3x3:";
+      print_matrix(m);
+      m /= 2;
+      cout << "m /= 2:";
+      print_matrix(m);
    }
 
    cout << "---------------------------\n";
