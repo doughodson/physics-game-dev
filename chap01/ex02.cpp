@@ -17,6 +17,11 @@ struct PointMass
 const int NUM_ELEMENTS{20};
 PointMass Elements[NUM_ELEMENTS];
 
+void print_vector(const Vector& v)
+{
+   cout << " v.x:" << v.x << " v.y:" << v.y << " v.z:" << v.z << endl;
+}
+
 int main()
 {
    float Ixx{}, Iyy{}, Izz{}, Ixy{}, Ixz{}, Iyz{};
