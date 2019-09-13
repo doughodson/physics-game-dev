@@ -16,9 +16,9 @@ public:
    Quaternion() = default;
    Quaternion(const float e0, const float e1, const float e2, const float e3);
 
-   float Magnitude();
-   Vector GetVector()  const;
-   float  GetScalar();
+   float Magnitude() const;
+   Vector GetVector() const;
+   float  GetScalar() const;
    Quaternion operator+=(const Quaternion);
    Quaternion operator-=(Quaternion);
    Quaternion operator*=(const float);
@@ -30,7 +30,7 @@ inline Quaternion::Quaternion(const float e0, const float e1, const float e2, co
 : n(e0), v(e1, e2, e3)
 {}
 
-inline float Quaternion::Magnitude()
+inline float Quaternion::Magnitude() const
 {
    return static_cast<float>(std::sqrt(n*n + v.x*v.x + v.y*v.y + v.z*v.z));
 }
@@ -40,7 +40,7 @@ inline Vector Quaternion::GetVector() const
    return Vector(v.x, v.y, v.z);
 }
 
-inline float Quaternion::GetScalar()
+inline float Quaternion::GetScalar() const
 {
    return n;
 }
@@ -80,6 +80,10 @@ inline Quaternion Quaternion::operator/=(const float s)
    v.z /= s;
    return *this;
 }
+
+//---------------------------------------------------------
+// functions and operator overloads
+//---------------------------------------------------------
 
 inline Quaternion operator+(const Quaternion q1, const Quaternion q2)
 {

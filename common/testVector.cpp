@@ -93,9 +93,9 @@ int main()
                                           << " v.z: " << v.z  << endl;
    }
 
-   cout << "---------------------------\n";
-   cout << "Tests: Overloaded operators\n";
-   cout << "---------------------------\n";
+   cout << "------------------------------\n";
+   cout << "Tests: Functions and Operators\n";
+   cout << "------------------------------\n";
 
    {
       Vector v(10,20,30), u(1,2,3);

@@ -135,7 +135,7 @@ inline Matrix3x3& Matrix3x3::operator/=(const float s)
 }
 
 //---------------------------------------------------------
-// operator overloads
+// functions and operator overloads
 //---------------------------------------------------------
 
 inline Matrix3x3 operator+(const Matrix3x3 m1, const Matrix3x3 m2)

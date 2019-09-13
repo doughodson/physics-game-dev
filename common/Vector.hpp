@@ -107,7 +107,7 @@ inline Vector Vector::operator-()
 }
 
 //---------------------------------------------------------
-// operator overloads
+// functions and operator overloads
 //---------------------------------------------------------
 
 inline Vector operator+(const Vector u, const Vector v)

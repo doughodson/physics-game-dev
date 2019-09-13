@@ -83,9 +83,9 @@ int main()
       print_matrix(m);
    }
 
-   cout << "---------------------------\n";
-   cout << "Tests: Overloaded operators\n";
-   cout << "---------------------------\n";
+   cout << "------------------------------\n";
+   cout << "Tests: Functions and Operators\n";
+   cout << "------------------------------\n";
 
    return 0;
 }
