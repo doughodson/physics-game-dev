@@ -8,12 +8,12 @@ using namespace std;
 struct PointMass
 {
    float mass{1};
-   Vector designPosition;
-   Vector correctedPosition;
+   Vector design_position;
+   Vector corrected_position;
 };
 
 const int NUM_ELEMENTS{20};
-PointMass Elements[NUM_ELEMENTS];
+PointMass elements[NUM_ELEMENTS];
 
 void print_vector(const Vector& v)
 {
@@ -22,29 +22,29 @@ void print_vector(const Vector& v)
 
 int main()
 {
-   float TotalMass{};
-   Vector CombinedCG;
-   Vector FirstMoment;
+   float total_mass{};
+   Vector combined_CG;
+   Vector first_moment;
 
    for (int i{}; i < NUM_ELEMENTS; i++) {
 //      TotalMass FAC+= Elements[i].mass;
-      TotalMass += Elements[i].mass;
+      total_mass += elements[i].mass;
    }
 
    for (int i{}; i < NUM_ELEMENTS; i++) {
-      FirstMoment += Elements[i].mass * Elements[i].designPosition;
+      first_moment += elements[i].mass * elements[i].design_position;
    }
-   CombinedCG = FirstMoment / TotalMass;
+   combined_CG = first_moment / total_mass;
 
    for (int i{}; i < NUM_ELEMENTS; i++) {
-      Elements[i].correctedPosition = Elements[i].designPosition - CombinedCG;
+      elements[i].corrected_position = elements[i].design_position - combined_CG;
    }
 
-   cout << "TotalMass   : " << TotalMass << endl;
-   cout << "Combined CG : ";
-   print_vector(CombinedCG);
-   cout << "FirstMoment : ";
-   print_vector(FirstMoment);
+   cout << "total_mass   : " << total_mass << endl;
+   cout << "combined_CG  : ";
+   print_vector(combined_CG);
+   cout << "first_moment : ";
+   print_vector(first_moment);
 
    return 0;
 }

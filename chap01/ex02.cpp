@@ -9,13 +9,13 @@ using namespace std;
 struct PointMass
 {
    float mass{};
-   Vector designPosition;
-   Vector correctedPosition;
-   Vector localInertia;
+   Vector design_position;
+   Vector corrected_position;
+   Vector local_inertia;
 };
 
 const int NUM_ELEMENTS{20};
-PointMass Elements[NUM_ELEMENTS];
+PointMass elements[NUM_ELEMENTS];
 
 void print_vector(const Vector& v)
 {
@@ -27,48 +27,48 @@ int main()
    float Ixx{}, Iyy{}, Izz{}, Ixy{}, Ixz{}, Iyz{};
 
    for (int i{}; i < NUM_ELEMENTS; i++) {
-      Ixx += Elements[i].localInertia.x +
-         Elements[i].mass * (Elements[i].correctedPosition.y *
-         Elements[i].correctedPosition.y +
-         Elements[i].correctedPosition.z *
-         Elements[i].correctedPosition.z);
+      Ixx += elements[i].local_inertia.x +
+         elements[i].mass * (elements[i].corrected_position.y *
+         elements[i].corrected_position.y +
+         elements[i].corrected_position.z *
+         elements[i].corrected_position.z);
 
-      Iyy += Elements[i].localInertia.y +
-         Elements[i].mass * (Elements[i].correctedPosition.z *
-         Elements[i].correctedPosition.z +
-         Elements[i].correctedPosition.x *
-         Elements[i].correctedPosition.x);
+      Iyy += elements[i].local_inertia.y +
+         elements[i].mass * (elements[i].corrected_position.z *
+         elements[i].corrected_position.z +
+         elements[i].corrected_position.x *
+         elements[i].corrected_position.x);
 
-      Izz += Elements[i].localInertia.z +
-         Elements[i].mass * (Elements[i].correctedPosition.x *
-         Elements[i].correctedPosition.x +
-         Elements[i].correctedPosition.y *
-         Elements[i].correctedPosition.y);
+      Izz += elements[i].local_inertia.z +
+         elements[i].mass * (elements[i].corrected_position.x *
+         elements[i].corrected_position.x +
+         elements[i].corrected_position.y *
+         elements[i].corrected_position.y);
 
-      Ixy += Elements[i].mass * (Elements[i].correctedPosition.x *
-         Elements[i].correctedPosition.y);
+      Ixy += elements[i].mass * (elements[i].corrected_position.x *
+         elements[i].corrected_position.y);
 
-      Ixz += Elements[i].mass * (Elements[i].correctedPosition.x *
-         Elements[i].correctedPosition.z);
+      Ixz += elements[i].mass * (elements[i].corrected_position.x *
+         elements[i].corrected_position.z);
 
-      Iyz += Elements[i].mass * (Elements[i].correctedPosition.y *
-         Elements[i].correctedPosition.z);
+      Iyz += elements[i].mass * (elements[i].corrected_position.y *
+         elements[i].corrected_position.z);
    }
 
-   Matrix3x3 InertiaTensor;
+   Matrix3x3 inertia_tensor;
 
    // e11 stands for element on row 1 column 1, e12 for row 1 column 2, etc.
-   InertiaTensor.e11 = Ixx;
-   InertiaTensor.e12 = -Ixy;
-   InertiaTensor.e13 = -Ixz;
+   inertia_tensor.e11 =  Ixx;
+   inertia_tensor.e12 = -Ixy;
+   inertia_tensor.e13 = -Ixz;
 
-   InertiaTensor.e21 = -Ixy;
-   InertiaTensor.e22 = Iyy;
-   InertiaTensor.e23 = -Iyz;
+   inertia_tensor.e21 = -Ixy;
+   inertia_tensor.e22 =  Iyy;
+   inertia_tensor.e23 = -Iyz;
 
-   InertiaTensor.e31 = -Ixz;
-   InertiaTensor.e32 = -Iyz;
-   InertiaTensor.e33 = Izz;
+   inertia_tensor.e31 = -Ixz;
+   inertia_tensor.e32 = -Iyz;
+   inertia_tensor.e33 =  Izz;
 
    return 0; 
 }
