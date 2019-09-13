@@ -16,9 +16,9 @@ public:
    Quaternion() = default;
    Quaternion(const float e0, const float e1, const float e2, const float e3);
 
-   float Magnitude() const;
-   Vector GetVector() const;
-   float  GetScalar() const;
+   float magnitude() const;
+   Vector get_vector() const;
+   float  get_scalar() const;
    Quaternion operator+=(const Quaternion);
    Quaternion operator-=(Quaternion);
    Quaternion operator*=(const float);
@@ -30,17 +30,17 @@ inline Quaternion::Quaternion(const float e0, const float e1, const float e2, co
 : n(e0), v(e1, e2, e3)
 {}
 
-inline float Quaternion::Magnitude() const
+inline float Quaternion::magnitude() const
 {
    return static_cast<float>(std::sqrt(n*n + v.x*v.x + v.y*v.y + v.z*v.z));
 }
 
-inline Vector Quaternion::GetVector() const
+inline Vector Quaternion::get_vector() const
 {
    return Vector(v.x, v.y, v.z);
 }
 
-inline float Quaternion::GetScalar() const
+inline float Quaternion::get_scalar() const
 {
    return n;
 }
@@ -150,8 +150,8 @@ inline Vector QGetAxis(const Quaternion q)
    Vector v;
    float m{};
 
-   v = q.GetVector();
-   m = v.Magnitude();
+   v = q.get_vector();
+   m = v.magnitude();
 
    if (m <= tol) {
       return Vector();
@@ -171,7 +171,7 @@ inline Vector QVRotate(const Quaternion q, const Vector v)
 
    t = q*v*(~q);
 
-   return t.GetVector();
+   return t.get_vector();
 }
 
 inline float DegreesToRadians(const float deg)

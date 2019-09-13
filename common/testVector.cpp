@@ -13,17 +13,17 @@ int main()
 
    {
       Vector v(1,1,1);
-      cout << "Magnitude v(1,1,1): " << v.Magnitude() << endl;
+      cout << "Magnitude v(1,1,1): " << v.magnitude() << endl;
    }
 
    {
       Vector v(1,2,3);
-      cout << "Magnitude v(1,2,3): " << v.Magnitude() << endl;
+      cout << "Magnitude v(1,2,3): " << v.magnitude() << endl;
    }
 
    {
       Vector v(1,1,1);
-      v.Normalize();
+      v.normalize();
       cout << "Normalize v(1,1,1)"  << " v.x: " << v.x
                                     << " v.y: " << v.y
                                     << " v.z: " << v.z  << endl;
@@ -31,7 +31,7 @@ int main()
 
    {
       Vector v(3,3,3);
-      v.Normalize();
+      v.normalize();
       cout << "Normalize v(3,3,3)"  << " v.x: " << v.x
                                     << " v.y: " << v.y
                                     << " v.z: " << v.z  << endl;
@@ -39,7 +39,7 @@ int main()
 
    {
       Vector v(1,2,3);
-      v.Normalize();
+      v.normalize();
       cout << "Normalize v(1,2,3)"  << " v.x: " << v.x
                                     << " v.y: " << v.y
                                     << " v.z: " << v.z  << endl;
@@ -47,7 +47,7 @@ int main()
 
    {
       Vector v(1,2,3);
-      v.Reverse();
+      v.reverse();
       cout << "Reverse v(1,2,3)" << " v.x: " << v.x
                                  << " v.y: " << v.y
                                  << " v.z: " << v.z  << endl;

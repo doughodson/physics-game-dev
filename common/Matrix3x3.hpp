@@ -22,8 +22,8 @@ public:
              const float r3c1, const float r3c2, const float r3c3);
 
    float det() const;
-   Matrix3x3 Transpose() const;
-   Matrix3x3 Inverse() const;
+   Matrix3x3 transpose() const;
+   Matrix3x3 inverse() const;
 
    Matrix3x3& operator+=(const Matrix3x3);
    Matrix3x3& operator-=(const Matrix3x3);
@@ -49,12 +49,12 @@ inline float Matrix3x3::det() const
           e31*e22*e13;
 }
 
-inline Matrix3x3 Matrix3x3::Transpose() const
+inline Matrix3x3 Matrix3x3::transpose() const
 {
    return Matrix3x3(e11,e21,e31,e12,e22,e32,e13,e23,e33);
 }
 
-inline Matrix3x3 Matrix3x3::Inverse() const
+inline Matrix3x3 Matrix3x3::inverse() const
 {
    float d{e11*e22*e33 -
            e11*e32*e23 +

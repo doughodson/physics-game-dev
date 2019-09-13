@@ -25,12 +25,12 @@ int main()
 
    {  // transpose
       Matrix3x3 m1(1,2,3,4,5,6,7,8,9);
-      Matrix3x3 m2{m1.Transpose()};
+      Matrix3x3 m2{m1.transpose()};
       cout << "Transpose Test: Matrix3x3:";
       print_matrix(m1);
       cout << "Transpose:";
       print_matrix(m2);
-      Matrix3x3 m3{m2.Transpose()};
+      Matrix3x3 m3{m2.transpose()};
       cout << "Transpose:";
       print_matrix(m3);
    }
@@ -40,7 +40,7 @@ int main()
       cout << "Inverse Test: Matrix3x3:";
       print_matrix(m);
       cout << "Inverse:";
-      print_matrix(m.Inverse());
+      print_matrix(m.inverse());
    }
 
    {  // operator+=

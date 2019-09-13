@@ -20,9 +20,9 @@ public:
    Vector() = default;
    Vector(const float xi, const float yi, const float zi);
 
-   float Magnitude() const;
-   void  Normalize();
-   void  Reverse();
+   float magnitude() const;
+   void  normalize();
+   void  reverse();
 
    Vector& operator+=(const Vector);
    Vector& operator-=(const Vector);
@@ -36,12 +36,12 @@ inline Vector::Vector(const float xi, const float yi, const float zi)
 : x(xi), y(yi), z(zi)
 {}
 
-inline float Vector::Magnitude() const
+inline float Vector::magnitude() const
 {
    return static_cast<float>(std::sqrt(x*x + y*y + z*z));
 }
 
-inline void Vector::Normalize()
+inline void Vector::normalize()
 {
    float m{static_cast<float>(std::sqrt(x*x + y*y + z*z))};
    if (m <= tol) {
@@ -62,7 +62,7 @@ inline void Vector::Normalize()
    }
 }
 
-inline void Vector::Reverse()
+inline void Vector::reverse()
 {
    x = -x;
    y = -y;
