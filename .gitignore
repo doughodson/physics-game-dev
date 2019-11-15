@@ -4,6 +4,10 @@ testVector
 testMatrix3x3
 testQuaternion
 
+#chapter 9
+rigid_body-2D.exe
+rigid_body-2D_d.exe
+
 # chapter 15
 flight-sim.exe
 flight-sim_d.exe

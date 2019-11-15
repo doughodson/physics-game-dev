@@ -2,6 +2,23 @@
 -- Example applications
 --------------------------------------------------------
 
+-- rigid body 2D
+project "ch09-rigid-body-2D"
+   kind "WindowedApp"
+--   kind "ConsoleApp"
+--   defines { "_CONSOLE" }
+   targetname "rigid-body-2D"
+   targetdir "../../ch09-rigid-body-2D"
+   debugdir "../../ch09-rigid-body-2D"
+   files {
+      "../../ch09-rigid-body-2D/**.h*",
+      "../../ch09-rigid-body-2D/**.cpp"
+   }
+   includedirs { DX7_IncPath }
+   libdirs     { DX7_LibPath }
+   links { LibDX7, LibWindows }
+   characterset("MBCS")
+
 -- flight simulator
 project "ch15-flight-sim"
    kind "WindowedApp"
