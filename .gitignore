@@ -10,6 +10,10 @@ cannon_d.exe
 particle-explosion.exe
 particle-explosion_d.exe
 
+# chapter 4
+cannon2.exe
+cannon2_d.exe
+
 #chapter 9
 rigid_body-2D.exe
 rigid_body-2D_d.exe
@@ -25,6 +29,7 @@ hover_d.exe
 # misc visual studio files
 *.pdb
 *.ilk
+*.aps
 
 ex01
 ex02

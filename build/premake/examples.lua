@@ -12,7 +12,8 @@ project "ch02-cannon"
    debugdir "../../ch02-cannon"
    files {
       "../../ch02-cannon/**.h*",
-      "../../ch02-cannon/**.c*"
+      "../../ch02-cannon/**.c*",
+      "../../ch02-cannon/**.rc"
    }
    includedirs { DX7_IncPath }
    libdirs     { DX7_LibPath }
@@ -29,7 +30,26 @@ project "ch02-particle-explosion"
    debugdir "../../ch02-particle-explosion"
    files {
       "../../ch02-particle-explosion/**.h*",
-      "../../ch02-particle-explosion/**.c*"
+      "../../ch02-particle-explosion/**.c*",
+      "../../ch02-particle-explosion/**.rc"
+   }
+   includedirs { DX7_IncPath }
+   libdirs     { DX7_LibPath }
+   links { LibDX7, LibWindows }
+   characterset("MBCS")
+
+-- chapter 4: cannon2
+project "ch04-cannon2"
+   kind "WindowedApp"
+--   kind "ConsoleApp"
+--   defines { "_CONSOLE" }
+   targetname "cannon2"
+   targetdir "../../ch04-cannon2"
+   debugdir "../../ch04-cannon2"
+   files {
+      "../../ch04-cannon2/**.h*",
+      "../../ch04-cannon2/**.c*",
+      "../../ch04-cannon2/**.rc"
    }
    includedirs { DX7_IncPath }
    libdirs     { DX7_LibPath }
