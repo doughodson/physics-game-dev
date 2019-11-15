@@ -3,16 +3,16 @@
 --------------------------------------------------------
 
 -- flight simulator
-project "chap15-flight-sim"
+project "ch15-flight-sim"
    kind "WindowedApp"
 --   kind "ConsoleApp"
 --   defines { "_CONSOLE" }
    targetname "flight-sim"
-   targetdir "../../chap15-flight-sim"
-   debugdir "../../chap15-flight-sim"
+   targetdir "../../ch15-flight-sim"
+   debugdir "../../ch15-flight-sim"
    files {
-      "../../chap15-flight-sim/**.h*",
-      "../../chap15-flight-sim/**.cpp"
+      "../../ch15-flight-sim/**.h*",
+      "../../ch15-flight-sim/**.cpp"
    }
    includedirs { DX7_IncPath }
    libdirs     { DX7_LibPath }
@@ -20,16 +20,16 @@ project "chap15-flight-sim"
    characterset("MBCS")
 
 -- hover
-project "chap17-hover"
+project "ch17-hover"
    kind "WindowedApp"
 --   kind "ConsoleApp"
 --   defines { "_CONSOLE" }
    targetname "hover"
-   targetdir "../../chap17-hover"
-   debugdir "../../chap17-hover"
+   targetdir "../../ch17-hover"
+   debugdir "../../ch17-hover"
    files {
-      "../../chap17-hover/**.h*",
-      "../../chap17-hover/**.cpp"
+      "../../ch17-hover/**.h*",
+      "../../ch17-hover/**.cpp"
    }
    includedirs { DX7_IncPath }
    libdirs     { DX7_LibPath }

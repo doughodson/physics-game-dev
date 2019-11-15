@@ -88,8 +88,8 @@ void	InitializeHovercraft(pRigidBody2D body)
 	body->fOrientation = 0.0;
 	
 	// Now define the mass properties
-	body->fMass = 621.6;
-	body->fInertia = 383320;
+	body->fMass = 621.6f;
+	body->fInertia = 383320.0f;
 	body->fInertiaInverse = 1.0f / body->fInertia;
 		
 	body->CP.x = -0.0f;		body->CP.y = 0.0f;		// coordinates of the cushion center of pressure
@@ -940,22 +940,19 @@ bool	ArePointsEqual(Vector p1, Vector p2)
 
 Vector	VRotate2D( float angle, Vector u)
 {
-	float	x,y;
-
-	x = u.x * cos(DegreesToRadians(-angle)) + u.y * sin(DegreesToRadians(-angle));
-	y = -u.x * sin(DegreesToRadians(-angle)) + u.y * cos(DegreesToRadians(-angle));
-
+	float x{static_cast<float>(u.x * cos(DegreesToRadians(-angle)) + u.y * sin(DegreesToRadians(-angle)))};
+	float y{static_cast<float>(-u.x * sin(DegreesToRadians(-angle)) + u.y * cos(DegreesToRadians(-angle)))};
 	return Vector( x, y, 0);
 }
 
-//------------------------------------------------------------------------//
-// Adapted from Rourke's Computational Geometry FAQ
-//------------------------------------------------------------------------//
-int	pnpoly(int	npol, Vector *vlist, Vector p)
+//-------------------------------------------------
+// adapted from Rourke's Computational Geometry FAQ
+//-------------------------------------------------
+int pnpoly(int npol, Vector *vlist, Vector p)
 {
-	int	i, j, c = 0;
+	int c{};
 
-	for (i = 0, j = npol-1; i<npol; j = i++) {
+	for (int i{}, j{npol-1}; i<npol; j = i++) {
 		if ((((vlist[i].y<=p.y) && (p.y<vlist[j].y)) ||
 			 ((vlist[j].y<=p.y) && (p.y<vlist[i].y))) &&
 			(p.x < (vlist[j].x - vlist[i].x) * (p.y - vlist[i].y) / (vlist[j].y - vlist[i].y) + vlist[i].x))
@@ -964,9 +961,4 @@ int	pnpoly(int	npol, Vector *vlist, Vector p)
 	}
 	return c;
 }
-
-
-
-
-
 
