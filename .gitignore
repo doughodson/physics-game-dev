@@ -4,6 +4,12 @@ testVector
 testMatrix3x3
 testQuaternion
 
+# chapter 2
+cannon.exe
+cannon_d.exe
+particle-explosion.exe
+particle-explosion_d.exe
+
 #chapter 9
 rigid_body-2D.exe
 rigid_body-2D_d.exe

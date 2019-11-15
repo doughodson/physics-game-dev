@@ -2,7 +2,41 @@
 -- Example applications
 --------------------------------------------------------
 
--- rigid body 2D
+-- chapter 2: cannon
+project "ch02-cannon"
+   kind "WindowedApp"
+--   kind "ConsoleApp"
+--   defines { "_CONSOLE" }
+   targetname "cannon"
+   targetdir "../../ch02-cannon"
+   debugdir "../../ch02-cannon"
+   files {
+      "../../ch02-cannon/**.h*",
+      "../../ch02-cannon/**.c*"
+   }
+   includedirs { DX7_IncPath }
+   libdirs     { DX7_LibPath }
+   links { LibDX7, LibWindows }
+   characterset("MBCS")
+
+-- chapter 2: particle explosion
+project "ch02-particle-explosion"
+   kind "WindowedApp"
+--   kind "ConsoleApp"
+--   defines { "_CONSOLE" }
+   targetname "particle-explosion"
+   targetdir "../../ch02-particle-explosion"
+   debugdir "../../ch02-particle-explosion"
+   files {
+      "../../ch02-particle-explosion/**.h*",
+      "../../ch02-particle-explosion/**.c*"
+   }
+   includedirs { DX7_IncPath }
+   libdirs     { DX7_LibPath }
+   links { LibDX7, LibWindows }
+   characterset("MBCS")
+
+-- chapter 9: rigid body 2D
 project "ch09-rigid-body-2D"
    kind "WindowedApp"
 --   kind "ConsoleApp"
@@ -12,14 +46,14 @@ project "ch09-rigid-body-2D"
    debugdir "../../ch09-rigid-body-2D"
    files {
       "../../ch09-rigid-body-2D/**.h*",
-      "../../ch09-rigid-body-2D/**.cpp"
+      "../../ch09-rigid-body-2D/**.c*"
    }
    includedirs { DX7_IncPath }
    libdirs     { DX7_LibPath }
    links { LibDX7, LibWindows }
    characterset("MBCS")
 
--- flight simulator
+-- chapter 15: flight simulator
 project "ch15-flight-sim"
    kind "WindowedApp"
 --   kind "ConsoleApp"
@@ -29,14 +63,14 @@ project "ch15-flight-sim"
    debugdir "../../ch15-flight-sim"
    files {
       "../../ch15-flight-sim/**.h*",
-      "../../ch15-flight-sim/**.cpp"
+      "../../ch15-flight-sim/**.c*"
    }
    includedirs { DX7_IncPath }
    libdirs     { DX7_LibPath }
    links { LibDX7, LibWindows }
    characterset("MBCS")
 
--- hover
+-- chapter 17: hover
 project "ch17-hover"
    kind "WindowedApp"
 --   kind "ConsoleApp"
@@ -46,7 +80,7 @@ project "ch17-hover"
    debugdir "../../ch17-hover"
    files {
       "../../ch17-hover/**.h*",
-      "../../ch17-hover/**.cpp"
+      "../../ch17-hover/**.c*"
    }
    includedirs { DX7_IncPath }
    libdirs     { DX7_LibPath }
