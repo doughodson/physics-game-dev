@@ -7,4 +7,7 @@ testQuaternion
 ex01
 ex02
 
+chap15-flight-sim/Debug
+chap15-flight-sim/Release
+
 directX-sdk
