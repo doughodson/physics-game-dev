@@ -4,10 +4,25 @@ testVector
 testMatrix3x3
 testQuaternion
 
+flight-sim.exe
+flight-sim_d.exe
+
+# misc visual studio files
+*.pdb
+*.ilk
+
 ex01
 ex02
 
+.vs/
+.vscode/
+build/vs2019/
+build/gmake/
+
 chap15-flight-sim/Debug
 chap15-flight-sim/Release
+
+
+
 
 directX-sdk
