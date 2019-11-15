@@ -10,10 +10,9 @@
 #include <d3drm.h>
 #include <direct.h>
 #include <d3dtypes.h>
-#include "mymath.h"
+#include "math_util.hpp"
 
 // NOTE: D3D uses a left handed coordinate system.
-
 
 #define RELEASE(x) if (x != NULL) {x->Release(); x = NULL;}
 
@@ -31,6 +30,9 @@ typedef struct _d3dInfo
 	LPDIRECT3DRMFRAME	Camera2;
 	LPDIRECT3DRMFRAME	Camera3;
 
+	LPDIRECT3DRMFRAME	Camera4;
+	LPDIRECT3DRMFRAME	Camera5;
+	LPDIRECT3DRMFRAME	Camera6;
 
 } d3dInfo;
 
@@ -69,13 +71,19 @@ void	PitchCameraBy(float ar);
 void	RollCameraBy(float ar);
 
 void	SetCameraOrientation(float dx, float dy, float dz, float ux, float uy, float uz);
+void	SetCameraOrientation2(float dx, float dy, float dz, float ux, float uy, float uz);
 
 BOOL	LoadObjectOnCameraFrame(char *fname, float sx, float sy, float sz, float x, float y, float z);
 void	SetCameraPosition(float x, float y, float z);
+void	SetCameraPosition2(float x, float y, float z);
 
 void	SetCamera1(void);
 void	SetCamera2(void);
 void	SetCamera3(void);
+
+void	SetCamera4(void);
+void	SetCamera5(void);
+void	SetCamera6(void);
 
 
 

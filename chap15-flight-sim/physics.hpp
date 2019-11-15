@@ -1,7 +1,7 @@
 #ifndef _PHYSICS
 #define _PHYSICS
 
-#include "mymath.h"
+#include "math_util.hpp"
 
 //------------------------------------------------------------------------//
 // Notes:

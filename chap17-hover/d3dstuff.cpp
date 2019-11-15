@@ -5,7 +5,7 @@ d3dInfo	D3D;
 LPDIRECT3DRMWINDEVICE WinDev;
 texInfo	Texture;
 
-
+// Creates a Direct3D Retained Mode Object
 BOOL	CreateD3DRMObject(void)
 {
 	HRESULT	retval;
@@ -17,9 +17,9 @@ BOOL	CreateD3DRMObject(void)
     }
 
 	return TRUE;
-
 }
 
+// Creates a Direct 3D Retained Mode Clipper Object
 BOOL	CreateD3DRMClipperObject(HWND hwnd)
 {
     if (FAILED(DirectDrawCreateClipper(0, &(D3D.DDClipper), NULL))) {
@@ -34,6 +34,7 @@ BOOL	CreateD3DRMClipperObject(HWND hwnd)
 	return TRUE;
 }
 
+// Creates a view port for our scene
 BOOL	CreateViewPort(HWND hwnd)
 {
     D3D.Model = D3DCOLOR_RGB;
@@ -45,6 +46,7 @@ BOOL	CreateViewPort(HWND hwnd)
 	return TRUE;
 }
 
+// Sets up our viewport and prepares it for rendering our scene
 BOOL	CreateDevice(HWND hwnd)
 {
     RECT rect;
@@ -128,9 +130,12 @@ BOOL	CreateDevice(HWND hwnd)
     return TRUE;
 }
 
+// Creates our scene: sets up the six cameras, some lights,
+// loads a background image, loads/scales/positions our ground
+// object, and loads/scales/positions our hovercraft objects
 BOOL	CreateScene(void)
-{
-    if (FAILED(D3D.D3DRM->CreateFrame(NULL, &(D3D.Scene) )))
+{    
+	if (FAILED(D3D.D3DRM->CreateFrame(NULL, &(D3D.Scene) )))
 		return FALSE;
 	
     if (FAILED(D3D.D3DRM->CreateFrame(D3D.Scene, &(D3D.Camera) )))
@@ -142,56 +147,33 @@ BOOL	CreateScene(void)
 	if (FAILED(D3D.D3DRM->CreateFrame(D3D.Scene, &(D3D.Camera3) )))
         return FALSE;
 
+	if (FAILED(D3D.D3DRM->CreateFrame(D3D.Scene, &(D3D.Camera4) )))
+        return FALSE;
+
+	if (FAILED(D3D.D3DRM->CreateFrame(D3D.Scene, &(D3D.Camera5) )))
+        return FALSE;
+
+	if (FAILED(D3D.D3DRM->CreateFrame(D3D.Scene, &(D3D.Camera6) )))
+        return FALSE;
+
 	if (!SetupSceneLights())
 		return FALSE;
 
 	if (!LoadBackground())
 		return FALSE;
 
-	Texture.power = 16.0F; 
-	Texture.su = 1.0F;
-	Texture.sv = 1.0F;
-	Texture.type = D3DRMWRAP_SPHERE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp","sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 100.0f, 500.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp","sphere2.x", 100.0f, 100.0f, 100.0f, 500.0f, 100.0f, 0.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp","sphere2.x", 100.0f, 100.0f, 100.0f, -500.0f, 100.0f, -500.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 1000.0f, 500.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 5000.0f, 300.0f, 5000.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, -5000.0f, 300.0f, 5000.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 5000.0f, 300.0f, -5000.0f, FALSE))
-		return FALSE;
-
-	if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, -5000.0f, 300.0f, -5000.0f, FALSE))
-		return FALSE;
-	
-	Texture.power = 24; // mat
-	Texture.su = 8.0F;
-	Texture.sv = 8.0F;
+	Texture.power = 24;
+	Texture.su = 36.0F;
+	Texture.sv = 36.0F;
 	Texture.type = D3DRMWRAP_FLAT;
-	if (!LoadObject(D3D.Scene, "GROUNDGRASS.PPM", "land4.x", 20000.0f, 5000.0f, 20000.0f, 0.0f, -100.0f, 0.0f, FALSE))
+	if (!LoadObject(D3D.Scene, "dirt.PPM", "land.x", 5000.0f, 0.0f, 5000.0f, 0.0f, 0.0f, 0.0f, FALSE))
 		return FALSE;
 
-	Texture.power = 2; // metallic
+	Texture.power = 2;
 	Texture.su = 1.0F;
 	Texture.sv = 1.0F;
-	if (!LoadObject(D3D.Camera, NULL, "plane2.x", 20.0f, 20.0f, 20.0f, 0.0f, -10.0f, 0.0f, TRUE))//-10,100
-		return FALSE;//"STEELPNL.PPM"
+	if (!LoadObject(D3D.Camera, NULL, "ACV.x", 10.0f, 10.0f, 10.0f, 0.0f, -25.0f, 0.0f, TRUE))
+		return FALSE;
 
 	if (FAILED(D3D.Camera->SetPosition(D3D.Scene, 0.0, 0.0, -200)))
 		return FALSE;
@@ -202,20 +184,44 @@ BOOL	CreateScene(void)
 	D3D.Camera2->SetRotation(D3D.Scene, 0, 0, 0, 0);
 	D3D.Camera2->SetOrientation(D3D.Scene, 0,0,-1, 0, 1, 0);
 
-	if (FAILED(D3D.Camera3->SetPosition(D3D.Scene, 0.0, 2000.0, 0.0)))
+	if (FAILED(D3D.Camera3->SetPosition(D3D.Scene, 0.0, 500.0, 0.0)))
 		return FALSE;
 	D3D.Camera3->SetRotation(D3D.Scene, 0, 0, 0, 0);
 	D3D.Camera3->SetOrientation(D3D.Scene, 0,0,-1, 0, 1, 0);
 
 
+	Texture.power = 2;
+	Texture.su = 1.0F;
+	Texture.sv = 1.0F;
+	if (!LoadObject(D3D.Camera4, NULL, "ACV2.x", 10.0f, 10.0f, 10.0f, 0.0f, -25.0f, 0.0f, TRUE))
+		return FALSE;
+
+	if (FAILED(D3D.Camera4->SetPosition(D3D.Scene, 0.0, 0.0, -200)))
+		return FALSE;
+	D3D.Camera4->SetRotation(D3D.Scene, 0, 0, 0, 0);
+
+	if (FAILED(D3D.Camera5->SetPosition(D3D.Scene, 0.0, 500.0, 0.0)))
+		return FALSE;
+	D3D.Camera5->SetRotation(D3D.Scene, 0, 0, 0, 0);
+	D3D.Camera5->SetOrientation(D3D.Scene, 0,0,-1, 0, 1, 0);
+
+	if (FAILED(D3D.Camera6->SetPosition(D3D.Scene, 0.0, 500.0, 0.0)))
+		return FALSE;
+	D3D.Camera6->SetRotation(D3D.Scene, 0, 0, 0, 0);
+	D3D.Camera6->SetOrientation(D3D.Scene, 0,0,-1, 0, 1, 0);
+
     return TRUE;
 }
 
+// Renders the current scene to the view port
 BOOL	Render(void)
 {
 
 	D3D.Camera2->LookAt(D3D.Camera, D3D.Scene, D3DRMCONSTRAIN_Z);
 	D3D.Camera3->LookAt(D3D.Camera, D3D.Scene, D3DRMCONSTRAIN_Z);
+
+	D3D.Camera5->LookAt(D3D.Camera4, D3D.Scene, D3DRMCONSTRAIN_Z);
+	D3D.Camera6->LookAt(D3D.Camera4, D3D.Scene, D3DRMCONSTRAIN_Z);
 
 
     if (FAILED(D3D.Scene->Move(D3DVAL(0.0))))
@@ -233,18 +239,23 @@ BOOL	Render(void)
     return TRUE;
 }
 
+// Releases all the objects
 void	CleanUp(void)
 {
 	RELEASE(D3D.Scene);
 	RELEASE(D3D.Camera);
 	RELEASE(D3D.Camera2);
 	RELEASE(D3D.Camera3);
+	RELEASE(D3D.Camera4);
+	RELEASE(D3D.Camera5);
+	RELEASE(D3D.Camera6);
 	RELEASE(D3D.View);
 	RELEASE(D3D.Device);	
 	RELEASE(D3D.D3DRM);
 	RELEASE(D3D.DDClipper);
 }
 
+// Sets up a couple of light sources to illuminate the scene
 BOOL	SetupSceneLights(void)
 {
 	LPDIRECT3DRMMESHBUILDER	builder	= NULL;
@@ -262,9 +273,9 @@ BOOL	SetupSceneLights(void)
 	
 	if (retval)		
 		if (FAILED(D3D.D3DRM->CreateLightRGB(	D3DRMLIGHT_AMBIENT, 
-												D3DVAL(0.5), 
-												D3DVAL(0.5), 
-												D3DVAL(0.5), 
+												D3DVAL(0.25), 
+												D3DVAL(0.25), 
+												D3DVAL(0.25), 
 												&light) ))
 			retval = FALSE;
 	
@@ -298,9 +309,9 @@ BOOL	SetupSceneLights(void)
 	
 	if (retval)		
 		if (FAILED(D3D.D3DRM->CreateLightRGB(	D3DRMLIGHT_DIRECTIONAL, 
-												D3DVAL(1.0), 
-												D3DVAL(0.75), 
-												D3DVAL(0.75), 
+												D3DVAL(0.5), 
+												D3DVAL(0.5), 
+												D3DVAL(0.5), 
 												&light) ))
 			retval = FALSE;
 	
@@ -309,7 +320,7 @@ BOOL	SetupSceneLights(void)
 			retval = FALSE;
 
 	if (retval)		
-		if (FAILED(frame->SetPosition(D3D.Scene, D3DVAL(100.0), D3DVAL(200.0), D3DVAL(0.0) )))
+		if (FAILED(frame->SetOrientation(D3D.Scene, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0)))
 			retval = FALSE;
 
 	if (retval)		
@@ -325,7 +336,7 @@ BOOL	SetupSceneLights(void)
 	RELEASE(light);
 
 
-	// now create directional light
+	// now create spot light
 	if (FAILED(D3D.D3DRM->CreateMeshBuilder(&builder)))
 		retval = FALSE;
 
@@ -335,9 +346,9 @@ BOOL	SetupSceneLights(void)
 	
 	if (retval)		
 		if (FAILED(D3D.D3DRM->CreateLightRGB(	D3DRMLIGHT_POINT, 
+												D3DVAL(0.5), 
 												D3DVAL(1.0), 
-												D3DVAL(0.75), 
-												D3DVAL(0.75), 
+												D3DVAL(0.5), 
 												&light) ))
 			retval = FALSE;
 	
@@ -346,7 +357,7 @@ BOOL	SetupSceneLights(void)
 			retval = FALSE;
 
 	if (retval)		
-		if (FAILED(frame->SetPosition(D3D.Scene, D3DVAL(100.0), D3DVAL(700.0), D3DVAL(1000.0) )))
+		if (FAILED(frame->SetPosition(D3D.Scene, 200, 200, -200 )))
 			retval = FALSE;
 
 	if (retval)		
@@ -365,6 +376,7 @@ BOOL	SetupSceneLights(void)
 	return retval;
 }
 
+// Loads a background image
 BOOL	LoadBackground(void)
 {
 	LPDIRECT3DRMTEXTURE		tex;
@@ -380,6 +392,7 @@ BOOL	LoadBackground(void)
 	return retval;
 }
 
+// Loads, scales and positions a 3D object
 BOOL	LoadObject(LPDIRECT3DRMFRAME fr, char *ftex, char *fname, float sx, float sy, float sz, float x, float y, float z, BOOL makechild)
 {
 	LPDIRECT3DRMMESHBUILDER	builder;
@@ -467,11 +480,14 @@ BOOL	LoadObject(LPDIRECT3DRMFRAME fr, char *ftex, char *fname, float sx, float s
 	return retval;
 }
 
+// Loads a texture
 HRESULT		LoadTexture(char *name, void *arg, LPDIRECT3DRMTEXTURE *tex)
 {
 	return D3D.D3DRM->LoadTexture(name, tex);
 }
 
+
+// not used
 void	MoveCamera(float d)
 {	
 	D3DVECTOR	vpos;
@@ -586,32 +602,75 @@ void	RollCameraBy(float ar)
 
 }
 
+// end not used
+
+
 void	SetCameraOrientation(float dx, float dy, float dz, float ux, float uy, float uz)
 {
 	D3D.Camera->SetOrientation(D3D.Scene, dx, dy, dz, ux, uy, uz);
 	return;
 }
 
+void	SetCameraOrientation2(float dx, float dy, float dz, float ux, float uy, float uz)
+{
+	D3D.Camera4->SetOrientation(D3D.Scene, dx, dy, dz, ux, uy, uz);
+	return;
+}
 
+
+
+// Sets the positions of the first three cameras
 void	SetCameraPosition(float x, float y, float z)
 {		
-	D3D.Camera->SetPosition(D3D.Scene, x, y, z);
-	D3D.Camera2->SetPosition(D3D.Scene, x, y+100, z-300);
+	D3D.Camera->SetPosition(D3D.Scene, x, y+25, z);
+	D3D.Camera2->SetPosition(D3D.Scene, x, y+50, z-150);
+	D3D.Camera3->SetPosition(D3D.Scene, x, y+500, z-1);
+	
 
 	return;
 }
 
+// Sets teh positions of the last three cameras
+void	SetCameraPosition2(float x, float y, float z)
+{		
+	D3D.Camera4->SetPosition(D3D.Scene, x, y+25, z);
+	D3D.Camera5->SetPosition(D3D.Scene, x, y+50, z-150);
+	D3D.Camera6->SetPosition(D3D.Scene, x, y+500, z-1);
+	return;
+}
+
+// Makes Camera 1 the current camera
 void	SetCamera1(void)
 {
 	D3D.View->SetCamera(D3D.Camera);
 }
 
+// Makes Camera 2 the current camera
 void	SetCamera2(void)
 {
 	D3D.View->SetCamera(D3D.Camera2);
 }
 
+// Makes Camera 3 the current camera
 void	SetCamera3(void)
 {
 	D3D.View->SetCamera(D3D.Camera3);
+}
+
+// Makes Camera 4 the current camera
+void	SetCamera4(void)
+{
+	D3D.View->SetCamera(D3D.Camera4);
+}
+
+// Makes Camera 5 the current camera
+void	SetCamera5(void)
+{
+	D3D.View->SetCamera(D3D.Camera5);
+}
+
+// Makes Camera 6 the current camera
+void	SetCamera6(void)
+{
+	D3D.View->SetCamera(D3D.Camera6);
 }

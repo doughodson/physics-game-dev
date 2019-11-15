@@ -1,6 +1,6 @@
 #define INITGUID
 
-#define APPNAME "Flight Sim"
+#define APPNAME "Hover Sim"
 
 // Windows Header Files:
 #include <windows.h>
@@ -12,6 +12,8 @@
 #include <malloc.h>
 #include <math.h>
 #include "mmsystem.h"
+
+#include <winuser.h>
 
 
 #include "d3dstuff.hpp"
@@ -33,6 +35,8 @@ BOOL		Initialized = false;
 float		TotalTime = 0;
 int			FrameCounter = RENDER_FRAME_COUNT;
 
+float		lastdt;
+
 
 // Foward declarations of functions included in this code module:
 BOOL InitApplication(HINSTANCE);
@@ -42,12 +46,18 @@ void	NullEvent(void);
 BOOL IsKeyDown(short KeyCode);
 
 // externals
-extern RigidBody	Airplane;
+extern RigidBody2D	Hovercraft1, Hovercraft2;
 extern	d3dInfo	D3D;
 extern	LPDIRECT3DRMWINDEVICE WinDev;
-extern	float	ThrustForce;
-extern	bool	Stalling;
-extern	bool	Flaps;
+
+extern	int	CountDo;
+extern	float Impulse;
+
+void	MyBeep()
+{
+	MessageBeep(0xFFFFFFFF);
+}
+
 
 //----------------------------------------------------------------------------------------------------//
 
@@ -126,10 +136,8 @@ BOOL InitApplication(HINSTANCE hInstance)
 
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-			
+{			
 	hInst = hInstance;
-
 	nShowCmd = nCmdShow;	
 
     hTheMainWindow = CreateWindow(	szAppName, 
@@ -150,10 +158,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	ShowWindow(hTheMainWindow, nCmdShow);
     UpdateWindow(hTheMainWindow);
 
-	InitializeAirplane();
+	Initialize();
 	Initialized = true;
 	TotalTime = 0;
-
 
 	return (TRUE);
 }
@@ -174,28 +181,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         		{   
 					if (FAILED(WinDev->HandleActivate(wParam)))					
                			WinDev->Release();
-				}
+				}		
 
-			
-
-			break;
-
-		case WM_COMMAND:
-			wmId    = LOWORD(wParam); 
-			wmEvent = HIWORD(wParam); 
-			/*switch(wmId) {
-
-			
-			}*/
-			return (0);
 			break;
 
 		case WM_DESTROY:
 			CleanUp();
 			PostQuitMessage(0);
-			break;
-
-		case	WM_KEYUP:
 			break;
 
 		case WM_KEYDOWN:
@@ -209,6 +201,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			if (key == 0x33) // 3
 				SetCamera3();
+
+			if (key == 0x34) // 4
+				SetCamera4();
+
+			if (key == 0x35) // 5
+				SetCamera5();
+
+			if (key == 0x36) // 6
+				SetCamera6();
 
 			break;
 
@@ -238,103 +239,104 @@ void	NullEvent(void)
 	char	buf[256];
 	char	s[256];
 
-	ZeroRudder();
-	ZeroAilerons();
-	ZeroElevators();
+	// figure out which flight control keys are down
+	ZeroThrusters(1);
 
-	// pitch down
 	if (IsKeyDown(VK_UP))
-		PitchDown();				
+		IncThrust(1);
 
-	// pitch up
 	if (IsKeyDown(VK_DOWN))
-		PitchUp();				
+		DecThrust(1);				
 
-	// roll left
-	if (IsKeyDown(VK_LEFT))
-		RollLeft();
-
-	// roll right
 	if (IsKeyDown(VK_RIGHT))
-		RollRight();
+	{
+		ZeroThrusters(1);
+		PortThruster(1);
+	}
 
-	//  Increase thrust
-	if (IsKeyDown(0x41)) // A
-		IncThrust();
-			
-	//  Decrease thrust
-	if (IsKeyDown(0x5A)) // Z
-		DecThrust();				
+	if (IsKeyDown(VK_LEFT))
+	{
+		ZeroThrusters(1);
+		STBDThruster(1);
+	}
 
-	// yaw left
-	if (IsKeyDown(0x58)) // x
-		LeftRudder();
+	ZeroThrusters(2);
 
-	// yaw right
-	if (IsKeyDown(0x43)) // c
-		RightRudder();
+	if (IsKeyDown(0x57)) // W key
+		IncThrust(2);
 
-	// landing flaps down
-	if (IsKeyDown(0x46)) //f
-		FlapsDown();
+	if (IsKeyDown(0x5A)) // Z key
+		DecThrust(2);				
 
-	// landing flaps up
-	if (IsKeyDown(0x44)) // d
-		ZeroFlaps();
+	if (IsKeyDown(0x53)) // S key
+	{
+		ZeroThrusters(2);
+		PortThruster(2);
+	}
 
-	NewTime = timeGetTime();	
+	if (IsKeyDown(0x41)) // A key
+	{
+		ZeroThrusters(2);
+		STBDThruster(2);
+	}
+
+	NewTime = timeGetTime();		
 	dt = (float) (NewTime - OldTime)/1000;
 	OldTime = NewTime;
 	
 	if (dt > (0.016f)) dt = (0.016f);
-	if (dt < 0.001f) dt = 0.001f;
-
-
+	if (dt < 0.001f) dt = 0.001f; // this is the best timeGetTime can do
+	
 	TotalTime += dt;
 	//if(TotalTime > 1.6f) 		
 		StepSimulation(dt);
-	
+
 	if(FrameCounter >= RENDER_FRAME_COUNT)
-	{			
+	{		
 		// Direct3D x = - our y
 		// Direct3D y = our z
 		// Direct3D z = our x
-		SetCameraPosition(-Airplane.vPosition.y, Airplane.vPosition.z, Airplane.vPosition.x);
+		SetCameraPosition(-Hovercraft1.vPosition.y, Hovercraft1.vPosition.z, Hovercraft1.vPosition.x);
 
 		vz = GetBodyZAxisVector(); // pointing up in our coordinate system
-		vx = GetBodyXAxisVector(); // pointing forward in our coordinate system
+		vx = GetBodyXAxisVector(1); // pointing forward in our coordinate system
 		SetCameraOrientation(	-vx.y, vx.z, vx.x, 
 							-vz.y, vz.z, vz.x);
+	
+		SetCameraPosition2(-Hovercraft2.vPosition.y, Hovercraft2.vPosition.z, Hovercraft2.vPosition.x);
+
+		vz = GetBodyZAxisVector(); // pointing up in our coordinate system
+		vx = GetBodyXAxisVector(2); // pointing forward in our coordinate system
+		SetCameraOrientation2(	-vx.y, vx.z, vx.x, 
+							-vz.y, vz.z, vz.x);	
+		
 		Render();
+		//MyBeep();
 		FrameCounter = 0;
 	
 		//OldTime = NewTime;
-
-		// Report stats in window title	
-		sprintf( buf, "Roll= %.2f ; ", Airplane.vEulerAngles.x);
+		
+		sprintf( buf, "Craft 1 (blue): T= %.0f ; ", Hovercraft1.ThrustForce);
 		strcpy(s, buf);
-		sprintf( buf, "Pitch= %.2f ; ", -Airplane.vEulerAngles.y); // take negative here since pilots like to see positive pitch as nose up
+		sprintf( buf, "S= %.0f ", Hovercraft1.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
+		//sprintf( buf, "S= %f ", Hovercraft1.vAngularVelocity.Magnitude());
 		strcat(s, buf);
-		sprintf( buf, "Yaw= %.2f ; ", Airplane.vEulerAngles.z);
+
+		sprintf( buf, "     Craft 2 (red): T= %.0f ; ", Hovercraft2.ThrustForce);
 		strcat(s, buf);
-		sprintf( buf, "Alt= %.0f ; ", Airplane.vPosition.z);
+		sprintf( buf, "S= %.0f ", Hovercraft2.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
+		//sprintf( buf, "S= %f ", Hovercraft2.vAngularVelocity.Magnitude());
 		strcat(s, buf);
-		sprintf( buf, "T= %.0f ; ", ThrustForce);
+
+		//sprintf( buf, "CountDo = %i", CountDo);
+		sprintf( buf, "Impulse = %.0f", Impulse);
 		strcat(s, buf);
-		sprintf( buf, "S= %.0f ", Airplane.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
-		strcat(s, buf);
-		if(Flaps)
-			strcat(s, "; Flaps");
-	
-		if(Stalling)
-		{
-			strcat(s, "; Stall!");	
-			Beep(10000, 250);
-		}
 
 		SetWindowText(hTheMainWindow, s);
 	} else
 		FrameCounter++;
+	
+
 
 }
 
@@ -350,3 +352,4 @@ BOOL IsKeyDown(short KeyCode)
 
 	return FALSE;
 }
+

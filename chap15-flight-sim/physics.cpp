@@ -11,7 +11,7 @@
 	COPYRIGHT:	Copyright 2000 by David Bourg
 */
 //----------------------------------------------------------------------------------------------------//
-#include "Physics.h"
+#include "physics.hpp"
 
 #define	_DTHRUST	10.0f
 #define	_MAXTHRUST	3000.0f

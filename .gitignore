@@ -4,8 +4,13 @@ testVector
 testMatrix3x3
 testQuaternion
 
+# chapter 15
 flight-sim.exe
 flight-sim_d.exe
+
+# chapter 17
+hover.exe
+hover_d.exe
 
 # misc visual studio files
 *.pdb
