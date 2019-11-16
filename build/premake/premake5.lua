@@ -82,6 +82,7 @@ createMFCProject("ch04-cannon2", "cannon2")
 createMFCProject("ch06-cannon3", "cannon3")
 createMFCProject("ch08-falling-particles", "falling-particles")
 createMFCProject("ch09-rigid-body-2D", "rigid-body-2D")
+createMFCProject("ch13-cloth-sim", "cloth-sim")
 createMFCProject("ch15-flight-sim", "flight-sim")
 createMFCProject("ch17-hover", "hover")
 

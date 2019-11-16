@@ -18,13 +18,17 @@ cannon2_d.exe
 cannon3.exe
 cannon3_d.exe
 
-#chapter 8
+# chapter 8
 falling-particles.exe
 falling-particles_d.exe
 
-#chapter 9
+# chapter 9
 rigid_body-2D.exe
 rigid_body-2D_d.exe
+
+# chapter 13
+cloth-sim.exe
+cloth-sim_d.exe
 
 # chapter 15
 flight-sim.exe
