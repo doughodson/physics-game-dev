@@ -38,6 +38,10 @@ flight-sim_d.exe
 hover.exe
 hover_d.exe
 
+# chapter XX
+volume.exe
+volume_d.exe
+
 # misc visual studio files
 *.pdb
 *.ilk

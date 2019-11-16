@@ -22,6 +22,24 @@ DX7_LibPath         = "c:/apps/dx7-sdk/lib"
 LibDX7     = { "d3drm.lib", "ddraw.lib" }
 LibWindows = { "Winmm" }
 
+local function createConsoleProject(projectName, targetName)
+   project (projectName)
+     kind("ConsoleApp")
+     defines({"_CONSOLE"})
+     location("../" .. _ACTION .. "/projects/%{prj.name}")
+     targetname(targetName)
+     targetdir("../../" .. projectName)
+     debugdir("../../" .. projectName)
+     files({
+        "../../" .. projectName .. "/**.h*",
+        "../../" .. projectName .. "/**.c*",
+        "../../" .. projectName .. "/**.rc"
+     })
+     includedirs({ DX7_IncPath })
+     libdirs({ DX7_LibPath })
+     links({ LibDX7, LibWindows })
+end
+
 local function createMFCProject(projectName, targetName)
    project (projectName)
      kind("WindowedApp")
@@ -85,4 +103,6 @@ createMFCProject("ch09-rigid-body-2D", "rigid-body-2D")
 createMFCProject("ch13-cloth-sim", "cloth-sim")
 createMFCProject("ch15-flight-sim", "flight-sim")
 createMFCProject("ch17-hover", "hover")
+
+createConsoleProject("chXX-volume", "volume")
 
