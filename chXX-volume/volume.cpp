@@ -1,9 +1,12 @@
 // volume.cpp : Defines the entry point for the console application.
 //
 
-#include <stdio.h>
-#include <math.h>
-#include "mymath.h"
+#include <cstdio>
+
+#include "common/Vector.hpp"
+#include "common/math_utils.hpp"
+
+using namespace std;
 
 //------------------------------------------------------------------------//
 // defines and typdefs
@@ -45,18 +48,14 @@ public:
 
 Body3D::Body3D(void)
 {
-	int i;
-
 	nFaces = 0;
 	nVertices = 0;
 
-	for(i=0; i<MAX_NUM_VERTICES; i++)
-	{
+	for(int i=0; i<MAX_NUM_VERTICES; i++) {
 		Vertex[i].x = Vertex[i].y = Vertex[i].z = 0;
 	}
 
-	for(i=0; i<MAX_NUM_FACES; i++)
-	{
+	for(int i=0; i<MAX_NUM_FACES; i++) {
 		Face[i].a = Face[i].b = Face[i].c = 0;
 	}
 
