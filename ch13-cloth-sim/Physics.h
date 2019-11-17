@@ -1,7 +1,8 @@
+
 #ifndef _PHYSICS
 #define _PHYSICS
 
-#include "mymath.h"
+#include "common/Vector.hpp"
 #include <windows.h>
 
 //------------------------------------------------------------------------//

@@ -1,6 +1,6 @@
 #include "d3dstuff.h"
-#include "MyMath.h"
-#include "physics.h"
+//#include "MyMath.h"
+#include "Physics.h"
 
 d3dInfo	D3D;
 LPDIRECT3DRMWINDEVICE WinDev;
@@ -562,7 +562,7 @@ BOOL	CreateCloth(char *ftex, unsigned int *faces, int faceCount, float *vertices
 
 	for(i=0; i<vertexCount; i++)
 	{
-		normals[i].Normalize();
+		normals[i].normalize();
 
 		d3dVertices[i].normal.x = normals[i].x;
 		d3dVertices[i].normal.y = normals[i].y;
@@ -702,7 +702,7 @@ void	UpdateCloth(unsigned int *faces, int faceCount, float *vertices, int vertex
 
 	for(i=0; i<vertexCount; i++)
 	{
-		normals[i].Normalize();
+		normals[i].normalize();
 
 		d3dVertices[i].normal.x = normals[i].x;
 		d3dVertices[i].normal.y = normals[i].y;

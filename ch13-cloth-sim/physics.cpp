@@ -185,7 +185,7 @@ void	Initialize(void)
 				StructuralSprings[count].k = SPRINGTENSIONCONSTANT;
 				StructuralSprings[count].d = SPRINGDAMPINGCONSTANT;				
 				L = Particles[r][c].vPosition - Particles[r][c+1].vPosition;
-				StructuralSprings[count].L = L.Magnitude();				
+				StructuralSprings[count].L = L.magnitude();				
 				count++;
 			}
 			if(r<NUMROWS)
@@ -197,7 +197,7 @@ void	Initialize(void)
 				StructuralSprings[count].k = SPRINGTENSIONCONSTANT;
 				StructuralSprings[count].d = SPRINGDAMPINGCONSTANT;				
 				L = Particles[r][c].vPosition - Particles[r+1][c].vPosition;
-				StructuralSprings[count].L = L.Magnitude();				
+				StructuralSprings[count].L = L.magnitude();				
 				count++;
 			}
 			if(r<NUMROWS && c<NUMCOLUMNS)
@@ -209,7 +209,7 @@ void	Initialize(void)
 				StructuralSprings[count].k = SPRINGSHEARCONSTANT;
 				StructuralSprings[count].d = SPRINGDAMPINGCONSTANT;				
 				L = Particles[r][c].vPosition - Particles[r+1][c+1].vPosition;
-				StructuralSprings[count].L = L.Magnitude();				
+				StructuralSprings[count].L = L.magnitude();				
 				count++;
 			}
 			if(c>0 && r<NUMROWS)
@@ -221,7 +221,7 @@ void	Initialize(void)
 				StructuralSprings[count].k = SPRINGSHEARCONSTANT;
 				StructuralSprings[count].d = SPRINGDAMPINGCONSTANT;				
 				L = Particles[r][c].vPosition - Particles[r+1][c-1].vPosition;
-				StructuralSprings[count].L = L.Magnitude();				
+				StructuralSprings[count].L = L.magnitude();				
 				count++;
 			}
 		}
@@ -268,12 +268,12 @@ void	CalcForces(Particle particles[NUMROWS+1][NUMCOLUMNS+1])
 
 				// viscous drag
 				dragVector = -particles[r][c].vVelocity;
-				dragVector.Normalize();				
-				particles[r][c].vForces += dragVector * (particles[r][c].vVelocity.Magnitude()*particles[r][c].vVelocity.Magnitude()) * DRAGCOEFFICIENT;
+				dragVector.normalize();				
+				particles[r][c].vForces += dragVector * (particles[r][c].vVelocity.magnitude()*particles[r][c].vVelocity.magnitude()) * DRAGCOEFFICIENT;
 
 				// wind
 				SetWindVector(tb_Rnd(0, 10), 0, tb_Rnd(0, 1));
-				WindVector.Normalize();
+				WindVector.normalize();
 				particles[r][c].vForces += WindVector * tb_Rnd(0, WindForceFactor);			
 			}
 		}
@@ -291,7 +291,7 @@ void	CalcForces(Particle particles[NUMROWS+1][NUMCOLUMNS+1])
 		v = particles[r1][c1].vVelocity - particles[r2][c2].vVelocity;
 		L = StructuralSprings[i].L;
 
-		f1 = -(StructuralSprings[i].k * (d.Magnitude() - L) + StructuralSprings[i].d * ( (v * d) / d.Magnitude() )) * ( d / d.Magnitude() );
+		f1 = -(StructuralSprings[i].k * (d.magnitude() - L) + StructuralSprings[i].d * ( (v * d) / d.magnitude() )) * ( d / d.magnitude() );
 		f2 = -f1;
 		
 		if(particles[r1][c1].bLocked == FALSE)
@@ -524,7 +524,7 @@ int		CheckForCollisions(Particle p[NUMROWS+1][NUMCOLUMNS+1])
 					Collisions[count].n.x = 0.0f;
 					Collisions[count].n.y = 1.0f;
 					Collisions[count].n.z = 0.0f;
-					Collisions[count].n.Normalize();
+					Collisions[count].n.normalize();
 					count++;
 				}
 			}
@@ -554,7 +554,7 @@ int		CheckForCollisions(Particle p[NUMROWS+1][NUMCOLUMNS+1])
 					Collisions[count].p1.r = r;
 					Collisions[count].p1.c = c;
 					Collisions[count].n = n;
-					Collisions[count].n.Normalize();
+					Collisions[count].n.normalize();
 					count++;
 				}
 			}

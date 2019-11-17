@@ -13,7 +13,6 @@ RigidBody2D		Craft2;
 #define		_TOL			1e-10
 #define		_FWDTIME		10
 
-
 bool	Initialize(void)
 {
 	
