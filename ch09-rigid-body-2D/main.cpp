@@ -2,14 +2,7 @@
 #include "main.h"
 #include "time.h"
 
-//---------------------------------------------------------------------------
-/*
-Book:           
-Authors:        
-Example:        
-*/
-//---------------------------------------------------------------------------
-
+#include "common/math_utils.hpp"
 
 // Global Variables:
 int				FrameCounter = 0;

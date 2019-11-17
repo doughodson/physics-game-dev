@@ -1,6 +1,9 @@
+
 #include "RigidBody2D.hpp"
 
-RigidBody2D::RigidBody2D(void)
+#include "common/math_utils.hpp"
+
+RigidBody2D::RigidBody2D()
 {
 	fMass = 100;
 	fInertia = 500;
@@ -27,7 +30,7 @@ RigidBody2D::RigidBody2D(void)
 	ThrustForce = _THRUSTFORCE;
 }
 
-void	RigidBody2D::CalcLoads(void)
+void RigidBody2D::CalcLoads(void)
 {
 	Vector	Fb;				// stores the sum of forces
 	Vector	Mb;				// stores the sum of moments
@@ -72,13 +75,13 @@ void	RigidBody2D::CalcLoads(void)
 		vLocalVelocity = vVelocityBody + vtmp; 
 
 		// Calculate local air speed
-		fLocalSpeed = vLocalVelocity.Magnitude();
+		fLocalSpeed = vLocalVelocity.magnitude();
 
 		// Find the direction in which drag will act.
 		// Drag always acts inline with the relative velocity but in the opposing direction
 		if(fLocalSpeed > tol) 
 		{
-			vLocalVelocity.Normalize();
+			vLocalVelocity.normalize();
 			vDragVector = -vLocalVelocity;		
 
 			// Determine the resultant force on the element.
@@ -121,7 +124,7 @@ void	RigidBody2D::CalcLoads(void)
 	vMoment += Mb;	
 }
 
-void	RigidBody2D::UpdateBodyEuler(double dt)
+void RigidBody2D::UpdateBodyEuler(double dt)
 {
 		Vector a;
 		Vector dv;
@@ -153,11 +156,11 @@ void	RigidBody2D::UpdateBodyEuler(double dt)
 		fOrientation += dr; 
 		
 		// Misc. calculations:
-		fSpeed = vVelocity.Magnitude();		
+		fSpeed = vVelocity.magnitude();		
 		vVelocityBody = VRotate2D(-fOrientation, vVelocity);	
 }
 
-void	RigidBody2D::SetThrusters(bool p, bool s)
+void RigidBody2D::SetThrusters(bool p, bool s)
 {
 	PThrust.x = 0;
 	PThrust.y = 0;
@@ -170,20 +173,9 @@ void	RigidBody2D::SetThrusters(bool p, bool s)
 		SThrust.y = -_STEERINGFORCE;
 }
 
-
-Vector	VRotate2D( float angle, Vector u)
+void RigidBody2D::ModulateThrust(bool up)
 {
-	float	x,y;
-
-	x = u.x * cos(DegreesToRadians(-angle)) + u.y * sin(DegreesToRadians(-angle));
-	y = -u.x * sin(DegreesToRadians(-angle)) + u.y * cos(DegreesToRadians(-angle));
-
-	return Vector( x, y, 0);
-}
-
-void	RigidBody2D::ModulateThrust(bool up)
-{
-	double	dT = up ? _DTHRUST:-_DTHRUST;
+	const double dT = up ? _DTHRUST:-_DTHRUST;
 
 	ThrustForce += dT;
 
