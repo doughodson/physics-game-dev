@@ -6,6 +6,7 @@
 
 #include "Vector.hpp"
 #include "math_utils.hpp"
+#include "constants.hpp"
 
 class Quaternion
 {
@@ -174,16 +175,6 @@ inline Vector QVRotate(const Quaternion q, const Vector v)
    return t.get_vector();
 }
 
-inline float DegreesToRadians(const float deg)
-{
-   return deg * PI / 180.0f;
-}
-
-inline float RadiansToDegrees(const float rad)
-{
-   return rad * 180.0f / PI;
-}
-
 inline Quaternion MakeQFromEulerAngles(const float x, const float y, const float z)
 {
    Quaternion q;
@@ -232,7 +223,7 @@ inline Vector MakeEulerAnglesFromQ(const Quaternion q)
       const double r13 = 2 * (q.v.x*q.v.z + q.n*q.v.y);
 
       u.x = RadiansToDegrees(0.0f);                                           // roll
-      u.y = RadiansToDegrees(static_cast<float>(-(PI/2) * r31/tmp));          // pitch
+      u.y = RadiansToDegrees(static_cast<float>(-(pi/2) * r31/tmp));          // pitch
       u.z = RadiansToDegrees(static_cast<float>(std::atan2(-r12, -r31*r13))); // yaw
       return u;
    }

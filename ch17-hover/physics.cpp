@@ -17,7 +17,8 @@
 #include <memory.h>
 #include "physics.hpp"
 
-
+#include "common/Vector.hpp"
+#include "common/math_utils.hpp"
 
 #define	_DTHRUST	1.0f
 #define	_MAXTHRUST	2000.0f
@@ -155,13 +156,13 @@ void	CalcLoads(pRigidBody2D body)
 		vLocalVelocity = body->vVelocityBody + vtmp; 
 
 		// Calculate local air speed
-		fLocalSpeed = vLocalVelocity.Magnitude();
+		fLocalSpeed = vLocalVelocity.magnitude();
 
 		// Find the direction in which drag will act.
 		// Drag always acts inline with the relative velocity but in the opposing direction
 		if(fLocalSpeed > tol) 
 		{
-			vLocalVelocity.Normalize();
+			vLocalVelocity.normalize();
 			vDragVector = -vLocalVelocity;		
 
 			// Determine the resultant force on the element.
@@ -550,14 +551,14 @@ void	UpdateBody(pRigidBody2D craft, float dtime)
 		// now calculate the hovercraft's new velocities at time t + dt
 		craft->vVelocity += (k1 + k2) / 2.0f;
 		craft->vAngularVelocity.z += (k1a + k2a) / 2.0f;
-		if(craft->vAngularVelocity.Magnitude() > 100.0)
+		if(craft->vAngularVelocity.magnitude() > 100.0)
 		{
 			MyBeep();
 		}
 		
 		// calculate the new position 
 		craft->vPosition += craft->vVelocity * dt;		
-		craft->fSpeed = craft->vVelocity.Magnitude();		
+		craft->fSpeed = craft->vVelocity.magnitude();		
 
 		// calculate the new orientation
 		craft->fOrientation += RadiansToDegrees(craft->vAngularVelocity.z * dt);
@@ -636,8 +637,8 @@ int		CheckForCollisionSimple(pRigidBody2D body1, pRigidBody2D body2)
 
 	r = body1->fLength/2 + body2->fLength/2;
 	d = body1->vPosition - body2->vPosition;
-	s = d.Magnitude() - r;
-	d.Normalize();		
+	s = d.magnitude() - r;
+	d.normalize();		
 	vCollisionNormal = d;
 	v1 = body1->vVelocity;
 	v2 = body2->vVelocity;					
@@ -679,7 +680,7 @@ int		CheckForCollision(pRigidBody2D body1, pRigidBody2D body2)
 	// First check to see if the bounding circles are colliding
 	r = body1->fLength/2 + body2->fLength/2;
 	d = body1->vPosition - body2->vPosition;
-	s = d.Magnitude() - r;
+	s = d.magnitude() - r;
 	if(s <= ctol)
 	{   // We have a possible collision, check further
 		// build vertex lists for each hovercraft
@@ -752,13 +753,13 @@ int		CheckForCollision(pRigidBody2D body1, pRigidBody2D body2)
 					else
 						edge = vList2[j+1] - vList2[j];				
 					u = edge;
-					u.Normalize();
+					u.normalize();
 
 					p = vList1[i] - vList2[j];					
 					proj = (p * u) * u;
 
 					d = p^u;					
-					dist = d.Magnitude();
+					dist = d.magnitude();
 
 					dot = p * edge;
 					if(dot > 0)
@@ -769,7 +770,7 @@ int		CheckForCollision(pRigidBody2D body1, pRigidBody2D body2)
 					body2->vCollisionPoint = vCollisionPoint - body2->vPosition;
 										
 					vCollisionNormal = ((u^p)^u);
-					vCollisionNormal.Normalize();
+					vCollisionNormal.normalize();
 					
 					v1 = body1->vVelocityBody + (body1->vAngularVelocity^body1->vCollisionPoint);
 					v2 = body2->vVelocityBody + (body2->vAngularVelocity^body2->vCollisionPoint);
@@ -781,11 +782,11 @@ int		CheckForCollision(pRigidBody2D body1, pRigidBody2D body2)
 					Vrn = vRelativeVelocity * vCollisionNormal;
 
 					vCollisionTangent = (vCollisionNormal^vRelativeVelocity)^vCollisionNormal;
-					vCollisionTangent.Normalize();
+					vCollisionTangent.normalize();
 					//vCollisionTangent.Reverse();
 
-					if( (proj.Magnitude() > tol) && 
-						(proj.Magnitude() <= edge.Magnitude()) && 
+					if( (proj.magnitude() > tol) && 
+						(proj.magnitude() <= edge.magnitude()) && 
 						(dist <= ctol) && 
 						(Vrn < 0.0f)						
 						)
@@ -807,13 +808,13 @@ int		CheckForCollision(pRigidBody2D body1, pRigidBody2D body2)
 					else
 						edge = vList1[j+1] - vList1[j];				
 					u = edge;
-					u.Normalize();
+					u.normalize();
 
 					p = vList2[i] - vList1[j];					
 					proj = (p * u) * u;
 
 					d = p^u;					
-					dist = d.Magnitude();
+					dist = d.magnitude();
 
 					dot = p * edge;
 					if(dot > 0)
@@ -825,7 +826,7 @@ int		CheckForCollision(pRigidBody2D body1, pRigidBody2D body2)
 					body2->vCollisionPoint = vCollisionPoint - body2->vPosition;
 										
 					vCollisionNormal = ((u^p)^u);
-					vCollisionNormal.Normalize();
+					vCollisionNormal.normalize();
 					
 					v1 = body1->vVelocityBody + (body1->vAngularVelocity^body1->vCollisionPoint);
 					v2 = body2->vVelocityBody + (body2->vAngularVelocity^body2->vCollisionPoint);
@@ -838,11 +839,11 @@ int		CheckForCollision(pRigidBody2D body1, pRigidBody2D body2)
 
 
 					vCollisionTangent = (vCollisionNormal^vRelativeVelocity)^vCollisionNormal;
-					vCollisionTangent.Normalize();
+					vCollisionTangent.normalize();
 					//vCollisionTangent.Reverse();
 
-					if( (proj.Magnitude() > tol) && 
-						(proj.Magnitude() <= edge.Magnitude()) && 
+					if( (proj.magnitude() > tol) && 
+						(proj.magnitude() <= edge.magnitude()) && 
 						(dist <= ctol) && 
 						(Vrn < 0.0f)						
 						)
@@ -936,13 +937,6 @@ bool	ArePointsEqual(Vector p1, Vector p2)
 		return true;
 	else
 		return false;	
-}
-
-Vector	VRotate2D( float angle, Vector u)
-{
-	float x{static_cast<float>(u.x * cos(DegreesToRadians(-angle)) + u.y * sin(DegreesToRadians(-angle)))};
-	float y{static_cast<float>(-u.x * sin(DegreesToRadians(-angle)) + u.y * cos(DegreesToRadians(-angle)))};
-	return Vector( x, y, 0);
 }
 
 //-------------------------------------------------

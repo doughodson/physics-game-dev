@@ -10,7 +10,6 @@
 #include <d3drm.h>
 #include <direct.h>
 #include <d3dtypes.h>
-#include "math_util.hpp"
 
 // NOTE: D3D uses a left handed coordinate system.
 

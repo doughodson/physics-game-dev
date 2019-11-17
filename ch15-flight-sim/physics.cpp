@@ -186,7 +186,7 @@ void	CalcAirplaneMassProperties(void)
 		in = DegreesToRadians(Element[i].fIncidence);
 		di = DegreesToRadians(Element[i].fDihedral);
 		Element[i].vNormal = Vector((float)sin(in), (float)(cos(in)*sin(di)), (float)(cos(in)*cos(di)));
-		Element[i].vNormal.Normalize();
+		Element[i].vNormal.normalize();
 	}
 
 	// Calculate total mass
@@ -228,7 +228,7 @@ void	CalcAirplaneMassProperties(void)
 	Airplane.mInertia.e21 = -Ixy;	Airplane.mInertia.e22 = Iyy;	Airplane.mInertia.e23 = -Iyz;
 	Airplane.mInertia.e31 = -Ixz;	Airplane.mInertia.e32 = -Iyz;	Airplane.mInertia.e33 = Izz;
 
-	Airplane.mInertiaInverse = Airplane.mInertia.Inverse();	
+	Airplane.mInertiaInverse = Airplane.mInertia.inverse();
 }
 
 //------------------------------------------------------------------------//
@@ -281,7 +281,7 @@ void	CalcAirplaneLoads(void)
 			Element[i].vNormal = Vector(	(float)sin(in), 
 											(float)(cos(in)*sin(di)), 
 											(float)(cos(in)*cos(di))); // surface normal vector
-			Element[i].vNormal.Normalize();
+			Element[i].vNormal.normalize();
 		}
 
 		// Calculate local velocity at element
@@ -291,7 +291,7 @@ void	CalcAirplaneLoads(void)
 		vLocalVelocity = Airplane.vVelocityBody + vtmp; 
 
 		// Calculate local air speed
-		fLocalSpeed = vLocalVelocity.Magnitude();
+		fLocalSpeed = vLocalVelocity.magnitude();
 
 		// Find the direction in which drag will act.
 		// Drag always acts inline with the relative velocity but in the opposing direction
@@ -301,8 +301,8 @@ void	CalcAirplaneLoads(void)
 		// Find the direction in which lift will act.
 		// Lift is always perpendicular to the drag vector
 		vLiftVector = (vDragVector^Element[i].vNormal)^vDragVector;
-		tmp = vLiftVector.Magnitude();
-		vLiftVector.Normalize();
+		tmp = vLiftVector.magnitude();
+		vLiftVector.normalize();
 
 		// Find the angle of attack.
 		// The attack angle is the angle between the lift vector and the
@@ -448,7 +448,7 @@ void	StepSimulation(float dt)
 									(0.5f * dt);
 
 		// now normalize the orientation quaternion:
-		mag = Airplane.qOrientation.Magnitude();
+		mag = Airplane.qOrientation.magnitude();
 		if (mag != 0)
 			Airplane.qOrientation /= mag;
 
@@ -457,7 +457,7 @@ void	StepSimulation(float dt)
 		Airplane.vVelocityBody = QVRotate(~Airplane.qOrientation, Airplane.vVelocity);
 		
 		// calculate the air speed:
-		Airplane.fSpeed = Airplane.vVelocity.Magnitude();
+		Airplane.fSpeed = Airplane.vVelocity.magnitude();
 
 		// get the Euler angles for our information
 		Vector u;

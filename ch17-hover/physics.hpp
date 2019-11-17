@@ -1,8 +1,7 @@
 #ifndef _PHYSICS
 #define _PHYSICS
 
-
-#include "math_util.hpp"
+#include "common/Vector.hpp"
 
 //------------------------------------------------------------------------//
 // Notes:

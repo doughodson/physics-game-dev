@@ -1,7 +1,9 @@
 #ifndef _PHYSICS
 #define _PHYSICS
 
-#include "math_util.hpp"
+#include "common/Vector.hpp"
+#include "common/Matrix3x3.hpp"
+#include "common/Quaternion.hpp"
 
 //------------------------------------------------------------------------//
 // Notes:
