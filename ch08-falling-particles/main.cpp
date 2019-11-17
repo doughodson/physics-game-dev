@@ -133,11 +133,11 @@ bool	CheckForCollisions(Particle* p)
 		{
 				r = p->fRadius + Obstacles[i].fRadius;
 				d = p->vPosition - Obstacles[i].vPosition;
-				s = d.Magnitude() - r;
+				s = d.magnitude() - r;
 
 				if(s <= _COLLISION_TOL)
 				{
-					d.Normalize();
+					d.normalize();
 					n = d;
 					vr = p->vVelocity - Obstacles[i].vVelocity;
 					vrn = vr*n;

@@ -4,7 +4,8 @@
 // Example: Realtime Particle Simulation, Chapter 8, Example 1
 //---------------------------------------------------------------------------
 
-#include "Particle.h"
+#include "Particle.hpp"
+
 #include "winmain.h"
 
 Particle::Particle()
@@ -44,7 +45,7 @@ void Particle::CalcLoads()
 		Vector	vDrag;
 		float	fDrag;
 		vDrag-=vVelocity;
-		vDrag.Normalize();
+		vDrag.normalize();
 		fDrag = static_cast<float>(0.5 * _AIRDENSITY * fSpeed * fSpeed * (3.14159 * fRadius * fRadius) * _DRAGCOEFFICIENT);
 		vDrag*=fDrag;
 
@@ -64,15 +65,15 @@ void Particle::UpdateBodyEuler(const double dt)
 
    // Integrate equation of motion:
    Vector a = vForces / fMass;
-		
+
    Vector dv = a * dt;
    vVelocity += dv;
 
    Vector ds = vVelocity * dt;
    vPosition += ds;
-	
+
    // Misc. calculations:
-   fSpeed = vVelocity.Magnitude();		
+   fSpeed = vVelocity.magnitude();		
 }
 
 void Particle::Draw()

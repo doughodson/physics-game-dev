@@ -1,8 +1,8 @@
 
 #include <iostream>
 
-#include "Vector.hpp"
-#include "Matrix3x3.hpp"
+#include "common/Vector.hpp"
+#include "common/Matrix3x3.hpp"
 
 using namespace std;
 

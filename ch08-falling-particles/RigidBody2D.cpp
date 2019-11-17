@@ -1,6 +1,9 @@
 
-#include "RigidBody2D.h"
-#include "mymath.h"
+#include "RigidBody2D.hpp"
+
+#include "common/constants.hpp"
+#include "common/Vector.hpp"
+#include "common/math_utils.hpp"
 
 void RigidBody2D::CalcLoads()
 {
@@ -47,19 +50,19 @@ void RigidBody2D::CalcLoads()
 		vLocalVelocity = vVelocityBody + vtmp; 
 
 		// Calculate local air speed
-		fLocalSpeed = vLocalVelocity.Magnitude();
+		fLocalSpeed = vLocalVelocity.magnitude();
 
 		// Find the direction in which drag will act.
 		// Drag always acts inline with the relative velocity but in the opposing direction
 		if(fLocalSpeed > tol) 
 		{
-			vLocalVelocity.Normalize();
+			vLocalVelocity.normalize();
 			vDragVector = -vLocalVelocity;		
 
 			// Determine the resultant force on the element.
 			double f;
-			if((Thrust * vLocalVelocity)/(Thrust.Magnitude() * vLocalVelocity.Magnitude()) > 0)
-				f = 2;	
+			if((Thrust * vLocalVelocity)/(Thrust.magnitude() * vLocalVelocity.magnitude()) > 0)
+				f = 2;
 			else
 				f = 1;
 
@@ -99,8 +102,7 @@ void RigidBody2D::CalcLoads()
 		Mb += vtmp;
 
 		// Calculate rotational drag
-		if(vAngularVelocity.Magnitude() > tol)
-		{
+		if(vAngularVelocity.magnitude() > tol) {
 			vtmp.x = 0;
 			vtmp.y = 0;
 			tmp = 0.5f * rho * vAngularVelocity.z*vAngularVelocity.z * ProjectedArea;
@@ -154,7 +156,7 @@ void RigidBody2D::UpdateBodyEuler(double dt)
 		fOrientation += dr; 
 		
 		// Misc. calculations:
-		fSpeed = vVelocity.Magnitude();		
+		fSpeed = vVelocity.magnitude();		
 		vVelocityBody = VRotate2D(-fOrientation, vVelocity);	
 }
 

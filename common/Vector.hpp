@@ -1,14 +1,14 @@
 
-#ifndef _Vector_HPP_
-#define _Vector_HPP_
+#ifndef __Vector_HPP__
+#define __Vector_HPP__
 
 #include <cmath>
 
-#include "math-utils.hpp"
+#include "constants.hpp"
 
 //------------------------------------------------------------------------
-// class: Vector
-// description: a 3D vector
+// Class: Vector
+// Description: a 3D vector
 //------------------------------------------------------------------------
 class Vector
 {
@@ -146,14 +146,6 @@ inline Vector operator*(const Vector u, const float s)
 inline Vector operator/(const Vector u, const float s)
 {
    return Vector(u.x/s, u.y/s, u.z/s);
-}
-
-
-inline float TripleScalarProduct(const Vector u, const Vector v, const Vector w)
-{
-   return static_cast<float>((u.x * ( v.y*w.z - v.z*w.y)) +
-                             (u.y * (-v.x*w.z + v.z*w.x)) +
-                             (u.z * ( v.x*w.y - v.y*w.x)));
 }
 
 #endif

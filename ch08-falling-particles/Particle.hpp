@@ -2,7 +2,7 @@
 #ifndef __Particle_HPP__
 #define __Particle_HPP__
 
-#include "mymath.h"
+#include "common/Vector.hpp"
 
 #define _GRAVITYACCELERATION -9.8f  // Acceleration due to gravity in m/s^2
 #define _DRAGCOEFFICIENT      0.6f  // Nondimensional drag coefficient 

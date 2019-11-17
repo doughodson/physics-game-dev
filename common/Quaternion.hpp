@@ -5,7 +5,7 @@
 #include <cmath>
 
 #include "Vector.hpp"
-#include "math-utils.hpp"
+#include "math_utils.hpp"
 
 class Quaternion
 {

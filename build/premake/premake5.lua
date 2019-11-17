@@ -16,6 +16,8 @@ end
 DX7_IncPath         = "c:/apps/dx7-sdk/include"
 DX7_LibPath         = "c:/apps/dx7-sdk/lib"
 
+COMMON_IncPath      = "../../"
+
 --
 -- 3rd party library names
 --
@@ -35,7 +37,6 @@ local function createConsoleProject(projectName, targetName)
         "../../" .. projectName .. "/**.c*",
         "../../" .. projectName .. "/**.rc"
      })
-     includedirs({ DX7_IncPath })
      libdirs({ DX7_LibPath })
      links({ LibDX7, LibWindows })
 end
@@ -52,7 +53,6 @@ local function createMFCProject(projectName, targetName)
         "../../" .. projectName .. "/**.c*",
         "../../" .. projectName .. "/**.rc"
      })
-     includedirs({ DX7_IncPath })
      libdirs({ DX7_LibPath })
      links({ LibDX7, LibWindows })
 end
@@ -71,6 +71,9 @@ workspace("physics-game-dev")
    --     Debug          (Application linked to Multi-threaded Debug DLL)
    --
    configurations({ "Release", "Debug" })
+
+   -- common include directories (all configurations/all projects)
+   includedirs({ DX7_IncPath, COMMON_IncPath })
 
    -- visual studio options and warnings
    -- /wd4351 (C4351 warning) - disable warning associated with array brace initialization
