@@ -22,9 +22,9 @@
 
 #define RENDER_FRAME_COUNT 300
 
-// Global Variables:
+// globals
 HINSTANCE hInst;            // current instance
-int nShowCmd;               // current show command	
+int nShowCmd;               // current show command
 char szAppName[] = APPNAME; // The name of this application
 char szTitle[]   = APPNAME; // The title bar text
 HWND hTheMainWindow;
@@ -36,15 +36,13 @@ BOOL Initialized = false;
 float TotalTime = 0;
 int FrameCounter = RENDER_FRAME_COUNT;
 
-
-// Foward declarations of functions included in this code module:
+// foward declaration of functions
 BOOL InitApplication(HINSTANCE);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void NullEvent();
 BOOL IsKeyDown(short KeyCode);
 
-// externals
 extern RigidBody Airplane;
 extern d3dInfo D3D;
 extern LPDIRECT3DRMWINDEVICE WinDev;
@@ -52,9 +50,7 @@ extern float ThrustForce;
 extern bool Stalling;
 extern bool Flaps;
 
-//----------------------------------------------------------------------------------------------------//
-
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, const int nCmdShow)
 {
    MSG msg;
    HANDLE hAccelTable;
@@ -114,11 +110,11 @@ BOOL InitApplication(HINSTANCE hInstance)
    wc.cbClsExtra    = 0;
    wc.cbWndExtra    = 0;
    wc.hInstance     = hInstance;
-   wc.hIcon         = NULL;//LoadIcon (hInstance, MAKEINTRESOURCE(IDI_MAINICON));
-   wc.hCursor       = LoadCursor(NULL, IDC_ARROW);//NULL
-   wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);//(HBRUSH)(COLOR_WINDOW+1);
+   wc.hIcon         = NULL;                                  // LoadIcon (hInstance, MAKEINTRESOURCE(IDI_MAINICON));
+   wc.hCursor       = LoadCursor(NULL, IDC_ARROW);           // NULL
+   wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);   // (HBRUSH)(COLOR_WINDOW+1);
 
-   wc.lpszMenuName = NULL; //MAKEINTRESOURCE(IDR_MAINMENU);//"MAINMENU";
+   wc.lpszMenuName = NULL; // MAKEINTRESOURCE(IDR_MAINMENU); // "MAINMENU";
 
    wc.lpszClassName = szAppName;
 
@@ -131,11 +127,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    nShowCmd = nCmdShow;
 
-    hTheMainWindow = CreateWindow( szAppName,
-                                   szTitle,
-                                   WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-                                   0, 0, 640, 480,
-                                   NULL, NULL, hInst, NULL);
+    hTheMainWindow = CreateWindow(szAppName,
+                                  szTitle,
+                                  WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
+                                  0, 0, 640, 480,
+                                  NULL, NULL, hInst, NULL);
 
    if (!CreateD3DRMObject())
       return (FALSE);
@@ -174,8 +170,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          break;
 
       case WM_COMMAND:
-         wmId    = LOWORD(wParam); 
-         wmEvent = HIWORD(wParam); 
+         wmId    = LOWORD(wParam);
+         wmEvent = HIWORD(wParam);
          return (0);
          break;
 
@@ -208,7 +204,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                WinDev->Release();
          }
 
-         EndPaint(hTheMainWindow, (LPPAINTSTRUCT) &ps);				
+         EndPaint(hTheMainWindow, (LPPAINTSTRUCT) &ps);
          return (0);
          break;
 
@@ -220,10 +216,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void NullEvent()
 {
-   Vector vz, vx;
-   char buf[256];
-   char s[256];
-
    ZeroRudder();
    ZeroAilerons();
    ZeroElevators();
@@ -277,7 +269,7 @@ void NullEvent()
 
    TotalTime += dt;
    //if(TotalTime > 1.6f)
-      StepSimulation(dt);
+   StepSimulation(dt);
 
    if (FrameCounter >= RENDER_FRAME_COUNT) {
       // Direct3D x = - our y
@@ -285,8 +277,8 @@ void NullEvent()
       // Direct3D z = our x
       SetCameraPosition(-Airplane.vPosition.y, Airplane.vPosition.z, Airplane.vPosition.x);
 
-      vz = GetBodyZAxisVector(); // pointing up in our coordinate system
-      vx = GetBodyXAxisVector(); // pointing forward in our coordinate system
+      Vector vz{GetBodyZAxisVector()}; // pointing up in our coordinate system
+      Vector vx{GetBodyXAxisVector()}; // pointing forward in our coordinate system
       SetCameraOrientation( -vx.y, vx.z, vx.x,
                             -vz.y, vz.z, vz.x);
       Render();
@@ -294,24 +286,26 @@ void NullEvent()
 
       //OldTime = NewTime;
 
-      // Report stats in window title	
-      std::sprintf( buf, "Roll= %.2f ; ", Airplane.vEulerAngles.x);
+      // Report stats in window title
+      char buf[256];
+      char s[256];
+      std::sprintf(buf, "Roll= %.2f ; ", Airplane.vEulerAngles.x);
       std::strcpy(s, buf);
-      std::sprintf( buf, "Pitch= %.2f ; ", -Airplane.vEulerAngles.y); // take negative here since pilots like to see positive pitch as nose up
+      std::sprintf(buf, "Pitch= %.2f ; ", -Airplane.vEulerAngles.y); // take negative here since pilots like to see positive pitch as nose up
       std::strcat(s, buf);
-      std::sprintf( buf, "Yaw= %.2f ; ", Airplane.vEulerAngles.z);
+      std::sprintf(buf, "Yaw= %.2f ; ", Airplane.vEulerAngles.z);
       std::strcat(s, buf);
-      std::sprintf( buf, "Alt= %.0f ; ", Airplane.vPosition.z);
+      std::sprintf(buf, "Alt= %.0f ; ", Airplane.vPosition.z);
       std::strcat(s, buf);
-      std::sprintf( buf, "T= %.0f ; ", ThrustForce);
+      std::sprintf(buf, "T= %.0f ; ", ThrustForce);
       std::strcat(s, buf);
-      std::sprintf( buf, "S= %.0f ", Airplane.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
+      std::sprintf(buf, "S= %.0f ", Airplane.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
       std::strcat(s, buf);
       if (Flaps)
          std::strcat(s, "; Flaps");
 
       if (Stalling) {
-         std::strcat(s, "; Stall!");	
+         std::strcat(s, "; Stall!");
          Beep(10000, 250);
       }
 
