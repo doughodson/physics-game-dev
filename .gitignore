@@ -47,6 +47,8 @@ volume_d.exe
 *.ilk
 *.aps
 
+.vscode/
+
 ex01
 ex02
 

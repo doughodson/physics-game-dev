@@ -13,10 +13,6 @@
 class Vector
 {
 public:
-   float x{};
-   float y{};
-   float z{};
-
    Vector() = default;
    Vector(const float xi, const float yi, const float zi);
 
@@ -30,6 +26,10 @@ public:
    Vector& operator/=(const float);
 
    Vector operator-();
+
+   float x{};
+   float y{};
+   float z{};
 };
 
 inline Vector::Vector(const float xi, const float yi, const float zi)

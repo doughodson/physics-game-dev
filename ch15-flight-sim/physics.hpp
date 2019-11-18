@@ -22,14 +22,14 @@
 //                Y------+
 //
 //
-// Body coordinates: x points to the front	
+// Body coordinates: x points to the front
 //                   y points to left
 //                   z points up 
 //
 // Note:  Direct3D's coordinates system is a left handed one with the z-axis pointing
 //        into the screen, the x-axis pointing to the right and the y-axis pointing up
 //
-// Units: English system,			
+// Units: English system,
 //          distance     --> feet
 //          time         --> seconds
 //          mass         --> slugs
@@ -46,7 +46,9 @@
 //------------------------------------------------------------------------
 typedef struct _RigidBody
 {
-   float fMass;               // total mass (constant)
+   _RigidBody() = default;
+
+   float fMass{};             // total mass (constant)
    Matrix3x3 mInertia;        // mass moment of inertia in body coordinates (constant)
    Matrix3x3 mInertiaInverse; // inverse of mass moment of inertia matrix	(constant)
 
@@ -55,10 +57,10 @@ typedef struct _RigidBody
    Vector vVelocityBody;      // velocity in body coordinates
    Vector vAngularVelocity;   // angular velocity in body coordinates
    Vector vEulerAngles;       // Euler angles in body coordinates
-   float fSpeed;              // speed (magnitude of the velocity)
+   float fSpeed{};            // speed (magnitude of the velocity)
 
-   Quaternion	qOrientation;	// orientation in earth coordinates
-   //Matrix3x3	mRotation;		// rotation matrix
+   Quaternion qOrientation;   // orientation in earth coordinates
+   //Matrix3x3 mRotation;     // rotation matrix
 
    Vector vForces;            // total force on body
    Vector vMoments;           // total moment (torque) on body
@@ -73,29 +75,30 @@ typedef struct _RigidBody
 
 typedef struct _BodyElement
 {
-   float	fMass;
+   _BodyElement() = default;
+
+   float fMass{};
    Vector vDCoords;
    Vector vCGCoords;
    Vector vLocalInertia;
-   float fIncidence;
-   float fDihedral;
+   float fIncidence{};
+   float fDihedral{};
    Vector vNormal;
-   float fArea;
-   int iFlap;
+   float fArea{};
+   int iFlap{};
 } BodyElement, *pBodyElement;
 
-
 void InitializeAirplane();
-void CalcAirplaneMassProperties();  // calcs total mass and inertia
-void CalcAirplaneLoads();           // calcs total forces and moments
-void StepSimulation(float dt);      // step dt time in the simulation
+void CalcAirplaneMassProperties();   // calcs total mass and inertia
+void CalcAirplaneLoads();            // calcs total forces and moments
+void StepSimulation(const float dt); // step dt time in the simulation
 Vector GetBodyZAxisVector();
 Vector GetBodyXAxisVector();
 Matrix3x3 MakeAngularVelocityMatrix(Vector u);
-float LiftCoefficient(float angle, int flaps);
-float DragCoefficient(float angle, int flaps);
-float RudderLiftCoefficient(float angle);
-float RudderDragCoefficient(float angle);
+float LiftCoefficient(const float angle, const int flaps);
+float DragCoefficient(const float angle, const int flaps);
+float RudderLiftCoefficient(const float angle);
+float RudderDragCoefficient(const float angle);
 void IncThrust();
 void DecThrust();
 void LeftRudder();
