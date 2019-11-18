@@ -23,8 +23,8 @@ falling-particles.exe
 falling-particles_d.exe
 
 # chapter 9
-rigid_body-2D.exe
-rigid_body-2D_d.exe
+rigid-body-2D.exe
+rigid-body-2D_d.exe
 
 # chapter 13
 cloth-sim.exe

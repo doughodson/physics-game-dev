@@ -1,41 +1,39 @@
-//----------------------------------------------------------------------------------------------------//
-/*
-	PHYSICS FOR GAME DEVELOPERS
-	
-	CHAPTERS 7 & 15 EXAMPLE PROGRAM
+//----------------------------------------------------------------------------------------------------
+//
+// PHYSICS FOR GAME DEVELOPERS
+//	
+// CHAPTERS 7 & 15 EXAMPLE PROGRAM
+//
+// NAME:      FlightSim
+// PURPOSE:   To demonstrate 3D rigid body flight simulation
+// BY:        David Bourg
+// DATE:      07/24/00
+// COPYRIGHT: Copyright 2000 by David Bourg
+//----------------------------------------------------------------------------------------------------
 
-	NAME:		FlightSim
-	PURPOSE:	To demonstrate 3D rigid body flight simulation
-	BY:			David Bourg
-	DATE:		07/24/00
-	COPYRIGHT:	Copyright 2000 by David Bourg
-*/
-//----------------------------------------------------------------------------------------------------//
 #include "physics.hpp"
 
 #define	_DTHRUST	10.0f
 #define	_MAXTHRUST	3000.0f
 
-//------------------------------------------------------------------------//
-// Global variables
-//------------------------------------------------------------------------//
-RigidBody	Airplane;		// Rigid body properties of our airplane
-BodyElement	Element[8];		// Mass, inertia and lifting surface properties of our airplane
-Vector		Thrust;			// Thrust vector, assumed to act through the plane's CG
-float		ThrustForce;	// Magnitude of the thrust force
-bool		Stalling;		// Flag to let us know if we are in a stalled condition
-bool		Flaps;			// Flag to let us know if the flaps are down
+//------------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------------
+RigidBody Airplane;     // Rigid body properties of our airplane
+BodyElement Element[8]; // Mass, inertia and lifting surface properties of our airplane
+Vector Thrust;          // Thrust vector, assumed to act through the plane's CG
+float ThrustForce;      // Magnitude of the thrust force
+bool Stalling;          // Flag to let us know if we are in a stalled condition
+bool Flaps;             // Flag to let us know if the flaps are down
 
-//------------------------------------------------------------------------//
+//------------------------------------------------------------------------
 // This function sets the initial state of the plane, i.e., its initial
 // location, and speed, along with its thrust and attitude.
 // This function also calls another function to calculate the plane's mass
 // properties.
-//------------------------------------------------------------------------//
-void	InitializeAirplane(void)
-{	
-	float iRoll, iPitch, iYaw;
-
+//------------------------------------------------------------------------
+void InitializeAirplane()
+{
 	// Set initial position
 	Airplane.vPosition.x = -5000.0f;
 	Airplane.vPosition.y = 0.0f;
@@ -71,13 +69,11 @@ void	InitializeAirplane(void)
 	Stalling = false;
 	Flaps = false;
 
-	// Set the initial orientation
-	iRoll = 0.0f;
-	iPitch = 0.0f;
-	iYaw = 0.0f;
+   // set initial orientation
+   const float iRoll{}, iPitch{}, iYaw{};
 	Airplane.qOrientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
-	
-	// Now go ahead and calculate the plane's mass properties
+
+	// calculate the plane's mass properties
 	CalcAirplaneMassProperties();
 }
 
