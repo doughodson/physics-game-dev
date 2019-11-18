@@ -71,8 +71,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
    OldTime = timeGetTime();
    NewTime = OldTime;
-   // Main message loop:
-   while (1) {
+   // message loop
+   while (true) {
       while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
          if (msg.message == WM_QUIT) {
             return msg.wParam;
@@ -113,9 +113,7 @@ BOOL InitApplication(HINSTANCE hInstance)
    wc.hIcon         = NULL;                                  // LoadIcon (hInstance, MAKEINTRESOURCE(IDI_MAINICON));
    wc.hCursor       = LoadCursor(NULL, IDC_ARROW);           // NULL
    wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);   // (HBRUSH)(COLOR_WINDOW+1);
-
    wc.lpszMenuName = NULL; // MAKEINTRESOURCE(IDR_MAINMENU); // "MAINMENU";
-
    wc.lpszClassName = szAppName;
 
    return RegisterClass(&wc);
@@ -155,7 +153,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
    int wmId, wmEvent;
-   BOOL validmenu = FALSE;	
+   BOOL validmenu = FALSE;
    int selection =0;
    PAINTSTRUCT ps;
    HDC pDC;
