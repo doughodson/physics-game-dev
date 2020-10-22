@@ -219,8 +219,8 @@ inline Vector MakeEulerAnglesFromQ(const Quaternion q)
    Vector u;
    const double tmp{std::fabs(r31)};
    if (tmp > 0.999999) {
-      const double r12 = 2 * (q.v.x*q.v.y - q.n*q.v.z);
-      const double r13 = 2 * (q.v.x*q.v.z + q.n*q.v.y);
+      const double r12{2.0 * (q.v.x*q.v.y - q.n*q.v.z)};
+      const double r13{2.0 * (q.v.x*q.v.z + q.n*q.v.y)};
 
       u.x = RadiansToDegrees(0.0f);                                           // roll
       u.y = RadiansToDegrees(static_cast<float>(-(pi/2) * r31/tmp));          // pitch
