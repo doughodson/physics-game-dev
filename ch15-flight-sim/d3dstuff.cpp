@@ -3,9 +3,9 @@
 
 #include <cmath>
 
-d3dInfo D3D;
-LPDIRECT3DRMWINDEVICE WinDev;
-texInfo Texture;
+d3dInfo D3D{};
+LPDIRECT3DRMWINDEVICE WinDev{};
+texInfo Texture{};
 
 BOOL CreateD3DRMObject()
 {
@@ -42,10 +42,7 @@ BOOL CreateViewPort(const HWND hwnd)
 
 BOOL CreateDevice(const HWND hwnd)
 {
-   RECT rect;
-   int devCaps;
-   HDC hdc;
- 
+   RECT rect{};
    GetClientRect(hwnd, &rect);  
    if (FAILED(D3D.D3DRM->CreateDeviceFromClipper(D3D.DDClipper,
                                                  NULL,
@@ -55,53 +52,53 @@ BOOL CreateDevice(const HWND hwnd)
       return FALSE;
    }
 
-   hdc = GetDC(hwnd);
-   devCaps = GetDeviceCaps(hdc, BITSPIXEL);
+   const HDC hdc{GetDC(hwnd)};
+   const int devCaps{GetDeviceCaps(hdc, BITSPIXEL)};
    ReleaseDC(hwnd, hdc);
-    
-    switch (devCaps) {
-    case 1:
-        if (FAILED(D3D.Device->SetShades(4)))
-            return FALSE;
 
-        if (FAILED(D3D.D3DRM->SetDefaultTextureShades(4)))
-            return FALSE;
+   switch (devCaps) {
+   case 1:
+      if (FAILED(D3D.Device->SetShades(4)))
+         return FALSE;
 
-        break;
+      if (FAILED(D3D.D3DRM->SetDefaultTextureShades(4)))
+         return FALSE;
 
-    case 16:
-        if (FAILED(D3D.Device->SetShades(32)))
-            return FALSE;
+      break;
 
-        if (FAILED(D3D.D3DRM->SetDefaultTextureColors(64)))
-            return FALSE;
+   case 16:
+      if (FAILED(D3D.Device->SetShades(32)))
+         return FALSE;
 
-        if (FAILED(D3D.D3DRM->SetDefaultTextureShades(32)))
-            return FALSE;
+      if (FAILED(D3D.D3DRM->SetDefaultTextureColors(64)))
+         return FALSE;
 
-        if (FAILED(D3D.Device->SetDither(FALSE)))
-            return FALSE;
-        break;
+      if (FAILED(D3D.D3DRM->SetDefaultTextureShades(32)))
+          return FALSE;
 
-    case 24:
-    case 32:
-        if (FAILED(D3D.Device->SetShades(256)))
-            return FALSE;
+      if (FAILED(D3D.Device->SetDither(FALSE)))
+          return FALSE;
+      break;
 
-        if (FAILED(D3D.D3DRM->SetDefaultTextureColors(64)))
-            return FALSE;
+   case 24:
+   case 32:
+      if (FAILED(D3D.Device->SetShades(256)))
+          return FALSE;
 
-        if (FAILED(D3D.D3DRM->SetDefaultTextureShades(256)))
-            return FALSE;
+      if (FAILED(D3D.D3DRM->SetDefaultTextureColors(64)))
+          return FALSE;
 
-        if (FAILED(D3D.Device->SetDither(FALSE)))
-            return FALSE;
-        break;
+      if (FAILED(D3D.D3DRM->SetDefaultTextureShades(256)))
+          return FALSE;
 
-    default:
-        if (FAILED(D3D.Device->SetDither(FALSE)))
-            return FALSE;
-    }
+      if (FAILED(D3D.Device->SetDither(FALSE)))
+          return FALSE;
+      break;
+
+   default:
+      if (FAILED(D3D.Device->SetDither(FALSE)))
+         return FALSE;
+   }
 
    D3D.Device->SetQuality(D3DRMRENDER_GOURAUD);
  
@@ -238,10 +235,10 @@ void CleanUp()
 
 BOOL SetupSceneLights()
 {
-   LPDIRECT3DRMMESHBUILDER builder = NULL;
-   LPDIRECT3DRMLIGHT light = NULL;
-   LPDIRECT3DRMFRAME frame = NULL;
-   BOOL retval = TRUE;
+   LPDIRECT3DRMMESHBUILDER builder{NULL};
+   LPDIRECT3DRMLIGHT light{NULL};
+   LPDIRECT3DRMFRAME frame{NULL};
+   BOOL retval{TRUE};
 
    // create ambient light first
    if (FAILED(D3D.D3DRM->CreateMeshBuilder(&builder)))
@@ -356,8 +353,8 @@ BOOL SetupSceneLights()
 
 BOOL LoadBackground()
 {
-   LPDIRECT3DRMTEXTURE tex;
-   BOOL retval = true;
+   LPDIRECT3DRMTEXTURE tex{};
+   BOOL retval{true};
 
    D3D.D3DRM->LoadTexture("clouds.ppm", &tex);
 
@@ -371,13 +368,13 @@ BOOL LoadBackground()
 
 BOOL LoadObject(LPDIRECT3DRMFRAME fr, char *ftex, char *fname, float sx, float sy, float sz, float x, float y, float z, BOOL makechild)
 {
-   LPDIRECT3DRMMESHBUILDER builder;
-   LPDIRECT3DRMFRAME frame;
-   BOOL retval = true;
-   LPDIRECT3DRMTEXTURE tex = 0;
-   LPDIRECT3DRMMATERIAL mat = NULL;
-   LPDIRECT3DRMWRAP wrap = NULL;
-   LPDIRECT3DRMMESH mesh = 0;
+   LPDIRECT3DRMMESHBUILDER builder{};
+   LPDIRECT3DRMFRAME frame{};
+   BOOL retval{true};
+   LPDIRECT3DRMTEXTURE tex{0};
+   LPDIRECT3DRMMATERIAL mat{NULL};
+   LPDIRECT3DRMWRAP wrap{NULL};
+   LPDIRECT3DRMMESH mesh{0};
 
    if (D3D.D3DRM->LoadTexture (ftex, &tex) == D3DRM_OK) {
       D3D.D3DRM->CreateMaterial(Texture.power, &mat);
@@ -458,9 +455,9 @@ HRESULT LoadTexture(char *name, void *arg, LPDIRECT3DRMTEXTURE *tex)
 
 void MoveCamera(const float d)
 {
-   D3DVECTOR vpos;
-   D3DVECTOR vdir;
-   D3DVECTOR vup;
+   D3DVECTOR vpos{};
+   D3DVECTOR vdir{};
+   D3DVECTOR vup{};
 
    GetCameraPosition(&vpos);
 
@@ -486,7 +483,7 @@ void MoveCamera(const float d)
 
 void StraifCamera(const float d)
 {
-   D3DVECTOR ux, uy, uz, vpos;
+   D3DVECTOR ux{}, uy{}, uz{}, vpos{};
 
    GetCameraUnitVectors(&ux, &uy, &uz);
    GetCameraPosition(&vpos);
@@ -526,7 +523,7 @@ void GetCameraUnitVectors(D3DVECTOR* vx, D3DVECTOR* vy, D3DVECTOR* vz)
 void NormalizeVector(D3DVECTOR* v)
 {
    float	mag{static_cast<float>(std::sqrt(v->x*v->x + v->y*v->y + v->z*v->z))};
-   if (mag == 0) mag = 1;
+   if (mag == 0) mag = 1.0f;
    v->x /= mag;
    v->y /= mag;
    v->z /= mag;
@@ -536,7 +533,7 @@ void NormalizeVector(D3DVECTOR* v)
 void YawCameraBy(const float ar)
 {
    // temporary
-   D3DVECTOR ux, uy, uz;
+   D3DVECTOR ux{}, uy{}, uz{};
 
    GetCameraUnitVectors(&ux, &uy, &uz);
    D3D.Camera->SetRotation(D3D.Scene, uy.x, uy.y, uy.z, ar);
@@ -546,7 +543,7 @@ void YawCameraBy(const float ar)
 void PitchCameraBy(const float ar)
 {
    // temporary
-   D3DVECTOR ux, uy, uz;
+   D3DVECTOR ux{}, uy{}, uz{};
 
    GetCameraUnitVectors(&ux, &uy, &uz);
    D3D.Camera->SetRotation(D3D.Scene, ux.x, ux.y, ux.z, ar);
@@ -556,7 +553,7 @@ void PitchCameraBy(const float ar)
 void	RollCameraBy(const float ar)
 {
    // temporary
-   D3DVECTOR	ux, uy, uz;
+   D3DVECTOR ux{}, uy{}, uz{};
 
    GetCameraUnitVectors(&ux, &uy, &uz);
    D3D.Camera->SetRotation(D3D.Scene, uz.x, uz.y, uz.z, ar);

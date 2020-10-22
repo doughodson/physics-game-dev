@@ -265,6 +265,7 @@ void NullEvent()
    if (dt > (0.016f)) dt = (0.016f);
    if (dt < 0.001f) dt = 0.001f;
 
+   Sleep(0.9);
    TotalTime += dt;
    //if(TotalTime > 1.6f)
    StepSimulation(dt);
@@ -315,7 +316,7 @@ void NullEvent()
 
 BOOL IsKeyDown(short KeyCode)
 {
-   SHORT	retval{GetAsyncKeyState(KeyCode)};
+   SHORT retval{GetAsyncKeyState(KeyCode)};
 
    if (HIBYTE(retval))
       return TRUE;

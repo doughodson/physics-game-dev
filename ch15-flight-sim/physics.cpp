@@ -181,7 +181,7 @@ void CalcAirplaneMassProperties()
    }
 
    // calculate total mass
-   float	mass{};
+   float mass{};
    for (int i{}; i< 8; i++) {
       mass += Element[i].fMass;
    }
@@ -200,7 +200,7 @@ void CalcAirplaneMassProperties()
 
    // calculate the moments and products of inertia for the combined elements
    // (This inertia matrix (tensor) is in body coordinates)
-   float	Ixx{}, Iyy{}, Izz{}, Ixy{}, Ixz{}, Iyz{};
+   float Ixx{}, Iyy{}, Izz{}, Ixy{}, Ixz{}, Iyz{};
    for (int i{}; i< 8; i++) {
       Ixx += Element[i].vLocalInertia.x + 
              Element[i].fMass * (Element[i].vCGCoords.y * Element[i].vCGCoords.y + Element[i].vCGCoords.z * Element[i].vCGCoords.z);
@@ -520,7 +520,7 @@ Vector GetBodyXAxisVector()
 
 Matrix3x3 MakeAngularVelocityMatrix(Vector u)
 {
-   return Matrix3x3(	0.0f, -u.z, u.y,
+   return Matrix3x3( 0.0f, -u.z, u.y,
                      u.z, 0.0f, -u.x,
                     -u.y, u.x, 0.0f);
 }
@@ -593,11 +593,11 @@ float DragCoefficient(const float angle, const int flaps)
 //  Given the attack angle this function returns the proper lift coefficient
 //  for a symmetric (no camber) airfoil without flaps.
 //------------------------------------------------------------------------
-float	RudderLiftCoefficient(const float angle)
+float RudderLiftCoefficient(const float angle)
 {
    float clf0[7] = {0.16f, 0.456f, 0.736f, 0.968f, 1.144f, 1.12f, 0.8f};
    float a[7]    = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
-   float	aa{static_cast<float>(std::fabs(angle))};
+   float aa{static_cast<float>(std::fabs(angle))};
 
    float cl{};
    for (int i{}; i<6; i++) {
@@ -614,11 +614,11 @@ float	RudderLiftCoefficient(const float angle)
 //  Given the attack angle this function returns the proper drag coefficient
 //  for a symmetric (no camber) airfoil without flaps.
 //------------------------------------------------------------------------
-float	RudderDragCoefficient(const float angle)
+float RudderDragCoefficient(const float angle)
 {
    float cdf0[7] = {0.0032f, 0.0072f, 0.0104f, 0.0184f, 0.04f, 0.096f, 0.168f};
    float a[7]	 = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
-   float	aa{static_cast<float>(std::fabs(angle))};
+   float aa{static_cast<float>(std::fabs(angle))};
 
    float cd{0.75f};
    for (int i{}; i<6; i++) {
