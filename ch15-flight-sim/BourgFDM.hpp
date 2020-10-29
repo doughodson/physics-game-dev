@@ -1,5 +1,7 @@
-#ifndef _PHYSICS
-#define _PHYSICS
+#ifndef __BourgFDM_HPP__
+#define __BourgFDM_HPP__
+
+#include "RigidBody.hpp"
 
 #include "common/Vector.hpp"
 #include "common/Matrix3x3.hpp"
@@ -41,52 +43,15 @@
 //
 //
 
-//------------------------------------------------------------------------
-// Rigid body structure
-//------------------------------------------------------------------------
-typedef struct _RigidBody
+//------------------------------------------------------------------------------
+// Class: BourgFDM
+// Description: Behavior of a rigid body as defined in Bourg book
+//------------------------------------------------------------------------------
+class BourgFDM
 {
-   _RigidBody() = default;
+   BourgFDM() = default;
 
-   float fMass{};             // total mass (constant)
-   Matrix3x3 mInertia;        // mass moment of inertia in body coordinates (constant)
-   Matrix3x3 mInertiaInverse; // inverse of mass moment of inertia matrix	(constant)
-
-   Vector vPosition;          // position in earth coordinates
-   Vector vVelocity;          // velocity in earth coordinates
-   Vector vVelocityBody;      // velocity in body coordinates
-   Vector vAngularVelocity;   // angular velocity in body coordinates
-   Vector vEulerAngles;       // Euler angles in body coordinates
-   float fSpeed{};            // speed (magnitude of the velocity)
-
-   Quaternion qOrientation;   // orientation in earth coordinates
-   //Matrix3x3 mRotation;     // rotation matrix
-
-   Vector vForces;            // total force on body
-   Vector vMoments;           // total moment (torque) on body
-
-   Matrix3x3 mIeInverse;      // inverse of moment of inertia in earth coordinates
-
-// testing...
-   Vector p1, p2;
-// ... end testing
-
-} RigidBody, *pRigidBody;
-
-typedef struct _BodyElement
-{
-   _BodyElement() = default;
-
-   float fMass{};
-   Vector vDCoords;
-   Vector vCGCoords;
-   Vector vLocalInertia;
-   float fIncidence{};
-   float fDihedral{};
-   Vector vNormal;
-   float fArea{};
-   int iFlap{};
-} BodyElement, *pBodyElement;
+};
 
 void InitializeAirplane();
 void CalcAirplaneMassProperties();   // calcs total mass and inertia

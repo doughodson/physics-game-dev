@@ -18,7 +18,7 @@
 #include <cstdio>
 
 #include "d3dstuff.hpp"
-#include "physics.hpp"
+#include "BourgFDM.hpp"
 
 #define RENDER_FRAME_COUNT 300
 

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstdio>
 
-#include "physics.hpp"
+#include "BourgFDM.hpp"
 
 extern RigidBody Airplane;
 extern float ThrustForce;

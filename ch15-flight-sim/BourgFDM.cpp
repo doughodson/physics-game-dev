@@ -10,7 +10,8 @@
 // COPYRIGHT: Copyright 2000 by David Bourg
 //----------------------------------------------------------------------------------------------------
 
-#include "physics.hpp"
+#include "BourgFDM.hpp"
+#include "BodyElement.hpp"
 
 #include <cmath>
 
