@@ -19,53 +19,43 @@
 #define _MAXTHRUST 3000.0f
 
 //------------------------------------------------------------------------
-// Globals
-//------------------------------------------------------------------------
-RigidBody Airplane;     // Rigid body properties of our airplane
-BodyElement Element[8]; // Mass, inertia and lifting surface properties of our airplane
-Vector Thrust;          // Thrust vector, assumed to act through the plane's CG
-float ThrustForce;      // Magnitude of the thrust force
-bool Stalling;          // Flag to let us know if we are in a stalled condition
-bool Flaps;             // Flag to let us know if the flaps are down
-
-//------------------------------------------------------------------------
 // This function sets the initial state of the plane, i.e., its initial
 // location, and speed, along with its thrust and attitude.
 // This function also calls another function to calculate the plane's mass
 // properties.
 //------------------------------------------------------------------------
-void InitializeAirplane()
+BourgFDM::BourgFDM()
 {
    // Set initial position
-   Airplane.vPosition.x = -5000.0f;
-   Airplane.vPosition.y = 0.0f;
-   Airplane.vPosition.z = 2000.0f;
+   vPosition.x = -5000.0f;
+   vPosition.y = 0.0f;
+   vPosition.z = 2000.0f;
 
    // Set initial velocity
-   Airplane.vVelocity.x = 60.0f;
-   Airplane.vVelocity.y = 0.0f;
-   Airplane.vVelocity.z = 0.0f;
-   Airplane.fSpeed = 60.0f;
+   vVelocity.x = 60.0f;
+   vVelocity.y = 0.0f;
+   vVelocity.z = 0.0f;
+   fSpeed = 60.0f;
 
    // Set initial angular velocity
-   Airplane.vAngularVelocity.x = 0.0f;
-   Airplane.vAngularVelocity.y = 0.0f;
-   Airplane.vAngularVelocity.z = 0.0f;
+   vAngularVelocity.x = 0.0f;
+   vAngularVelocity.y = 0.0f;
+   vAngularVelocity.z = 0.0f;
 
    // Set the initial thrust, forces and moments
-   Airplane.vForces.x = 500.0f;
-   Airplane.vForces.y = 0.0f;
-   Airplane.vForces.z = 0.0f;
+   vForces.x = 500.0f;
+   vForces.y = 0.0f;
+   vForces.z = 0.0f;
    ThrustForce = 500.0;
 
-   Airplane.vMoments.x = 0.0f;
-   Airplane.vMoments.y = 0.0f;
-   Airplane.vMoments.z = 0.0f;
+   vMoments.x = 0.0f;
+   vMoments.y = 0.0f;
+   vMoments.z = 0.0f;
 
    // Zero the velocity in body space coordinates
-   Airplane.vVelocityBody.x = 0.0f;
-   Airplane.vVelocityBody.y = 0.0f;
-   Airplane.vVelocityBody.z = 0.0f;
+   vVelocityBody.x = 0.0f;
+   vVelocityBody.y = 0.0f;
+   vVelocityBody.z = 0.0f;
 
    // Set these to false at first, you can control later using the keyboard
    Stalling = false;
@@ -73,7 +63,7 @@ void InitializeAirplane()
 
    // set initial orientation
    const float iRoll{}, iPitch{}, iYaw{};
-   Airplane.qOrientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
+   qOrientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
 
    // calculate the plane's mass properties
    CalcAirplaneMassProperties();
@@ -97,14 +87,14 @@ void InitializeAirplane()
 //   Some other properties of each element are also calculated which you'll
 //   need when calculating the lift and drag forces on the plane.
 //------------------------------------------------------------------------
-void CalcAirplaneMassProperties()
+void BourgFDM::CalcAirplaneMassProperties()
 {
    // Initialize the elements here
    // Initially the coordinates of each element are referenced from
    // a design coordinates system located at the very tail end of the plane,
    // its baseline and center line.  Later, these coordinates will be adjusted
    // so that each element is referenced to the combined center of gravity of
-   // the airplane.
+   // the airplane
    Element[0].fMass = 6.56f;
    Element[0].vDCoords = Vector(14.5f, 12.0f, 2.5f);
    Element[0].vLocalInertia = Vector(13.92f, 10.50f, 24.00f);
@@ -215,28 +205,28 @@ void CalcAirplaneMassProperties()
    }
 
    // setup the airplane's mass and its inertia matrix and take the inverse of the inertia matrix
-   Airplane.fMass = mass;
-   Airplane.mInertia.e11 = Ixx;	Airplane.mInertia.e12 = -Ixy;	Airplane.mInertia.e13 = -Ixz;
-   Airplane.mInertia.e21 = -Ixy;	Airplane.mInertia.e22 = Iyy;	Airplane.mInertia.e23 = -Iyz;
-   Airplane.mInertia.e31 = -Ixz;	Airplane.mInertia.e32 = -Iyz;	Airplane.mInertia.e33 = Izz;
+   fMass = mass;
+   mInertia.e11 = Ixx;  mInertia.e12 = -Ixy; mInertia.e13 = -Ixz;
+   mInertia.e21 = -Ixy; mInertia.e22 = Iyy;  mInertia.e23 = -Iyz;
+   mInertia.e31 = -Ixz; mInertia.e32 = -Iyz; mInertia.e33 = Izz;
 
-   Airplane.mInertiaInverse = Airplane.mInertia.inverse();
+   mInertiaInverse = mInertia.inverse();
 }
 
 //------------------------------------------------------------------------
 // This function calculates all of the forces and moments acting on the
 // plane at any given time.
 //------------------------------------------------------------------------
-void CalcAirplaneLoads()
+void BourgFDM::CalcAirplaneLoads()
 {
    // reset forces and moments:
-   Airplane.vForces.x = 0.0f;
-   Airplane.vForces.y = 0.0f;
-   Airplane.vForces.z = 0.0f;
+   vForces.x = 0.0f;
+   vForces.y = 0.0f;
+   vForces.z = 0.0f;
 
-   Airplane.vMoments.x = 0.0f;
-   Airplane.vMoments.y = 0.0f;
-   Airplane.vMoments.z = 0.0f;
+   vMoments.x = 0.0f;
+   vMoments.y = 0.0f;
+   vMoments.z = 0.0f;
 
    Vector Fb;   // total force
    Vector Mb;   // total moment
@@ -266,8 +256,8 @@ void CalcAirplaneLoads()
       // Calculate local velocity at element
       // The local velocity includes the velocity due to linear motion of the airplane, 
       // plus the velocity at each element due to the rotation of the airplane.
-      Vector vtmp{Airplane.vAngularVelocity^Element[i].vCGCoords}; // rotational part
-      Vector vLocalVelocity{Airplane.vVelocityBody + vtmp};
+      Vector vtmp{vAngularVelocity^Element[i].vCGCoords}; // rotational part
+      Vector vLocalVelocity{vVelocityBody + vtmp};
 
       // Calculate local air speed
       float fLocalSpeed{vLocalVelocity.magnitude()};
@@ -329,10 +319,10 @@ void CalcAirplaneLoads()
    Fb += Thrust;
 
    // Convert forces from model space to earth space
-   Airplane.vForces = QVRotate(Airplane.qOrientation, Fb);
+   vForces = QVRotate(qOrientation, Fb);
 
    // Apply gravity (g is defined as -32.174 ft/s^2)
-   Airplane.vForces.z += g * Airplane.fMass;
+   vForces.z += g * fMass;
 
    // experimental spring connecting the plane to a point 2000 ft above the earth-space origin.
    /*
@@ -351,7 +341,7 @@ void CalcAirplaneLoads()
    */
    // end experimental stuff
 
-   Airplane.vMoments += Mb;
+   vMoments += Mb;
 
 // testing...
    //Airplane.vMoments = QVRotate(Airplane.qOrientation, Airplane.vMoments);
@@ -362,7 +352,7 @@ void CalcAirplaneLoads()
 //------------------------------------------------------------------------
 // Step simulation using Euler's method
 //------------------------------------------------------------------------
-void StepSimulation(const float dt)
+void BourgFDM::StepSimulation(const float dt)
 {
    // Take care of translation first:
    // (If this body were a particle, this is all you would need to do.)
@@ -373,19 +363,19 @@ void StepSimulation(const float dt)
    CalcAirplaneLoads();
 
    // calculate the acceleration of the airplane in earth space:
-   Ae = Airplane.vForces / Airplane.fMass;
+   Ae = vForces / fMass;
 
    // calculate the velocity of the airplane in earth space:
-   Airplane.vVelocity += Ae * dt;
+   vVelocity += Ae * dt;
 
    // calculate the position of the airplane in earth space:
-   Airplane.vPosition += Airplane.vVelocity * dt;
+   vPosition += vVelocity * dt;
 
 // experimental...
 /*
-   if (Airplane.vPosition.z <= 0.0f) {
-      Airplane.vVelocity.z = -Airplane.vVelocity.z;
-      Airplane.vPosition.z = 0.0f;
+   if (vPosition.z <= 0.0f) {
+      vVelocity.z = -vVelocity.z;
+      vPosition.z = 0.0f;
    }
 */
 // ...end experimental stuff
@@ -395,19 +385,19 @@ void StepSimulation(const float dt)
    float mag;
 
    // make a matrix out of the angular velocity vector:
-   mAngularVelocity = MakeAngularVelocityMatrix(Airplane.vAngularVelocity);
+   mAngularVelocity = MakeAngularVelocityMatrix(vAngularVelocity);
 
 // testing...
-   Airplane.vAngularVelocity += Airplane.mInertiaInverse * 
-                                (Airplane.vMoments - 
-                                (Airplane.vAngularVelocity^
-                                (Airplane.mInertia * Airplane.vAngularVelocity)))
+   vAngularVelocity += mInertiaInverse * 
+                       (vMoments - 
+                       (vAngularVelocity^
+                       (mInertia * vAngularVelocity)))
                                  * dt;	
 
-   Airplane.p1 = (Airplane.vMoments - (Airplane.vAngularVelocity^(Airplane.mInertia * Airplane.vAngularVelocity)));
-   Airplane.p2 = (Airplane.vMoments - mAngularVelocity * Airplane.mInertia * Airplane.vAngularVelocity);
+   p1 = (vMoments - (vAngularVelocity^(mInertia * vAngularVelocity)));
+   p2 = (vMoments - mAngularVelocity * mInertia * vAngularVelocity);
 
-   Airplane.p1-=Airplane.p2;
+   p1 -= p2;
 // ... end testing
 
    // calculate the angular velocity of the airplane in body space:
@@ -419,33 +409,33 @@ void StepSimulation(const float dt)
                                  * dt;
    */
    // calculate the new rotation quaternion:
-   Airplane.qOrientation += (Airplane.qOrientation * Airplane.vAngularVelocity) * (0.5f * dt);
+   qOrientation += (qOrientation * vAngularVelocity) * (0.5f * dt);
 
    // now normalize the orientation quaternion:
-   mag = Airplane.qOrientation.magnitude();
+   mag = qOrientation.magnitude();
    if (mag != 0) {
-      Airplane.qOrientation /= mag;
+      qOrientation /= mag;
    }
 
    // calculate the velocity in body space:
    // (we'll need this to calculate lift and drag forces)
-   Airplane.vVelocityBody = QVRotate(~Airplane.qOrientation, Airplane.vVelocity);
+   vVelocityBody = QVRotate(~qOrientation, vVelocity);
 
    // calculate the air speed:
-   Airplane.fSpeed = Airplane.vVelocity.magnitude();
+   fSpeed = vVelocity.magnitude();
 
    // get the Euler angles for our information
-   Vector u{MakeEulerAnglesFromQ(Airplane.qOrientation)};
-   Airplane.vEulerAngles.x = u.x;  // roll
-   Airplane.vEulerAngles.y = u.y;  // pitch
-   Airplane.vEulerAngles.z = u.z;  // yaw
+   Vector u{MakeEulerAnglesFromQ(qOrientation)};
+   vEulerAngles.x = u.x;  // roll
+   vEulerAngles.y = u.y;  // pitch
+   vEulerAngles.z = u.z;  // yaw
 }
 
 /*
 //------------------------------------------------------------------------
 //  Using modified Euler's method -- midpoint method
 //------------------------------------------------------------------------
-void StepSimulation(const float dt)
+void BourgFDM::StepSimulation(const float dt)
 {
    // Take care of translation first:
    // (If this body were a particle, this is all you would need to do.)
@@ -507,19 +497,19 @@ void StepSimulation(const float dt)
 }
 */
 
-Vector GetBodyZAxisVector()
+Vector BourgFDM::GetBodyZAxisVector()
 {
    Vector v(0.0f, 0.0f, 1.0f);
-   return QVRotate(Airplane.qOrientation, v);
+   return QVRotate(qOrientation, v);
 }
 
-Vector GetBodyXAxisVector()
+Vector BourgFDM::GetBodyXAxisVector()
 {
    Vector v(1.0f, 0.0f, 0.0f);
-   return QVRotate(Airplane.qOrientation, v);
+   return QVRotate(qOrientation, v);
 }
 
-Matrix3x3 MakeAngularVelocityMatrix(Vector u)
+Matrix3x3 BourgFDM::MakeAngularVelocityMatrix(Vector u)
 {
    return Matrix3x3( 0.0f, -u.z, u.y,
                      u.z, 0.0f, -u.x,
@@ -531,7 +521,7 @@ Matrix3x3 MakeAngularVelocityMatrix(Vector u)
 //  returns the appropriate lift coefficient for a cambered airfoil with
 //  a plain trailing edge flap (+/- 15 degree deflection).
 //------------------------------------------------------------------------
-float LiftCoefficient(const float angle, const int flaps)
+float BourgFDM::LiftCoefficient(const float angle, const int flaps)
 {
    float clf0[9] = {-0.54f, -0.2f, 0.2f, 0.57f, 0.92f, 1.21f, 1.43f, 1.4f, 1.0f};
    float clfd[9] = {0.0f, 0.45f, 0.85f, 1.02f, 1.39f, 1.65f, 1.75f, 1.38f, 1.17f};
@@ -563,7 +553,7 @@ float LiftCoefficient(const float angle, const int flaps)
 //  returns the appropriate drag coefficient for a cambered airfoil with
 //  a plain trailing edge flap (+/- 15 degree deflection).
 //------------------------------------------------------------------------
-float DragCoefficient(const float angle, const int flaps)
+float BourgFDM::DragCoefficient(const float angle, const int flaps)
 {
    float cdf0[9] = {0.01f, 0.0074f, 0.004f, 0.009f, 0.013f, 0.023f, 0.05f, 0.12f, 0.21f};
    float cdfd[9] = {0.0065f, 0.0043f, 0.0055f, 0.0153f, 0.0221f, 0.0391f, 0.1f, 0.195f, 0.3f};
@@ -594,7 +584,7 @@ float DragCoefficient(const float angle, const int flaps)
 //  Given the attack angle this function returns the proper lift coefficient
 //  for a symmetric (no camber) airfoil without flaps.
 //------------------------------------------------------------------------
-float RudderLiftCoefficient(const float angle)
+float BourgFDM::RudderLiftCoefficient(const float angle)
 {
    float clf0[7] = {0.16f, 0.456f, 0.736f, 0.968f, 1.144f, 1.12f, 0.8f};
    float a[7]    = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
@@ -615,7 +605,7 @@ float RudderLiftCoefficient(const float angle)
 //  Given the attack angle this function returns the proper drag coefficient
 //  for a symmetric (no camber) airfoil without flaps.
 //------------------------------------------------------------------------
-float RudderDragCoefficient(const float angle)
+float BourgFDM::RudderDragCoefficient(const float angle)
 {
    float cdf0[7] = {0.0032f, 0.0072f, 0.0104f, 0.0184f, 0.04f, 0.096f, 0.168f};
    float a[7]	 = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
@@ -631,7 +621,7 @@ float RudderDragCoefficient(const float angle)
    return cd;
 }
 
-void IncThrust()
+void BourgFDM::IncThrust()
 {
    ThrustForce += _DTHRUST;
    if (ThrustForce > _MAXTHRUST) {
@@ -639,7 +629,7 @@ void IncThrust()
    }
 }
 
-void DecThrust()
+void BourgFDM::DecThrust()
 {
    ThrustForce -= _DTHRUST;
    if (ThrustForce < 0) {
@@ -647,65 +637,65 @@ void DecThrust()
    }
 }
 
-void LeftRudder()
+void BourgFDM::LeftRudder()
 {
    Element[6].fIncidence = 16;
 }
 
-void RightRudder()
+void BourgFDM::RightRudder()
 {
    Element[6].fIncidence = -16;
 }
 
-void ZeroRudder()
+void BourgFDM::ZeroRudder()
 {
    Element[6].fIncidence = 0;
 }
 
-void RollLeft()
+void BourgFDM::RollLeft()
 {
    Element[0].iFlap = 1;
    Element[3].iFlap = -1;
 }
 
-void RollRight()
+void BourgFDM::RollRight()
 {
    Element[0].iFlap = -1;
    Element[3].iFlap = 1;
 }
 
-void PitchUp()
+void BourgFDM::PitchUp()
 {
    Element[4].iFlap = 1;
    Element[5].iFlap = 1;
 }
 
-void PitchDown()
+void BourgFDM::PitchDown()
 {
    Element[4].iFlap = -1;
    Element[5].iFlap = -1;
 }
 
-void ZeroAilerons()
+void BourgFDM::ZeroAilerons()
 {
    Element[0].iFlap = 0;
    Element[3].iFlap = 0;
 }
 
-void ZeroElevators()
+void BourgFDM::ZeroElevators()
 {
    Element[4].iFlap = 0;
    Element[5].iFlap = 0;
 }
 
-void FlapsDown()
+void BourgFDM::FlapsDown()
 {
    Element[1].iFlap = -1;
    Element[2].iFlap = -1;
    Flaps = true;
 }
 
-void ZeroFlaps()
+void BourgFDM::ZeroFlaps()
 {
    Element[1].iFlap = 0;
    Element[2].iFlap = 0;

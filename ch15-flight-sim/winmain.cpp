@@ -43,12 +43,9 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void NullEvent();
 BOOL IsKeyDown(short KeyCode);
 
-extern RigidBody Airplane;
+BourgFDM fdm;
 extern d3dInfo D3D;
 extern LPDIRECT3DRMWINDEVICE WinDev;
-extern float ThrustForce;
-extern bool Stalling;
-extern bool Flaps;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, const int nCmdShow)
 {
@@ -143,7 +140,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hTheMainWindow, nCmdShow);
    UpdateWindow(hTheMainWindow);
 
-   InitializeAirplane();
    Initialized = true;
    TotalTime = 0;
 
@@ -214,49 +210,49 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void NullEvent()
 {
-   ZeroRudder();
-   ZeroAilerons();
-   ZeroElevators();
+   fdm.ZeroRudder();
+   fdm.ZeroAilerons();
+   fdm.ZeroElevators();
 
    // pitch down
    if (IsKeyDown(VK_UP))
-      PitchDown();
+      fdm.PitchDown();
 
    // pitch up
    if (IsKeyDown(VK_DOWN))
-      PitchUp();
+      fdm.PitchUp();
 
    // roll left
    if (IsKeyDown(VK_LEFT))
-      RollLeft();
+      fdm.RollLeft();
 
    // roll right
    if (IsKeyDown(VK_RIGHT))
-      RollRight();
+      fdm.RollRight();
 
    //  Increase thrust
    if (IsKeyDown(0x41)) // A
-      IncThrust();
+      fdm.IncThrust();
 
    //  Decrease thrust
    if (IsKeyDown(0x5A)) // Z
-      DecThrust();
+      fdm.DecThrust();
 
    // yaw left
    if (IsKeyDown(0x58)) // x
-      LeftRudder();
+      fdm.LeftRudder();
 
    // yaw right
    if (IsKeyDown(0x43)) // c
-      RightRudder();
+      fdm.RightRudder();
 
    // landing flaps down
    if (IsKeyDown(0x46)) //f
-      FlapsDown();
+      fdm.FlapsDown();
 
    // landing flaps up
    if (IsKeyDown(0x44)) // d
-      ZeroFlaps();
+      fdm.ZeroFlaps();
 
    NewTime = timeGetTime();	
    dt = static_cast<float>((NewTime - OldTime)/1000);
@@ -268,16 +264,16 @@ void NullEvent()
    Sleep(0.9);
    TotalTime += dt;
    //if(TotalTime > 1.6f)
-   StepSimulation(dt);
+   fdm.StepSimulation(dt);
 
    if (FrameCounter >= RENDER_FRAME_COUNT) {
       // Direct3D x = - our y
       // Direct3D y = our z
       // Direct3D z = our x
-      SetCameraPosition(-Airplane.vPosition.y, Airplane.vPosition.z, Airplane.vPosition.x);
+      SetCameraPosition(-fdm.vPosition.y, fdm.vPosition.z, fdm.vPosition.x);
 
-      Vector vz{GetBodyZAxisVector()}; // pointing up in our coordinate system
-      Vector vx{GetBodyXAxisVector()}; // pointing forward in our coordinate system
+      Vector vz{fdm.GetBodyZAxisVector()}; // pointing up in our coordinate system
+      Vector vx{fdm.GetBodyXAxisVector()}; // pointing forward in our coordinate system
       SetCameraOrientation( -vx.y, vx.z, vx.x,
                             -vz.y, vz.z, vz.x);
       Render();
@@ -288,22 +284,22 @@ void NullEvent()
       // Report stats in window title
       char buf[256];
       char s[256];
-      std::sprintf(buf, "Roll= %.2f ; ", Airplane.vEulerAngles.x);
+      std::sprintf(buf, "Roll= %.2f ; ", fdm.vEulerAngles.x);
       std::strcpy(s, buf);
-      std::sprintf(buf, "Pitch= %.2f ; ", -Airplane.vEulerAngles.y); // take negative here since pilots like to see positive pitch as nose up
+      std::sprintf(buf, "Pitch= %.2f ; ", -fdm.vEulerAngles.y); // take negative here since pilots like to see positive pitch as nose up
       std::strcat(s, buf);
-      std::sprintf(buf, "Yaw= %.2f ; ", Airplane.vEulerAngles.z);
+      std::sprintf(buf, "Yaw= %.2f ; ", fdm.vEulerAngles.z);
       std::strcat(s, buf);
-      std::sprintf(buf, "Alt= %.0f ; ", Airplane.vPosition.z);
+      std::sprintf(buf, "Alt= %.0f ; ", fdm.vPosition.z);
       std::strcat(s, buf);
-      std::sprintf(buf, "T= %.0f ; ", ThrustForce);
+      std::sprintf(buf, "T= %.0f ; ", fdm.ThrustForce);
       std::strcat(s, buf);
-      std::sprintf(buf, "S= %.0f ", Airplane.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
+      std::sprintf(buf, "S= %.0f ", fdm.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
       std::strcat(s, buf);
-      if (Flaps)
+      if (fdm.Flaps)
          std::strcat(s, "; Flaps");
 
-      if (Stalling) {
+      if (fdm.Stalling) {
          std::strcat(s, "; Stall!");
          Beep(10000, 250);
       }

@@ -2,6 +2,7 @@
 #define __BourgFDM_HPP__
 
 #include "RigidBody.hpp"
+#include "BodyElement.hpp"
 
 #include "common/Vector.hpp"
 #include "common/Matrix3x3.hpp"
@@ -47,35 +48,42 @@
 // Class: BourgFDM
 // Description: Behavior of a rigid body as defined in Bourg book
 //------------------------------------------------------------------------------
-class BourgFDM
+class BourgFDM : public RigidBody
 {
-   BourgFDM() = default;
+public:
+   BourgFDM();
 
+   void CalcAirplaneMassProperties();   // calcs total mass and inertia
+   void CalcAirplaneLoads();            // calcs total forces and moments
+   void StepSimulation(const float dt); // step dt time in the simulation
+   Vector GetBodyZAxisVector();
+   Vector GetBodyXAxisVector();
+   Matrix3x3 MakeAngularVelocityMatrix(Vector u);
+   float LiftCoefficient(const float angle, const int flaps);
+   float DragCoefficient(const float angle, const int flaps);
+   float RudderLiftCoefficient(const float angle);
+   float RudderDragCoefficient(const float angle);
+   void IncThrust();
+   void DecThrust();
+   void LeftRudder();
+   void RightRudder();
+   void ZeroRudder();
+   void RollLeft();
+   void RollRight();
+   void PitchUp();
+   void PitchDown();
+   void ZeroAilerons();
+   void ZeroElevators();
+   void FlapsDown();
+   void ZeroFlaps();
+
+//private:
+
+   BodyElement Element[8];  // Mass, inertia and lifting surface properties of our airplane
+   Vector Thrust;           // Thrust vector, assumed to act through the plane's CG
+   float ThrustForce{};     // Magnitude of the thrust force
+   bool Stalling{};         // Flag to let us know if we are in a stalled condition
+   bool Flaps{};            // Flag to let us know if the flaps are down
 };
-
-void InitializeAirplane();
-void CalcAirplaneMassProperties();   // calcs total mass and inertia
-void CalcAirplaneLoads();            // calcs total forces and moments
-void StepSimulation(const float dt); // step dt time in the simulation
-Vector GetBodyZAxisVector();
-Vector GetBodyXAxisVector();
-Matrix3x3 MakeAngularVelocityMatrix(Vector u);
-float LiftCoefficient(const float angle, const int flaps);
-float DragCoefficient(const float angle, const int flaps);
-float RudderLiftCoefficient(const float angle);
-float RudderDragCoefficient(const float angle);
-void IncThrust();
-void DecThrust();
-void LeftRudder();
-void RightRudder();
-void ZeroRudder();
-void RollLeft();
-void RollRight();
-void PitchUp();
-void PitchDown();
-void ZeroAilerons();
-void ZeroElevators();
-void FlapsDown();
-void ZeroFlaps();
 
 #endif
