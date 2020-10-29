@@ -14,16 +14,16 @@ int main()
 
    BourgFDM fdm;
 
-   fdm.ZeroRudder();
-   fdm.ZeroAilerons();
-   fdm.ZeroElevators();
-   fdm.ZeroFlaps();
+   fdm.zero_rudder();
+   fdm.zero_ailerons();
+   fdm.zero_elevators();
+   fdm.zero_flaps();
 
    for (int i{}; i < 10; i++) {
 
-      fdm.IncThrust();
+      fdm.inc_thrust();
 
-      fdm.StepSimulation(dt);
+      fdm.step_simulation(dt);
       std::cout << "Simulation time : " << current_time << std::endl;
 
       std::cout << "Roll   : " << fdm.vEulerAngles.x << std::endl;
@@ -33,8 +33,8 @@ int main()
       std::cout << "Thrust : " << fdm.ThrustForce << std::endl;
       std::cout << "Speed  : " << fdm.fSpeed / 1.688 << std::endl; // divide by 1.688 to convert ft/s to knots
 
-      if (fdm.Flaps) std::cout << "Flaps!\n";
-      if (fdm.Stalling) std::cout << "Stall!\n";
+      if (fdm.flaps) std::cout << "Flaps!\n";
+      if (fdm.stalling) std::cout << "Stall!\n";
 
       std::cout << "===================================================\n";
       current_time += dt;

@@ -53,37 +53,37 @@ class BourgFDM : public RigidBody
 public:
    BourgFDM();
 
-   void CalcAirplaneMassProperties();   // calcs total mass and inertia
-   void CalcAirplaneLoads();            // calcs total forces and moments
-   void StepSimulation(const float dt); // step dt time in the simulation
-   Vector GetBodyZAxisVector();
-   Vector GetBodyXAxisVector();
-   Matrix3x3 MakeAngularVelocityMatrix(Vector u);
+   void calc_mass_properties();          // calcs total mass and inertia
+   void calc_loads();                    // calcs total forces and moments
+   void step_simulation(const float dt); // step dt time in the simulation
+   Vector getBodyZAxisVector();
+   Vector getBodyXAxisVector();
+   Matrix3x3 makeAngularVelocityMatrix(Vector u);
    float LiftCoefficient(const float angle, const int flaps);
    float DragCoefficient(const float angle, const int flaps);
    float RudderLiftCoefficient(const float angle);
    float RudderDragCoefficient(const float angle);
-   void IncThrust();
-   void DecThrust();
-   void LeftRudder();
-   void RightRudder();
-   void ZeroRudder();
-   void RollLeft();
-   void RollRight();
-   void PitchUp();
-   void PitchDown();
-   void ZeroAilerons();
-   void ZeroElevators();
-   void FlapsDown();
-   void ZeroFlaps();
+   void inc_thrust();
+   void dec_thrust();
+   void left_rudder();
+   void right_rudder();
+   void zero_rudder();
+   void roll_left();
+   void roll_right();
+   void pitch_up();
+   void pitch_down();
+   void zero_ailerons();
+   void zero_elevators();
+   void flaps_down();
+   void zero_flaps();
 
 //private:
 
    BodyElement Element[8];  // Mass, inertia and lifting surface properties of our airplane
    Vector Thrust;           // Thrust vector, assumed to act through the plane's CG
    float ThrustForce{};     // Magnitude of the thrust force
-   bool Stalling{};         // Flag to let us know if we are in a stalled condition
-   bool Flaps{};            // Flag to let us know if the flaps are down
+   bool stalling{};         // Flag to let us know if we are in a stalled condition
+   bool flaps{};            // Flag to let us know if the flaps are down
 };
 
 #endif

@@ -210,49 +210,49 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void NullEvent()
 {
-   fdm.ZeroRudder();
-   fdm.ZeroAilerons();
-   fdm.ZeroElevators();
+   fdm.zero_rudder();
+   fdm.zero_ailerons();
+   fdm.zero_elevators();
 
    // pitch down
    if (IsKeyDown(VK_UP))
-      fdm.PitchDown();
+      fdm.pitch_down();
 
    // pitch up
    if (IsKeyDown(VK_DOWN))
-      fdm.PitchUp();
+      fdm.pitch_up();
 
    // roll left
    if (IsKeyDown(VK_LEFT))
-      fdm.RollLeft();
+      fdm.roll_left();
 
    // roll right
    if (IsKeyDown(VK_RIGHT))
-      fdm.RollRight();
+      fdm.roll_right();
 
    //  Increase thrust
    if (IsKeyDown(0x41)) // A
-      fdm.IncThrust();
+      fdm.inc_thrust();
 
    //  Decrease thrust
    if (IsKeyDown(0x5A)) // Z
-      fdm.DecThrust();
+      fdm.dec_thrust();
 
    // yaw left
    if (IsKeyDown(0x58)) // x
-      fdm.LeftRudder();
+      fdm.left_rudder();
 
    // yaw right
    if (IsKeyDown(0x43)) // c
-      fdm.RightRudder();
+      fdm.right_rudder();
 
    // landing flaps down
    if (IsKeyDown(0x46)) //f
-      fdm.FlapsDown();
+      fdm.flaps_down();
 
    // landing flaps up
    if (IsKeyDown(0x44)) // d
-      fdm.ZeroFlaps();
+      fdm.zero_flaps();
 
    NewTime = timeGetTime();	
    dt = static_cast<float>((NewTime - OldTime)/1000);
@@ -264,7 +264,7 @@ void NullEvent()
    Sleep(0.9);
    TotalTime += dt;
    //if(TotalTime > 1.6f)
-   fdm.StepSimulation(dt);
+   fdm.step_simulation(dt);
 
    if (FrameCounter >= RENDER_FRAME_COUNT) {
       // Direct3D x = - our y

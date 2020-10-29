@@ -58,15 +58,15 @@ BourgFDM::BourgFDM()
    vVelocityBody.z = 0.0f;
 
    // Set these to false at first, you can control later using the keyboard
-   Stalling = false;
-   Flaps = false;
+   stalling = false;
+   flaps = false;
 
    // set initial orientation
    const float iRoll{}, iPitch{}, iYaw{};
    qOrientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
 
    // calculate the plane's mass properties
-   CalcAirplaneMassProperties();
+   calc_mass_properties();
 }
 
 //------------------------------------------------------------------------
@@ -87,7 +87,7 @@ BourgFDM::BourgFDM()
 //   Some other properties of each element are also calculated which you'll
 //   need when calculating the lift and drag forces on the plane.
 //------------------------------------------------------------------------
-void BourgFDM::CalcAirplaneMassProperties()
+void BourgFDM::calc_mass_properties()
 {
    // Initialize the elements here
    // Initially the coordinates of each element are referenced from
@@ -217,7 +217,7 @@ void BourgFDM::CalcAirplaneMassProperties()
 // This function calculates all of the forces and moments acting on the
 // plane at any given time.
 //------------------------------------------------------------------------
-void BourgFDM::CalcAirplaneLoads()
+void BourgFDM::calc_loads()
 {
    // reset forces and moments:
    vForces.x = 0.0f;
@@ -240,7 +240,7 @@ void BourgFDM::CalcAirplaneLoads()
    // Calculate forces and moments in body space:
    Vector vDragVector;
 
-   Stalling = false;
+   stalling = false;
 
    for(int i{}; i<8; i++) { // loop through the seven lifting elements skipping the fuselage
       if (i == 6) {         // The tail/rudder is a special case since it can rotate
@@ -302,7 +302,7 @@ void BourgFDM::CalcAirplaneLoads()
       // before the lift goes to zero to give the pilot time to correct.
       if (i<=3) {
          if (LiftCoefficient(fAttackAngle, Element[i].iFlap) == 0) {
-            Stalling = true;
+            stalling = true;
          }
       }
 
@@ -352,7 +352,7 @@ void BourgFDM::CalcAirplaneLoads()
 //------------------------------------------------------------------------
 // Step simulation using Euler's method
 //------------------------------------------------------------------------
-void BourgFDM::StepSimulation(const float dt)
+void BourgFDM::step_simulation(const float dt)
 {
    // Take care of translation first:
    // (If this body were a particle, this is all you would need to do.)
@@ -360,7 +360,7 @@ void BourgFDM::StepSimulation(const float dt)
    Vector Ae;
 
    // calculate all of the forces and moments on the airplane:
-   CalcAirplaneLoads();
+   calc_loads();
 
    // calculate the acceleration of the airplane in earth space:
    Ae = vForces / fMass;
@@ -385,7 +385,7 @@ void BourgFDM::StepSimulation(const float dt)
    float mag;
 
    // make a matrix out of the angular velocity vector:
-   mAngularVelocity = MakeAngularVelocityMatrix(vAngularVelocity);
+   mAngularVelocity = makeAngularVelocityMatrix(vAngularVelocity);
 
 // testing...
    vAngularVelocity += mInertiaInverse * 
@@ -497,19 +497,19 @@ void BourgFDM::StepSimulation(const float dt)
 }
 */
 
-Vector BourgFDM::GetBodyZAxisVector()
+Vector BourgFDM::getBodyZAxisVector()
 {
    Vector v(0.0f, 0.0f, 1.0f);
    return QVRotate(qOrientation, v);
 }
 
-Vector BourgFDM::GetBodyXAxisVector()
+Vector BourgFDM::getBodyXAxisVector()
 {
    Vector v(1.0f, 0.0f, 0.0f);
    return QVRotate(qOrientation, v);
 }
 
-Matrix3x3 BourgFDM::MakeAngularVelocityMatrix(Vector u)
+Matrix3x3 BourgFDM::makeAngularVelocityMatrix(Vector u)
 {
    return Matrix3x3( 0.0f, -u.z, u.y,
                      u.z, 0.0f, -u.x,
@@ -621,7 +621,7 @@ float BourgFDM::RudderDragCoefficient(const float angle)
    return cd;
 }
 
-void BourgFDM::IncThrust()
+void BourgFDM::inc_thrust()
 {
    ThrustForce += _DTHRUST;
    if (ThrustForce > _MAXTHRUST) {
@@ -629,7 +629,7 @@ void BourgFDM::IncThrust()
    }
 }
 
-void BourgFDM::DecThrust()
+void BourgFDM::dec_thrust()
 {
    ThrustForce -= _DTHRUST;
    if (ThrustForce < 0) {
@@ -637,67 +637,67 @@ void BourgFDM::DecThrust()
    }
 }
 
-void BourgFDM::LeftRudder()
+void BourgFDM::left_rudder()
 {
    Element[6].fIncidence = 16;
 }
 
-void BourgFDM::RightRudder()
+void BourgFDM::right_rudder()
 {
    Element[6].fIncidence = -16;
 }
 
-void BourgFDM::ZeroRudder()
+void BourgFDM::zero_rudder()
 {
    Element[6].fIncidence = 0;
 }
 
-void BourgFDM::RollLeft()
+void BourgFDM::roll_left()
 {
    Element[0].iFlap = 1;
    Element[3].iFlap = -1;
 }
 
-void BourgFDM::RollRight()
+void BourgFDM::roll_right()
 {
    Element[0].iFlap = -1;
    Element[3].iFlap = 1;
 }
 
-void BourgFDM::PitchUp()
+void BourgFDM::pitch_up()
 {
    Element[4].iFlap = 1;
    Element[5].iFlap = 1;
 }
 
-void BourgFDM::PitchDown()
+void BourgFDM::pitch_down()
 {
    Element[4].iFlap = -1;
    Element[5].iFlap = -1;
 }
 
-void BourgFDM::ZeroAilerons()
+void BourgFDM::zero_ailerons()
 {
    Element[0].iFlap = 0;
    Element[3].iFlap = 0;
 }
 
-void BourgFDM::ZeroElevators()
+void BourgFDM::zero_elevators()
 {
    Element[4].iFlap = 0;
    Element[5].iFlap = 0;
 }
 
-void BourgFDM::FlapsDown()
+void BourgFDM::flaps_down()
 {
    Element[1].iFlap = -1;
    Element[2].iFlap = -1;
-   Flaps = true;
+   flaps = true;
 }
 
-void BourgFDM::ZeroFlaps()
+void BourgFDM::zero_flaps()
 {
    Element[1].iFlap = 0;
    Element[2].iFlap = 0;
-   Flaps = false;
+   flaps = false;
 }
