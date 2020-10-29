@@ -11,7 +11,9 @@
 //----------------------------------------------------------------------------------------------------
 
 #include "BourgFDM.hpp"
+
 #include "BodyElement.hpp"
+#include "common/Vector.hpp"
 
 #include <cmath>
 
@@ -26,36 +28,23 @@
 //------------------------------------------------------------------------
 BourgFDM::BourgFDM()
 {
-   // Set initial position
-   vPosition.x = -5000.0f;
-   vPosition.y = 0.0f;
-   vPosition.z = 2000.0f;
+   // initial position
+   position = Vector(-5000.0f, 0.0f, 2000.0f);
+   // initial velocity
+   velocity = Vector(60.0f, 0.0f, 0.0f);
+   speed = 60.0f;
 
-   // Set initial velocity
-   vVelocity.x = 60.0f;
-   vVelocity.y = 0.0f;
-   vVelocity.z = 0.0f;
-   fSpeed = 60.0f;
+   // initial angular velocity
+   angular_velocity = Vector(0.0f, 0.0f, 0.0f);
 
-   // Set initial angular velocity
-   vAngularVelocity.x = 0.0f;
-   vAngularVelocity.y = 0.0f;
-   vAngularVelocity.z = 0.0f;
-
-   // Set the initial thrust, forces and moments
-   vForces.x = 500.0f;
-   vForces.y = 0.0f;
-   vForces.z = 0.0f;
+   // initial thrust, force and moment
+   force = Vector(500.0f, 0.0f, 0.0f);
    thrust_force = 500.0;
 
-   vMoments.x = 0.0f;
-   vMoments.y = 0.0f;
-   vMoments.z = 0.0f;
+   moment = Vector(0.0f, 0.0f, 0.0f);
 
-   // Zero the velocity in body space coordinates
-   vVelocityBody.x = 0.0f;
-   vVelocityBody.y = 0.0f;
-   vVelocityBody.z = 0.0f;
+   // zero the velocity in body space coordinates
+   velocity_body = Vector(0.0f, 0.0f, 0.0f);
 
    // Set these to false at first, you can control later using the keyboard
    stalling = false;
@@ -84,13 +73,13 @@ void BourgFDM::update(const float dt)
    calc_loads();
 
    // calculate the acceleration of the airplane in earth space:
-   Ae = vForces / fMass;
+   Ae = force / mass;
 
    // calculate the velocity of the airplane in earth space:
-   vVelocity += Ae * dt;
+   velocity += Ae * dt;
 
    // calculate the position of the airplane in earth space:
-   vPosition += vVelocity * dt;
+   position += velocity * dt;
 
    // experimental...
    /*
@@ -103,20 +92,16 @@ void BourgFDM::update(const float dt)
 
       // Now handle the rotations:
    Matrix3x3 mAngularVelocity;
-   float mag;
+   float mag{};
 
    // make a matrix out of the angular velocity vector:
-   mAngularVelocity = make_angular_velocity_matrix(vAngularVelocity);
+   mAngularVelocity = make_angular_velocity_matrix(angular_velocity);
 
    // testing...
-   vAngularVelocity += mInertiaInverse *
-      (vMoments -
-         (vAngularVelocity ^
-            (mInertia * vAngularVelocity)))
-      * dt;
+   angular_velocity += inertia_inverse * (moment - (angular_velocity^(inertia * angular_velocity))) * dt;
 
-   p1 = (vMoments - (vAngularVelocity ^ (mInertia * vAngularVelocity)));
-   p2 = (vMoments - mAngularVelocity * mInertia * vAngularVelocity);
+   p1 = (moment - (angular_velocity ^ (inertia * angular_velocity)));
+   p2 = (moment - mAngularVelocity * inertia * angular_velocity);
 
    p1 -= p2;
    // ... end testing
@@ -130,7 +115,7 @@ void BourgFDM::update(const float dt)
                                     * dt;
       */
       // calculate the new rotation quaternion:
-   qOrientation += (qOrientation * vAngularVelocity) * (0.5f * dt);
+   qOrientation += (qOrientation * angular_velocity) * (0.5f * dt);
 
    // now normalize the orientation quaternion:
    mag = qOrientation.magnitude();
@@ -140,16 +125,16 @@ void BourgFDM::update(const float dt)
 
    // calculate the velocity in body space:
    // (we'll need this to calculate lift and drag forces)
-   vVelocityBody = QVRotate(~qOrientation, vVelocity);
+   velocity_body = QVRotate(~qOrientation, velocity);
 
    // calculate the air speed:
-   fSpeed = vVelocity.magnitude();
+   speed = velocity.magnitude();
 
    // get the Euler angles for our information
    Vector u{ MakeEulerAnglesFromQ(qOrientation) };
-   vEulerAngles.x = u.x;  // roll
-   vEulerAngles.y = u.y;  // pitch
-   vEulerAngles.z = u.z;  // yaw
+   euler_angles.x = u.x;  // roll
+   euler_angles.y = u.y;  // pitch
+   euler_angles.z = u.z;  // yaw
 }
 
 void BourgFDM::update2(const float dt)
@@ -169,30 +154,30 @@ void BourgFDM::update2(const float dt)
    calc_loads();
 
    // calculate the acceleration of the airplane in earth space:
-   Ae = vForces / fMass;
+   Ae = force / mass;
 
    // calculate the velocity of the airplane in earth space:
    Vdot = Ae * (dt/2.0f);
-   Pdot = vVelocity + Vdot * (dt/2.0f);
+   Pdot = velocity + Vdot * (dt/2.0f);
 
-   vVelocity += Vdot * dt;
+   velocity += Vdot * dt;
 
    // calculate the position of the airplane in earth space:
-   vPosition += Pdot * dt;
+   position += Pdot * dt;
 
    // Now handle the rotations:
    Matrix3x3 mAngularVelocity;
    float mag{};
 
    // make a matrix out of the angular velocity vector:
-   mAngularVelocity = make_angular_velocity_matrix(vAngularVelocity);
+   mAngularVelocity = make_angular_velocity_matrix(angular_velocity);
 
    // calculate the angular velocity of the airplane in body space:
    // vtemp = -(Vector)(mAngularVelocity * Airplane.mInertia * Airplane.vAngularVelocity);
-   vAngularVelocity += mInertiaInverse * (vMoments - mAngularVelocity * mInertia * vAngularVelocity) * dt;
+   angular_velocity += inertia_inverse * (moment - mAngularVelocity * inertia * angular_velocity) * dt;
 
    // calculate the new rotation quaternion:
-   qOrientation += (qOrientation * vAngularVelocity) * (0.5f * dt);
+   qOrientation += (qOrientation * angular_velocity) * (0.5f * dt);
 
    // now normalize the orientation quaternion:
    mag = qOrientation.magnitude();
@@ -202,16 +187,16 @@ void BourgFDM::update2(const float dt)
 
    // calculate the velocity in body space:
    // (we'll need this to calculate lift and drag forces)
-   vVelocityBody = QVRotate(~qOrientation, vVelocity);
+   velocity_body = QVRotate(~qOrientation, velocity);
 
    // calculate the air speed:
-   fSpeed = vVelocity.magnitude();
+   speed = velocity.magnitude();
 
    // get the Euler angles for our information
    Vector u{MakeEulerAnglesFromQ(qOrientation)};
-   vEulerAngles.x = u.x;  // roll
-   vEulerAngles.y = u.y;  // pitch
-   vEulerAngles.z = u.z;  // yaw
+   euler_angles.x = u.x;  // roll
+   euler_angles.y = u.y;  // pitch
+   euler_angles.z = u.z;  // yaw
 }
 
 //------------------------------------------------------------------------
@@ -317,7 +302,7 @@ void BourgFDM::calc_mass_properties()
    }
 
    // calculate total mass
-   float mass{};
+   mass = 0.0f;
    for (int i{}; i< 8; i++) {
       mass += element[i].mass;
    }
@@ -350,12 +335,11 @@ void BourgFDM::calc_mass_properties()
    }
 
    // setup the airplane's mass and its inertia matrix and take the inverse of the inertia matrix
-   fMass = mass;
-   mInertia.e11 = Ixx;  mInertia.e12 = -Ixy; mInertia.e13 = -Ixz;
-   mInertia.e21 = -Ixy; mInertia.e22 = Iyy;  mInertia.e23 = -Iyz;
-   mInertia.e31 = -Ixz; mInertia.e32 = -Iyz; mInertia.e33 = Izz;
+   inertia.e11 = Ixx;  inertia.e12 = -Ixy; inertia.e13 = -Ixz;
+   inertia.e21 = -Ixy; inertia.e22 = Iyy;  inertia.e23 = -Iyz;
+   inertia.e31 = -Ixz; inertia.e32 = -Iyz; inertia.e33 = Izz;
 
-   mInertiaInverse = mInertia.inverse();
+   inertia_inverse = inertia.inverse();
 }
 
 //------------------------------------------------------------------------
@@ -365,13 +349,8 @@ void BourgFDM::calc_mass_properties()
 void BourgFDM::calc_loads()
 {
    // reset forces and moments:
-   vForces.x = 0.0f;
-   vForces.y = 0.0f;
-   vForces.z = 0.0f;
-
-   vMoments.x = 0.0f;
-   vMoments.y = 0.0f;
-   vMoments.z = 0.0f;
+   force = Vector(0.0f, 0.0f, 0.0f);
+   moment = Vector(0.0f, 0.0f, 0.0f);
 
    Vector Fb;   // total force
    Vector Mb;   // total moment
@@ -399,8 +378,8 @@ void BourgFDM::calc_loads()
       // Calculate local velocity at element
       // The local velocity includes the velocity due to linear motion of the airplane, 
       // plus the velocity at each element due to the rotation of the airplane.
-      Vector vtmp{vAngularVelocity^element[i].cg_coord}; // rotational part
-      Vector vLocalVelocity{vVelocityBody + vtmp};
+      Vector vtmp{angular_velocity^element[i].cg_coord}; // rotational part
+      Vector vLocalVelocity{velocity_body + vtmp};
 
       // Calculate local air speed
       float fLocalSpeed{vLocalVelocity.magnitude()};
@@ -461,11 +440,11 @@ void BourgFDM::calc_loads()
    // Now add the thrust
    Fb += thrust;
 
-   // Convert forces from model space to earth space
-   vForces = QVRotate(qOrientation, Fb);
+   // convert force from model space to earth space
+   force = QVRotate(qOrientation, Fb);
 
-   // Apply gravity (g is defined as -32.174 ft/s^2)
-   vForces.z += g * fMass;
+   // apply gravity (g is defined as -32.174 ft/s^2)
+   force.z += g * mass;
 
    // experimental spring connecting the plane to a point 2000 ft above the earth-space origin.
    /*
@@ -484,7 +463,7 @@ void BourgFDM::calc_loads()
    */
    // end experimental stuff
 
-   vMoments += Mb;
+   moment += Mb;
 
 // testing...
    //Airplane.vMoments = QVRotate(Airplane.qOrientation, Airplane.vMoments);

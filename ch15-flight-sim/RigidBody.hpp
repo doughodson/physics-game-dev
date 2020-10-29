@@ -14,22 +14,22 @@ class RigidBody
 public:
    RigidBody() = default;
 
-   float fMass{};             // total mass (constant)
-   Matrix3x3 mInertia;        // mass moment of inertia in body coordinates (constant)
-   Matrix3x3 mInertiaInverse; // inverse of mass moment of inertia matrix	(constant)
+   float mass{};              // total mass (constant)
+   Matrix3x3 inertia;         // mass moment of inertia in body coordinates (constant)
+   Matrix3x3 inertia_inverse; // inverse of mass moment of inertia matrix	(constant)
 
-   Vector vPosition;          // position in earth coordinates
-   Vector vVelocity;          // velocity in earth coordinates
-   Vector vVelocityBody;      // velocity in body coordinates
-   Vector vAngularVelocity;   // angular velocity in body coordinates
-   Vector vEulerAngles;       // Euler angles in body coordinates
-   float fSpeed{};            // speed (magnitude of the velocity)
+   Vector position;           // position in earth coordinates
+   Vector velocity;           // velocity in earth coordinates
+   Vector velocity_body;      // velocity in body coordinates
+   Vector angular_velocity;   // angular velocity in body coordinates
+   Vector euler_angles;       // Euler angles in body coordinates
+   float speed{};             // speed (magnitude of the velocity)
 
    Quaternion qOrientation;   // orientation in earth coordinates
    //Matrix3x3 mRotation;     // rotation matrix
 
-   Vector vForces;            // total force on body
-   Vector vMoments;           // total moment (torque) on body
+   Vector force;              // total force on body
+   Vector moment;             // total moment (torque) on body
 
    Matrix3x3 mIeInverse;      // inverse of moment of inertia in earth coordinates
 

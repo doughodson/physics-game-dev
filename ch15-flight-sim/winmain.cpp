@@ -275,7 +275,7 @@ void NullEvent()
       // Direct3D x = - our y
       // Direct3D y = our z
       // Direct3D z = our x
-      SetCameraPosition(-fdm.vPosition.y, fdm.vPosition.z, fdm.vPosition.x);
+      SetCameraPosition(-fdm.position.y, fdm.position.z, fdm.position.x);
 
       Vector vz{fdm.get_body_Z_axis_vector()}; // pointing up in our coordinate system
       Vector vx{fdm.get_body_X_axis_vector()}; // pointing forward in our coordinate system
@@ -289,17 +289,17 @@ void NullEvent()
       // Report stats in window title
       char buf[256];
       char s[256];
-      std::sprintf(buf, "Roll= %.2f ; ", fdm.vEulerAngles.x);
+      std::sprintf(buf, "Roll= %.2f ; ", fdm.euler_angles.x);
       std::strcpy(s, buf);
-      std::sprintf(buf, "Pitch= %.2f ; ", -fdm.vEulerAngles.y); // take negative here since pilots like to see positive pitch as nose up
+      std::sprintf(buf, "Pitch= %.2f ; ", -fdm.euler_angles.y); // take negative here since pilots like to see positive pitch as nose up
       std::strcat(s, buf);
-      std::sprintf(buf, "Yaw= %.2f ; ", fdm.vEulerAngles.z);
+      std::sprintf(buf, "Yaw= %.2f ; ", fdm.euler_angles.z);
       std::strcat(s, buf);
-      std::sprintf(buf, "Alt= %.0f ; ", fdm.vPosition.z);
+      std::sprintf(buf, "Alt= %.0f ; ", fdm.position.z);
       std::strcat(s, buf);
       std::sprintf(buf, "T= %.0f ; ", fdm.thrust_force);
       std::strcat(s, buf);
-      std::sprintf(buf, "S= %.0f ", fdm.fSpeed/1.688f); // divide by 1.688 to convert ft/s to knots
+      std::sprintf(buf, "S= %.0f ", fdm.speed/1.688f); // divide by 1.688 to convert ft/s to knots
       std::strcat(s, buf);
       if (fdm.flaps)
          std::strcat(s, "; Flaps");

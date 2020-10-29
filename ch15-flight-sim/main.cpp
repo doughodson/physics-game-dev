@@ -27,12 +27,12 @@ int main()
 //      fdm.update2(dt);
       std::cout << "Simulation time : " << current_time << std::endl;
 
-      std::cout << "Roll   : " << fdm.vEulerAngles.x << std::endl;
-      std::cout << "Pitch  : " << -fdm.vEulerAngles.y << std::endl;
-      std::cout << "Yaw    : " << fdm.vEulerAngles.z << std::endl;
-      std::cout << "Alt    : " << fdm.vPosition.z << std::endl;
+      std::cout << "Roll   : " << fdm.euler_angles.x << std::endl;
+      std::cout << "Pitch  : " << -fdm.euler_angles.y << std::endl;
+      std::cout << "Yaw    : " << fdm.euler_angles.z << std::endl;
+      std::cout << "Alt    : " << fdm.position.z << std::endl;
       std::cout << "Thrust : " << fdm.thrust_force << std::endl;
-      std::cout << "Speed  : " << fdm.fSpeed / 1.688f << std::endl; // divide by 1.688 to convert ft/s to knots
+      std::cout << "Speed  : " << fdm.speed / 1.688f << std::endl; // divide by 1.688 to convert ft/s to knots
 
       if (fdm.flaps) std::cout << "Flaps!\n";
       if (fdm.stalling) std::cout << "Stall!\n";
