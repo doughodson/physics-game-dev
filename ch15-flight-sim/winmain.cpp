@@ -294,7 +294,7 @@ void NullEvent()
       std::strcat(s, buf);
       std::sprintf(buf, "T= %.0f ; ", fdm.ThrustForce);
       std::strcat(s, buf);
-      std::sprintf(buf, "S= %.0f ", fdm.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
+      std::sprintf(buf, "S= %.0f ", fdm.fSpeed/1.688f); // divide by 1.688 to convert ft/s to knots
       std::strcat(s, buf);
       if (fdm.flaps)
          std::strcat(s, "; Flaps");
