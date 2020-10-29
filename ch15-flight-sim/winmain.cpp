@@ -269,7 +269,7 @@ void NullEvent()
    Sleep(static_cast<DWORD>(0.9));
    TotalTime += dt;
    //if(TotalTime > 1.6f)
-   fdm.step_simulation(dt);
+   fdm.update(dt);
 
    if (FrameCounter >= RENDER_FRAME_COUNT) {
       // Direct3D x = - our y
@@ -277,8 +277,8 @@ void NullEvent()
       // Direct3D z = our x
       SetCameraPosition(-fdm.vPosition.y, fdm.vPosition.z, fdm.vPosition.x);
 
-      Vector vz{fdm.getBodyZAxisVector()}; // pointing up in our coordinate system
-      Vector vx{fdm.getBodyXAxisVector()}; // pointing forward in our coordinate system
+      Vector vz{fdm.get_body_Z_axis_vector()}; // pointing up in our coordinate system
+      Vector vx{fdm.get_body_X_axis_vector()}; // pointing forward in our coordinate system
       SetCameraOrientation( -vx.y, vx.z, vx.x,
                             -vz.y, vz.z, vz.x);
       Render();

@@ -45,11 +45,16 @@ class BourgFDM : public RigidBody
 public:
    BourgFDM();
 
-   void calc_mass_properties();          // calcs total mass and inertia
-   void calc_loads();                    // calcs total forces and moments
-   void step_simulation(const float dt); // step dt time in the simulation
-   Vector getBodyZAxisVector();
-   Vector getBodyXAxisVector();
+   void update(const float dt);           // update model using Euler's method
+   void update2(const float dt);          // update model using midpoint method
+
+   Vector get_body_Z_axis_vector();
+   Vector get_body_X_axis_vector();
+
+   float thrust_force{};    // magnitude of the thrust force
+   bool stalling{};         // stall flag
+   bool flaps{};            // flaps down flag
+
    void inc_thrust();
    void dec_thrust();
    void left_rudder();
@@ -64,14 +69,13 @@ public:
    void flaps_down();
    void zero_flaps();
 
-   BodyElement element[8];  // Mass, inertia and lifting surface properties of our airplane
-   Vector thrust;           // Thrust vector, assumed to act through the plane's CG
-   float thrust_force{};    // Magnitude of the thrust force
-   bool stalling{};         // Flag to let us know if we are in a stalled condition
-   bool flaps{};            // Flag to let us know if the flaps are down
-
 private:
-   Matrix3x3 make_angular_velocity_matrix(Vector u);
+   BodyElement element[8];  // mass, inertia and lifting surface properties of our airplane
+
+   void calc_mass_properties();    // calcs total mass and inertia
+   void calc_loads();              // calcs total forces and moments
+
+   Matrix3x3 make_angular_velocity_matrix(const Vector& u);
    float lift_coefficient(const float angle, const int flaps);
    float drag_coefficient(const float angle, const int flaps);
    float rudder_lift_coefficient(const float angle);

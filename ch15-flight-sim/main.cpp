@@ -23,7 +23,8 @@ int main()
 
       fdm.inc_thrust();
 
-      fdm.step_simulation(dt);
+      fdm.update(dt);
+//      fdm.update2(dt);
       std::cout << "Simulation time : " << current_time << std::endl;
 
       std::cout << "Roll   : " << fdm.vEulerAngles.x << std::endl;
