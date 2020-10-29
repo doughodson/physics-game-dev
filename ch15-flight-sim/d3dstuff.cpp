@@ -144,44 +144,44 @@ BOOL CreateScene()
    Texture.sv = 1.0F;
    Texture.type = D3DRMWRAP_SPHERE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp", "assets/sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp","sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 100.0f, 500.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp","assets/sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 100.0f, 500.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp","sphere2.x", 100.0f, 100.0f, 100.0f, 500.0f, 100.0f, 0.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp","assets/sphere2.x", 100.0f, 100.0f, 100.0f, 500.0f, 100.0f, 0.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp","sphere2.x", 100.0f, 100.0f, 100.0f, -500.0f, 100.0f, -500.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp","assets/sphere2.x", 100.0f, 100.0f, 100.0f, -500.0f, 100.0f, -500.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 1000.0f, 500.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp", "assets/sphere2.x", 100.0f, 100.0f, 100.0f, 0.0f, 1000.0f, 500.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 5000.0f, 300.0f, 5000.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp", "assets/sphere2.x", 100.0f, 100.0f, 100.0f, 5000.0f, 300.0f, 5000.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, -5000.0f, 300.0f, 5000.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp", "assets/sphere2.x", 100.0f, 100.0f, 100.0f, -5000.0f, 300.0f, 5000.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, 5000.0f, 300.0f, -5000.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp", "assets/sphere2.x", 100.0f, 100.0f, 100.0f, 5000.0f, 300.0f, -5000.0f, FALSE))
       return FALSE;
 
-   if (!LoadObject(D3D.Scene, "test.bmp", "sphere2.x", 100.0f, 100.0f, 100.0f, -5000.0f, 300.0f, -5000.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/test.bmp", "assets/sphere2.x", 100.0f, 100.0f, 100.0f, -5000.0f, 300.0f, -5000.0f, FALSE))
       return FALSE;
 
    Texture.power = 24; // mat
    Texture.su = 8.0F;
    Texture.sv = 8.0F;
    Texture.type = D3DRMWRAP_FLAT;
-   if (!LoadObject(D3D.Scene, "ground_grass.ppm", "land4.x", 20000.0f, 5000.0f, 20000.0f, 0.0f, -100.0f, 0.0f, FALSE))
+   if (!LoadObject(D3D.Scene, "assets/ground_grass.ppm", "assets/land4.x", 20000.0f, 5000.0f, 20000.0f, 0.0f, -100.0f, 0.0f, FALSE))
       return FALSE;
 
    Texture.power = 2; // metallic
    Texture.su = 1.0F;
    Texture.sv = 1.0F;
-   if (!LoadObject(D3D.Camera, NULL, "plane2.x", 20.0f, 20.0f, 20.0f, 0.0f, -10.0f, 0.0f, TRUE))//-10,100
+   if (!LoadObject(D3D.Camera, NULL, "assets/plane2.x", 20.0f, 20.0f, 20.0f, 0.0f, -10.0f, 0.0f, TRUE))//-10,100
       return FALSE;//"STEELPNL.PPM"
 
    if (FAILED(D3D.Camera->SetPosition(D3D.Scene, 0.0, 0.0, -200)))
@@ -356,7 +356,7 @@ BOOL LoadBackground()
    LPDIRECT3DRMTEXTURE tex{};
    BOOL retval{true};
 
-   D3D.D3DRM->LoadTexture("clouds.ppm", &tex);
+   D3D.D3DRM->LoadTexture("assets/clouds.ppm", &tex);
 
    if (FAILED(D3D.Scene->SetSceneBackgroundImage(tex) ))
       retval =  FALSE;
