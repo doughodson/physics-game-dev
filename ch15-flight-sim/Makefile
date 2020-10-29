@@ -1,0 +1,19 @@
+
+include ../makedefs
+
+PGM = flight-sim
+
+OBJS =  \
+	BourgFDM.o \
+	main.o
+
+.PHONY: all clean
+
+all: $(PGM)
+
+$(PGM): $(OBJS)
+	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
+
+clean:
+	-rm -f *.o
+	-rm -f $(PGM)
