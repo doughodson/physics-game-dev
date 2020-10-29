@@ -25,7 +25,7 @@ public:
    Vector euler_angles;       // Euler angles in body coordinates
    float speed{};             // speed (magnitude of the velocity)
 
-   Quaternion qOrientation;   // orientation in earth coordinates
+   Quaternion orientation;    // orientation in earth coordinates
    //Matrix3x3 mRotation;     // rotation matrix
 
    Vector force;              // total force on body

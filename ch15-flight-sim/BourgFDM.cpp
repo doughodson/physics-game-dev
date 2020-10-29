@@ -52,7 +52,7 @@ BourgFDM::BourgFDM()
 
    // set initial orientation
    const float iRoll{}, iPitch{}, iYaw{};
-   qOrientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
+   orientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
 
    // calculate the plane's mass properties
    calc_mass_properties();
@@ -115,23 +115,23 @@ void BourgFDM::update(const float dt)
                                     * dt;
       */
       // calculate the new rotation quaternion:
-   qOrientation += (qOrientation * angular_velocity) * (0.5f * dt);
+   orientation += (orientation * angular_velocity) * (0.5f * dt);
 
    // now normalize the orientation quaternion:
-   mag = qOrientation.magnitude();
+   mag = orientation.magnitude();
    if (mag != 0) {
-      qOrientation /= mag;
+      orientation /= mag;
    }
 
    // calculate the velocity in body space:
    // (we'll need this to calculate lift and drag forces)
-   velocity_body = QVRotate(~qOrientation, velocity);
+   velocity_body = QVRotate(~orientation, velocity);
 
    // calculate the air speed:
    speed = velocity.magnitude();
 
    // get the Euler angles for our information
-   Vector u{ MakeEulerAnglesFromQ(qOrientation) };
+   Vector u{ MakeEulerAnglesFromQ(orientation) };
    euler_angles.x = u.x;  // roll
    euler_angles.y = u.y;  // pitch
    euler_angles.z = u.z;  // yaw
@@ -177,23 +177,23 @@ void BourgFDM::update2(const float dt)
    angular_velocity += inertia_inverse * (moment - mAngularVelocity * inertia * angular_velocity) * dt;
 
    // calculate the new rotation quaternion:
-   qOrientation += (qOrientation * angular_velocity) * (0.5f * dt);
+   orientation += (orientation * angular_velocity) * (0.5f * dt);
 
    // now normalize the orientation quaternion:
-   mag = qOrientation.magnitude();
+   mag = orientation.magnitude();
    if (mag != 0) {
-      qOrientation /= mag;
+      orientation /= mag;
    }
 
    // calculate the velocity in body space:
    // (we'll need this to calculate lift and drag forces)
-   velocity_body = QVRotate(~qOrientation, velocity);
+   velocity_body = QVRotate(~orientation, velocity);
 
    // calculate the air speed:
    speed = velocity.magnitude();
 
    // get the Euler angles for our information
-   Vector u{MakeEulerAnglesFromQ(qOrientation)};
+   Vector u{MakeEulerAnglesFromQ(orientation)};
    euler_angles.x = u.x;  // roll
    euler_angles.y = u.y;  // pitch
    euler_angles.z = u.z;  // yaw
@@ -441,7 +441,7 @@ void BourgFDM::calc_loads()
    Fb += thrust;
 
    // convert force from model space to earth space
-   force = QVRotate(qOrientation, Fb);
+   force = QVRotate(orientation, Fb);
 
    // apply gravity (g is defined as -32.174 ft/s^2)
    force.z += g * mass;
@@ -474,13 +474,13 @@ void BourgFDM::calc_loads()
 Vector BourgFDM::get_body_Z_axis_vector()
 {
    Vector v(0.0f, 0.0f, 1.0f);
-   return QVRotate(qOrientation, v);
+   return QVRotate(orientation, v);
 }
 
 Vector BourgFDM::get_body_X_axis_vector()
 {
    Vector v(1.0f, 0.0f, 0.0f);
-   return QVRotate(qOrientation, v);
+   return QVRotate(orientation, v);
 }
 
 Matrix3x3 BourgFDM::make_angular_velocity_matrix(const Vector& u)
