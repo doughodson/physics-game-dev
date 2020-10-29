@@ -13,15 +13,15 @@ struct BodyElement
 {
    BodyElement() = default;
 
-   float fMass{};
-   Vector vDCoords;
-   Vector vCGCoords;
-   Vector vLocalInertia;
-   float fIncidence{};
-   float fDihedral{};
-   Vector vNormal;
-   float fArea{};
-   int iFlap{};
+   float mass{};              // mass of element
+   Vector dsg_coord;          // design coordinate
+   Vector cg_coord;           // center of gravity (CG) coordinate
+   Vector local_inertia;
+   float incidence_angle{};   // incidence angle
+   float dihedral_angle{};    // dihedral angle
+   Vector normal;             // normal vector (perpendicular) to lifting surface
+   float area{};
+   int flap{};                // flap position (0 = not deflected, 1 = flap up, -1 = flap down)
 };
 
 #endif

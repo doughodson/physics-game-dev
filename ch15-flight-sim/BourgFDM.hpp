@@ -70,12 +70,12 @@ public:
    void zero_flaps();
 
 private:
-   BodyElement element[8];  // mass, inertia and lifting surface properties of our airplane
+   BodyElement element[8];         // mass, inertia and lifting surface properties
 
    void calc_mass_properties();    // calcs total mass and inertia
    void calc_loads();              // calcs total forces and moments
 
-   Matrix3x3 make_angular_velocity_matrix(const Vector& u);
+   Matrix3x3 make_angular_velocity_matrix(const Vector&);
    float lift_coefficient(const float angle, const int flaps);
    float drag_coefficient(const float angle, const int flaps);
    float rudder_lift_coefficient(const float angle);

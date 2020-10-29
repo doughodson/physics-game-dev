@@ -240,113 +240,113 @@ void BourgFDM::calc_mass_properties()
    // its baseline and center line.  Later, these coordinates will be adjusted
    // so that each element is referenced to the combined center of gravity of
    // the airplane
-   element[0].fMass = 6.56f;
-   element[0].vDCoords = Vector(14.5f, 12.0f, 2.5f);
-   element[0].vLocalInertia = Vector(13.92f, 10.50f, 24.00f);
-   element[0].fIncidence = -3.5f;
-   element[0].fDihedral = 0.0f;
-   element[0].fArea = 31.2f;
-   element[0].iFlap = 0;
+   element[0].mass = 6.56f;
+   element[0].dsg_coord = Vector(14.5f, 12.0f, 2.5f);
+   element[0].local_inertia = Vector(13.92f, 10.50f, 24.00f);
+   element[0].incidence_angle = -3.5f;
+   element[0].dihedral_angle = 0.0f;
+   element[0].area = 31.2f;
+   element[0].flap = 0;
 
-   element[1].fMass = 7.31f;
-   element[1].vDCoords = Vector(14.5f, 5.5f, 2.5f);
-   element[1].vLocalInertia = Vector(21.95f, 12.22f, 33.67f);
-   element[1].fIncidence = -3.5f;
-   element[1].fDihedral = 0.0f;
-   element[1].fArea = 36.4f;
-   element[1].iFlap = 0;
+   element[1].mass = 7.31f;
+   element[1].dsg_coord = Vector(14.5f, 5.5f, 2.5f);
+   element[1].local_inertia = Vector(21.95f, 12.22f, 33.67f);
+   element[1].incidence_angle = -3.5f;
+   element[1].dihedral_angle = 0.0f;
+   element[1].area = 36.4f;
+   element[1].flap = 0;
 
-   element[2].fMass = 7.31f;
-   element[2].vDCoords = Vector(14.5f, -5.5f, 2.5f);
-   element[2].vLocalInertia = Vector(21.95f, 12.22f, 33.67f);
-   element[2].fIncidence = -3.5f;
-   element[2].fDihedral = 0.0f;
-   element[2].fArea = 36.4f;
-   element[2].iFlap = 0;
+   element[2].mass = 7.31f;
+   element[2].dsg_coord = Vector(14.5f, -5.5f, 2.5f);
+   element[2].local_inertia = Vector(21.95f, 12.22f, 33.67f);
+   element[2].incidence_angle = -3.5f;
+   element[2].dihedral_angle = 0.0f;
+   element[2].area = 36.4f;
+   element[2].flap = 0;
 
-   element[3].fMass = 6.56f;
-   element[3].vDCoords = Vector(14.5f, -12.0f, 2.5f);
-   element[3].vLocalInertia = Vector(13.92f, 10.50f, 24.00f);
-   element[3].fIncidence = -3.5f;
-   element[3].fDihedral = 0.0f;
-   element[3].fArea = 31.2f;
-   element[3].iFlap = 0;
+   element[3].mass = 6.56f;
+   element[3].dsg_coord = Vector(14.5f, -12.0f, 2.5f);
+   element[3].local_inertia = Vector(13.92f, 10.50f, 24.00f);
+   element[3].incidence_angle = -3.5f;
+   element[3].dihedral_angle = 0.0f;
+   element[3].area = 31.2f;
+   element[3].flap = 0;
 
-   element[4].fMass = 2.62f;
-   element[4].vDCoords = Vector(3.03f, 2.5f, 3.0f);
-   element[4].vLocalInertia = Vector(0.837f, 0.385f, 1.206f);
-   element[4].fIncidence = 0.0f;
-   element[4].fDihedral = 0.0f;
-   element[4].fArea = 10.8f;
-   element[4].iFlap = 0;
+   element[4].mass = 2.62f;
+   element[4].dsg_coord = Vector(3.03f, 2.5f, 3.0f);
+   element[4].local_inertia = Vector(0.837f, 0.385f, 1.206f);
+   element[4].incidence_angle = 0.0f;
+   element[4].dihedral_angle = 0.0f;
+   element[4].area = 10.8f;
+   element[4].flap = 0;
 
-   element[5].fMass = 2.62f;
-   element[5].vDCoords = Vector(3.03f, -2.5f, 3.0f);
-   element[5].vLocalInertia = Vector(0.837f,0.385f, 1.206f);
-   element[5].fIncidence = 0.0f;
-   element[5].fDihedral = 0.0f;
-   element[5].fArea = 10.8f;
-   element[5].iFlap = 0;
+   element[5].mass = 2.62f;
+   element[5].dsg_coord = Vector(3.03f, -2.5f, 3.0f);
+   element[5].local_inertia = Vector(0.837f,0.385f, 1.206f);
+   element[5].incidence_angle = 0.0f;
+   element[5].dihedral_angle = 0.0f;
+   element[5].area = 10.8f;
+   element[5].flap = 0;
 
-   element[6].fMass = 2.93f;
-   element[6].vDCoords = Vector(2.25f, 0.0f, 5.0f);
-   element[6].vLocalInertia = Vector(1.262f, 1.942f, 0.718f);
-   element[6].fIncidence = 0.0f;
-   element[6].fDihedral = 90.0f;
-   element[6].fArea = 12.0f;
-   element[6].iFlap = 0;
+   element[6].mass = 2.93f;
+   element[6].dsg_coord = Vector(2.25f, 0.0f, 5.0f);
+   element[6].local_inertia = Vector(1.262f, 1.942f, 0.718f);
+   element[6].incidence_angle = 0.0f;
+   element[6].dihedral_angle = 90.0f;
+   element[6].area = 12.0f;
+   element[6].flap = 0;
 
-   element[7].fMass = 31.8f;
-   element[7].vDCoords = Vector(15.25f, 0.0f, 1.5f);
-   element[7].vLocalInertia = Vector(66.30f, 861.9f, 861.9f);
-   element[7].fIncidence = 0.0f;
-   element[7].fDihedral = 0.0f;
-   element[7].fArea = 84.0f;
-   element[7].iFlap = 0;
+   element[7].mass = 31.8f;
+   element[7].dsg_coord = Vector(15.25f, 0.0f, 1.5f);
+   element[7].local_inertia = Vector(66.30f, 861.9f, 861.9f);
+   element[7].incidence_angle = 0.0f;
+   element[7].dihedral_angle = 0.0f;
+   element[7].area = 84.0f;
+   element[7].flap = 0;
 
    // Calculate the vector normal (perpendicular) to each lifting surface.
    // This is required when calculating the relative air velocity for
    // lift and drag calculations.
    for (int i{}; i< 8; i++) {
-      float in{DegreesToRadians(element[i].fIncidence)};
-      float di{DegreesToRadians(element[i].fDihedral)};
-      element[i].vNormal = Vector(static_cast<float>(std::sin(in)),
+      float in{DegreesToRadians(element[i].incidence_angle)};
+      float di{DegreesToRadians(element[i].dihedral_angle)};
+      element[i].normal = Vector(static_cast<float>(std::sin(in)),
                                   static_cast<float>(std::cos(in) * std::sin(di)),
                                   static_cast<float>(std::cos(in) * std::cos(di)));
-      element[i].vNormal.normalize();
+      element[i].normal.normalize();
    }
 
    // calculate total mass
    float mass{};
    for (int i{}; i< 8; i++) {
-      mass += element[i].fMass;
+      mass += element[i].mass;
    }
 
    // calculate combined center of gravity location
    Vector vMoment;
    for (int i{}; i< 8; i++) {
-      vMoment += element[i].fMass * element[i].vDCoords;
+      vMoment += element[i].mass * element[i].dsg_coord;
    }
    Vector CG = vMoment/mass;
 
    // calculate coordinates of each element with respect to the combined CG 
    for (int i{}; i< 8; i++) {
-      element[i].vCGCoords = element[i].vDCoords - CG;
+      element[i].cg_coord = element[i].dsg_coord - CG;
    }
 
    // calculate the moments and products of inertia for the combined elements
    // (This inertia matrix (tensor) is in body coordinates)
    float Ixx{}, Iyy{}, Izz{}, Ixy{}, Ixz{}, Iyz{};
    for (int i{}; i< 8; i++) {
-      Ixx += element[i].vLocalInertia.x + 
-             element[i].fMass * (element[i].vCGCoords.y * element[i].vCGCoords.y + element[i].vCGCoords.z * element[i].vCGCoords.z);
-      Iyy += element[i].vLocalInertia.y +
-             element[i].fMass * (element[i].vCGCoords.z * element[i].vCGCoords.z + element[i].vCGCoords.x * element[i].vCGCoords.x);
-      Izz += element[i].vLocalInertia.z +
-             element[i].fMass * (element[i].vCGCoords.x * element[i].vCGCoords.x + element[i].vCGCoords.y * element[i].vCGCoords.y);
-      Ixy += element[i].fMass * (element[i].vCGCoords.x * element[i].vCGCoords.y);
-      Ixz += element[i].fMass * (element[i].vCGCoords.x * element[i].vCGCoords.z);
-      Iyz += element[i].fMass * (element[i].vCGCoords.y * element[i].vCGCoords.z);
+      Ixx += element[i].local_inertia.x + 
+             element[i].mass * (element[i].cg_coord.y * element[i].cg_coord.y + element[i].cg_coord.z * element[i].cg_coord.z);
+      Iyy += element[i].local_inertia.y +
+             element[i].mass * (element[i].cg_coord.z * element[i].cg_coord.z + element[i].cg_coord.x * element[i].cg_coord.x);
+      Izz += element[i].local_inertia.z +
+             element[i].mass * (element[i].cg_coord.x * element[i].cg_coord.x + element[i].cg_coord.y * element[i].cg_coord.y);
+      Ixy += element[i].mass * (element[i].cg_coord.x * element[i].cg_coord.y);
+      Ixz += element[i].mass * (element[i].cg_coord.x * element[i].cg_coord.z);
+      Iyz += element[i].mass * (element[i].cg_coord.y * element[i].cg_coord.z);
    }
 
    // setup the airplane's mass and its inertia matrix and take the inverse of the inertia matrix
@@ -388,18 +388,18 @@ void BourgFDM::calc_loads()
    for(int i{}; i<8; i++) { // loop through the seven lifting elements skipping the fuselage
       if (i == 6) {         // The tail/rudder is a special case since it can rotate
                             // thus you have to recalculate the normal vector
-         float in{DegreesToRadians(element[i].fIncidence)};  // incidence angle
-         float di{DegreesToRadians(element[i].fDihedral)};   // dihedral angle
-         element[i].vNormal = Vector(static_cast<float>(std::sin(in)), 
+         float in{DegreesToRadians(element[i].incidence_angle)};  // incidence angle
+         float di{DegreesToRadians(element[i].dihedral_angle)};   // dihedral angle
+         element[i].normal = Vector(static_cast<float>(std::sin(in)), 
                                      static_cast<float>(std::cos(in) * std::sin(di)),
                                      static_cast<float>(std::cos(in) * std::cos(di)));     // surface normal vector
-         element[i].vNormal.normalize();
+         element[i].normal.normalize();
       }
 
       // Calculate local velocity at element
       // The local velocity includes the velocity due to linear motion of the airplane, 
       // plus the velocity at each element due to the rotation of the airplane.
-      Vector vtmp{vAngularVelocity^element[i].vCGCoords}; // rotational part
+      Vector vtmp{vAngularVelocity^element[i].cg_coord}; // rotational part
       Vector vLocalVelocity{vVelocityBody + vtmp};
 
       // Calculate local air speed
@@ -413,7 +413,7 @@ void BourgFDM::calc_loads()
 
       // Find the direction in which lift will act.
       // Lift is always perpendicular to the drag vector
-      Vector vLiftVector{(vDragVector^element[i].vNormal)^vDragVector};
+      Vector vLiftVector{(vDragVector^element[i].normal)^vDragVector};
       float tmp{vLiftVector.magnitude()};
       vLiftVector.normalize();
 
@@ -422,13 +422,13 @@ void BourgFDM::calc_loads()
       // element normal vector. Note, the sine of the attack angle,
       // is equal to the cosine of the angle between the drag vector and
       // the normal vector.
-      tmp = vDragVector * element[i].vNormal;
+      tmp = vDragVector * element[i].normal;
       if (tmp > 1.) tmp = 1;
       if (tmp < -1) tmp = -1;
       float fAttackAngle{RadiansToDegrees(static_cast<float>(std::asin(tmp)))};
 
       // Determine the resultant force (lift and drag) on the element.
-      tmp = 0.5f * rho * fLocalSpeed*fLocalSpeed * element[i].fArea;		
+      tmp = 0.5f * rho * fLocalSpeed*fLocalSpeed * element[i].area;		
       Vector vResultant;
       if (i == 6) { // Tail/rudder
          vResultant = (vLiftVector * rudder_lift_coefficient(fAttackAngle) +
@@ -436,15 +436,15 @@ void BourgFDM::calc_loads()
       } else if (i == 7) {
          vResultant = vDragVector * 0.5f * tmp; // simulate fuselage drag
       } else {
-         vResultant = (vLiftVector * lift_coefficient(fAttackAngle, element[i].iFlap) +
-                       vDragVector * drag_coefficient(fAttackAngle, element[i].iFlap) ) * tmp;
+         vResultant = (vLiftVector * lift_coefficient(fAttackAngle, element[i].flap) +
+                       vDragVector * drag_coefficient(fAttackAngle, element[i].flap) ) * tmp;
       }
       // Check for stall.
       // We can easily determine when stalled by noting when the coefficient
       // of lift is zero. In reality stall warning devices give warnings well
       // before the lift goes to zero to give the pilot time to correct.
       if (i<=3) {
-         if (lift_coefficient(fAttackAngle, element[i].iFlap) == 0) {
+         if (lift_coefficient(fAttackAngle, element[i].flap) == 0) {
             stalling = true;
          }
       }
@@ -454,7 +454,7 @@ void BourgFDM::calc_loads()
 
       // Calculate the moment about the CG of this element's force
       // and keep a running total of these moments (total moment)
-      vtmp = element[i].vCGCoords^vResultant; 
+      vtmp = element[i].cg_coord^vResultant;
       Mb += vtmp;
    }
 
@@ -634,65 +634,65 @@ void BourgFDM::dec_thrust()
 
 void BourgFDM::left_rudder()
 {
-   element[6].fIncidence = 16;
+   element[6].incidence_angle = 16;
 }
 
 void BourgFDM::right_rudder()
 {
-   element[6].fIncidence = -16;
+   element[6].incidence_angle = -16;
 }
 
 void BourgFDM::zero_rudder()
 {
-   element[6].fIncidence = 0;
+   element[6].incidence_angle = 0;
 }
 
 void BourgFDM::roll_left()
 {
-   element[0].iFlap = 1;
-   element[3].iFlap = -1;
+   element[0].flap = 1;
+   element[3].flap = -1;
 }
 
 void BourgFDM::roll_right()
 {
-   element[0].iFlap = -1;
-   element[3].iFlap = 1;
+   element[0].flap = -1;
+   element[3].flap = 1;
 }
 
 void BourgFDM::pitch_up()
 {
-   element[4].iFlap = 1;
-   element[5].iFlap = 1;
+   element[4].flap = 1;
+   element[5].flap = 1;
 }
 
 void BourgFDM::pitch_down()
 {
-   element[4].iFlap = -1;
-   element[5].iFlap = -1;
+   element[4].flap = -1;
+   element[5].flap = -1;
 }
 
 void BourgFDM::zero_ailerons()
 {
-   element[0].iFlap = 0;
-   element[3].iFlap = 0;
+   element[0].flap = 0;
+   element[3].flap = 0;
 }
 
 void BourgFDM::zero_elevators()
 {
-   element[4].iFlap = 0;
-   element[5].iFlap = 0;
+   element[4].flap = 0;
+   element[5].flap = 0;
 }
 
 void BourgFDM::flaps_down()
 {
-   element[1].iFlap = -1;
-   element[2].iFlap = -1;
+   element[1].flap = -1;
+   element[2].flap = -1;
    flaps = true;
 }
 
 void BourgFDM::zero_flaps()
 {
-   element[1].iFlap = 0;
-   element[2].iFlap = 0;
+   element[1].flap = 0;
+   element[2].flap = 0;
    flaps = false;
 }
