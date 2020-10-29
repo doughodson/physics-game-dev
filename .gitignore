@@ -33,6 +33,8 @@ cloth-sim_d.exe
 # chapter 15
 flight-sim.exe
 flight-sim_d.exe
+flight-sim_dx7.exe
+flight-sim_dx7_d.exe
 
 # chapter 17
 hover.exe

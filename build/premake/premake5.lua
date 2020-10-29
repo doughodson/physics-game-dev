@@ -24,34 +24,41 @@ COMMON_IncPath      = "../../"
 LibDX7     = { "d3drm.lib", "ddraw.lib" }
 LibWindows = { "Winmm" }
 
-local function createConsoleProject(projectName, targetName)
-   project (projectName)
+local function createConsoleProject(targetDirPath, targetName)
+   project (targetName)
      kind("ConsoleApp")
      defines({"_CONSOLE"})
      location("../" .. _ACTION .. "/projects/%{prj.name}")
      targetname(targetName)
-     targetdir("../../" .. projectName)
-     debugdir("../../" .. projectName)
+     targetdir("../../" .. targetDirPath)
+     includedirs({COMMON_IncPath})
+     debugdir("../../" .. targetDirPath)
      files({
-        "../../" .. projectName .. "/**.h*",
-        "../../" .. projectName .. "/**.c*",
-        "../../" .. projectName .. "/**.rc"
+        "../../" .. targetDirPath .. "/**.h*",
+        "../../" .. targetDirPath .. "/**.c*"
      })
-     libdirs({ DX7_LibPath })
-     links({ LibDX7, LibWindows })
+     excludes({
+        "../../" .. targetDirPath .. "/winmain.cpp",
+        "../../" .. targetDirPath .. "/d3d*.*"
+     })
+     links({LibWindows})
 end
 
-local function createMFCProject(projectName, targetName)
-   project (projectName)
+local function createMFCProject(targetDirPath, targetName)
+   project (targetName)
      kind("WindowedApp")
      location("../" .. _ACTION .. "/projects/%{prj.name}")
      targetname(targetName)
-     targetdir("../../" .. projectName)
-     debugdir("../../" .. projectName)
+     includedirs({DX7_IncPath, COMMON_IncPath})
+     targetdir("../../" .. targetDirPath)
+     debugdir("../../" .. targetDirPath)
      files({
-        "../../" .. projectName .. "/**.h*",
-        "../../" .. projectName .. "/**.c*",
-        "../../" .. projectName .. "/**.rc"
+        "../../" .. targetDirPath .. "/**.h*",
+        "../../" .. targetDirPath .. "/**.c*",
+        "../../" .. targetDirPath .. "/**.rc"
+     })
+     excludes({
+        "../../" .. targetDirPath .. "/main.cpp"
      })
      libdirs({ DX7_LibPath })
      links({ LibDX7, LibWindows })
@@ -71,9 +78,6 @@ workspace("physics-game-dev")
    --     Debug          (Application linked to Multi-threaded Debug DLL)
    --
    configurations({ "Release", "Debug" })
-
-   -- common include directories (all configurations/all projects)
-   includedirs({ DX7_IncPath, COMMON_IncPath })
 
    -- visual studio options and warnings
    -- /wd4351 (C4351 warning) - disable warning associated with array brace initialization
@@ -104,8 +108,10 @@ createMFCProject("ch06-cannon3", "cannon3")
 createMFCProject("ch08-falling-particles", "falling-particles")
 createMFCProject("ch09-rigid-body-2D", "rigid-body-2D")
 createMFCProject("ch13-cloth-sim", "cloth-sim")
-createMFCProject("ch15-flight-sim", "flight-sim")
 createMFCProject("ch17-hover", "hover")
 
 createConsoleProject("chXX-volume", "volume")
+
+createMFCProject("ch15-flight-sim", "flight-sim_dx7")
+createConsoleProject("ch15-flight-sim", "flight-sim")
 
