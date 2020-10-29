@@ -261,7 +261,7 @@ void NullEvent()
    if (dt > (0.016f)) dt = (0.016f);
    if (dt < 0.001f) dt = 0.001f;
 
-   Sleep(0.9);
+   Sleep(static_cast<DWORD>(0.9));
    TotalTime += dt;
    //if(TotalTime > 1.6f)
    fdm.step_simulation(dt);
@@ -272,8 +272,8 @@ void NullEvent()
       // Direct3D z = our x
       SetCameraPosition(-fdm.vPosition.y, fdm.vPosition.z, fdm.vPosition.x);
 
-      Vector vz{fdm.GetBodyZAxisVector()}; // pointing up in our coordinate system
-      Vector vx{fdm.GetBodyXAxisVector()}; // pointing forward in our coordinate system
+      Vector vz{fdm.getBodyZAxisVector()}; // pointing up in our coordinate system
+      Vector vx{fdm.getBodyXAxisVector()}; // pointing forward in our coordinate system
       SetCameraOrientation( -vx.y, vx.z, vx.x,
                             -vz.y, vz.z, vz.x);
       Render();
@@ -296,10 +296,10 @@ void NullEvent()
       std::strcat(s, buf);
       std::sprintf(buf, "S= %.0f ", fdm.fSpeed/1.688); // divide by 1.688 to convert ft/s to knots
       std::strcat(s, buf);
-      if (fdm.Flaps)
+      if (fdm.flaps)
          std::strcat(s, "; Flaps");
 
-      if (fdm.Stalling) {
+      if (fdm.stalling) {
          std::strcat(s, "; Stall!");
          Beep(10000, 250);
       }
