@@ -8,11 +8,12 @@
 #include "common/Matrix3x3.hpp"
 #include "common/Quaternion.hpp"
 
-//------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Class: BourgFDM
+// Description: Behavior of a rigid body as defined in Bourg book
+//------------------------------------------------------------------------------
 // Notes:
-//------------------------------------------------------------------------
-//
-//
+//------------------------------------------------------------------------------
 //  Earth coordinates: x points North
 //                     y points West
 //                     z points up
@@ -29,9 +30,6 @@
 //                   y points to left
 //                   z points up 
 //
-// Note:  Direct3D's coordinates system is a left handed one with the z-axis pointing
-//        into the screen, the x-axis pointing to the right and the y-axis pointing up
-//
 // Units: English system,
 //          distance     --> feet
 //          time         --> seconds
@@ -41,12 +39,6 @@
 //          velocity     --> feet-per-second
 //          acceleration --> feet-per-second^2
 //          density      --> slugs-per-feet^3
-//
-//
-
-//------------------------------------------------------------------------------
-// Class: BourgFDM
-// Description: Behavior of a rigid body as defined in Bourg book
 //------------------------------------------------------------------------------
 class BourgFDM : public RigidBody
 {
@@ -58,11 +50,6 @@ public:
    void step_simulation(const float dt); // step dt time in the simulation
    Vector getBodyZAxisVector();
    Vector getBodyXAxisVector();
-   Matrix3x3 makeAngularVelocityMatrix(Vector u);
-   float LiftCoefficient(const float angle, const int flaps);
-   float DragCoefficient(const float angle, const int flaps);
-   float RudderLiftCoefficient(const float angle);
-   float RudderDragCoefficient(const float angle);
    void inc_thrust();
    void dec_thrust();
    void left_rudder();
@@ -77,13 +64,18 @@ public:
    void flaps_down();
    void zero_flaps();
 
-//private:
-
-   BodyElement Element[8];  // Mass, inertia and lifting surface properties of our airplane
-   Vector Thrust;           // Thrust vector, assumed to act through the plane's CG
-   float ThrustForce{};     // Magnitude of the thrust force
+   BodyElement element[8];  // Mass, inertia and lifting surface properties of our airplane
+   Vector thrust;           // Thrust vector, assumed to act through the plane's CG
+   float thrust_force{};    // Magnitude of the thrust force
    bool stalling{};         // Flag to let us know if we are in a stalled condition
    bool flaps{};            // Flag to let us know if the flaps are down
+
+private:
+   Matrix3x3 make_angular_velocity_matrix(Vector u);
+   float lift_coefficient(const float angle, const int flaps);
+   float drag_coefficient(const float angle, const int flaps);
+   float rudder_lift_coefficient(const float angle);
+   float rudder_drag_coefficient(const float angle);
 };
 
 #endif

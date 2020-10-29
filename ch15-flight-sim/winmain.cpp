@@ -1,4 +1,9 @@
 
+//------------------------------------------------------------------------------------------
+// Note:  Direct3D's coordinates system is a left handed one with the z-axis pointing
+//        into the screen, the x-axis pointing to the right and the y-axis pointing up
+//------------------------------------------------------------------------------------------
+
 #define INITGUID
 
 #define APPNAME "Flight Sim"
@@ -292,7 +297,7 @@ void NullEvent()
       std::strcat(s, buf);
       std::sprintf(buf, "Alt= %.0f ; ", fdm.vPosition.z);
       std::strcat(s, buf);
-      std::sprintf(buf, "T= %.0f ; ", fdm.ThrustForce);
+      std::sprintf(buf, "T= %.0f ; ", fdm.thrust_force);
       std::strcat(s, buf);
       std::sprintf(buf, "S= %.0f ", fdm.fSpeed/1.688f); // divide by 1.688 to convert ft/s to knots
       std::strcat(s, buf);
