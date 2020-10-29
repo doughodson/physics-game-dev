@@ -282,7 +282,7 @@ void BourgFDM::CalcAirplaneLoads()
       tmp = vDragVector * Element[i].vNormal;
       if (tmp > 1.) tmp = 1;
       if (tmp < -1) tmp = -1;
-      float fAttackAngle{RadiansToDegrees((float) asin(tmp))};
+      float fAttackAngle{RadiansToDegrees(static_cast<float>(std::asin(tmp)))};
 
       // Determine the resultant force (lift and drag) on the element.
       tmp = 0.5f * rho * fLocalSpeed*fLocalSpeed * Element[i].fArea;		

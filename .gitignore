@@ -4,45 +4,8 @@ testVector
 testMatrix3x3
 testQuaternion
 
-# chapter 2
-cannon.exe
-cannon_d.exe
-particle-explosion.exe
-particle-explosion_d.exe
-
-# chapter 4
-cannon2.exe
-cannon2_d.exe
-
-# chapter 6
-cannon3.exe
-cannon3_d.exe
-
-# chapter 8
-falling-particles.exe
-falling-particles_d.exe
-
-# chapter 9
-rigid-body-2D.exe
-rigid-body-2D_d.exe
-
-# chapter 13
-cloth-sim.exe
-cloth-sim_d.exe
-
 # chapter 15
-flight-sim.exe
-flight-sim_d.exe
-flight-sim_dx7.exe
-flight-sim_dx7_d.exe
-
-# chapter 17
-hover.exe
-hover_d.exe
-
-# chapter XX
-volume.exe
-volume_d.exe
+ch15-flight-sim/flight-sim
 
 # misc visual studio files
 *.pdb
@@ -51,18 +14,15 @@ volume_d.exe
 
 .vscode/
 
-ex01
-ex02
-
 .vs/
 .vscode/
 build/vs2019/
 build/gmake/
+*.[oa]
 
-chap15-flight-sim/Debug
-chap15-flight-sim/Release
+*.exe
+*.lib
 
-
-
+!premake*.*
 
 directX-sdk

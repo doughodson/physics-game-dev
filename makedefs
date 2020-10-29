@@ -3,6 +3,8 @@
 # 'make' configuration file
 # -----------------------------------------------------------------------------
 
+ROOT_DIR=..
+
 # ---
 # Optimize?
 # ---
@@ -23,7 +25,7 @@ CPPFLAGS += -Wall
 CPPFLAGS += -std=c++11 
 
 # warn of old c-style casts, so they can be replaced
-#CPPFLAGS += -Wold-style-cast
+CPPFLAGS += -Wold-style-cast
 # supress warnings of misleading-indentation coming from google protocol buffers code
 CPPFLAGS += -Wno-misleading-indentation
 # supress unused variable warnings
@@ -31,13 +33,5 @@ CPPFLAGS += -Wno-unused-variable
 CPPFLAGS += -Wno-unused-result
 CPPFLAGS += -Wno-unused-but-set-variable
 
-# ---
-# GCC or Clang compiler selection - by default, use system
-# default compiler
-#
-# If you want to use clang, make sure to compile 3rd party libs
-# with clang - especially, Google Protocol Buffers
-# ---
-#CXX = g++
-#CXX = clang++
+CPPFLAGS += -I..
 
