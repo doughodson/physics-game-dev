@@ -62,10 +62,10 @@ void BourgFDM::update(const float dt)
    // calculate the acceleration of the airplane in earth space
    Vector Ae{force / mass};
 
-   // calculate the velocity of the airplane in earth space:
+   // calculate the velocity of the airplane in earth space
    velocity += Ae * dt;
 
-   // calculate the position of the airplane in earth space:
+   // calculate the position of the airplane in earth space
    position += velocity * dt;
 
    //----------------------
@@ -84,11 +84,11 @@ void BourgFDM::update(const float dt)
       orientation /= mag;
    }
 
-   // calculate the velocity in body space:
+   // calculate the velocity in body space
    // (we'll need this to calculate lift and drag forces)
    velocity_body = QVRotate(~orientation, velocity);
 
-   // calculate the air speed:
+   // calculate the air speed
    speed = velocity.magnitude();
 
    // get the Euler angles for our information
@@ -107,33 +107,32 @@ void BourgFDM::update2(const float dt)
    // compute translation
    //----------------------
 
-   // calculate all of the forces and moments on the airplane:
+   // calculate all of the forces and moments on the airplane
    calc_loads();
 
-   // calculate the acceleration of the airplane in earth space:
+   // calculate the acceleration of the airplane in earth space
    Vector Ae{force / mass};
 
-   // calculate the velocity of the airplane in earth space:
+   // calculate the velocity of the airplane in earth space
    Vector Vdot{Ae * (dt/2.0f)};
    Vector Pdot{velocity + Vdot * (dt/2.0f)};
 
    velocity += Vdot * dt;
 
-   // calculate the position of the airplane in earth space:
+   // calculate the position of the airplane in earth space
    position += Pdot * dt;
 
    //----------------------
    // compute rotation
    //----------------------
 
-   // make a matrix out of the angular velocity vector:
+   // make a matrix out of the angular velocity vector
    Matrix3x3 mAngularVelocity{make_angular_velocity_matrix(angular_velocity)};
 
-   // calculate the angular velocity of the airplane in body space:
-   // vtemp = -(Vector)(mAngularVelocity * Airplane.mInertia * Airplane.vAngularVelocity);
+   // calculate the angular velocity of the airplane in body space
    angular_velocity += inertia_inverse * (moment - mAngularVelocity * inertia * angular_velocity) * dt;
 
-   // calculate the new rotation quaternion:
+   // calculate the new rotation quaternion
    orientation += (orientation * angular_velocity) * (0.5f * dt);
 
    // now normalize the orientation quaternion:
