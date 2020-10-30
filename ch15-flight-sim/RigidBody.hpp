@@ -26,7 +26,6 @@ public:
    float speed{};             // speed (magnitude of the velocity)
 
    Quaternion orientation;    // orientation in earth coordinates
-   //Matrix3x3 mRotation;     // rotation matrix
 
    Vector force;              // total force on body
    Vector moment;             // total moment (torque) on body
