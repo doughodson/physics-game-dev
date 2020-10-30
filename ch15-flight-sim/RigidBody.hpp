@@ -32,11 +32,6 @@ public:
    Vector moment;             // total moment (torque) on body
 
    Matrix3x3 mIeInverse;      // inverse of moment of inertia in earth coordinates
-
-// testing...
-   Vector p1, p2;
-// ... end testing
-
 };
 
 #endif

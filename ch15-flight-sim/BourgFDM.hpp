@@ -2,6 +2,7 @@
 #define __BourgFDM_HPP__
 
 #include "RigidBody.hpp"
+
 #include "BodyElement.hpp"
 
 #include "common/Vector.hpp"
@@ -10,9 +11,8 @@
 
 //------------------------------------------------------------------------------
 // Class: BourgFDM
-// Description: Behavior of a rigid body as defined in Bourg book
-//------------------------------------------------------------------------------
-// Notes:
+// Description: A rigid body flight dynamics model as defined in the book
+//              Physics for Game Developers by Bourg
 //------------------------------------------------------------------------------
 //  Earth coordinates: x points North
 //                     y points West
@@ -45,8 +45,8 @@ class BourgFDM : public RigidBody
 public:
    BourgFDM();
 
-   void update(const float dt);           // update model using Euler's method
-   void update2(const float dt);          // update model using midpoint method
+   void update(const float dt);           // update using Euler's method
+   void update2(const float dt);          // update using midpoint method
 
    Vector get_body_Z_axis_vector();
    Vector get_body_X_axis_vector();

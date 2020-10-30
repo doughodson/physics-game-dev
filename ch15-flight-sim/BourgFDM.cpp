@@ -1,14 +1,3 @@
-//----------------------------------------------------------------------------------------------------
-// PHYSICS FOR GAME DEVELOPERS
-//
-// CHAPTERS 7 & 15 EXAMPLE PROGRAM
-//
-// NAME:      FlightSim
-// PURPOSE:   To demonstrate 3D rigid body flight simulation
-// BY:        David Bourg
-// DATE:      07/24/00
-// COPYRIGHT: Copyright 2000 by David Bourg
-//----------------------------------------------------------------------------------------------------
 
 #include "BourgFDM.hpp"
 
@@ -21,10 +10,10 @@
 #define _MAXTHRUST 3000.0f
 
 //------------------------------------------------------------------------
-// This function sets the initial state of the plane, i.e., its initial
-// location, and speed, along with its thrust and attitude.
-// This function also calls another function to calculate the plane's mass
-// properties.
+// constructor that defines the initial state of an airplane which
+// includes:
+//   initial location, and speed, along with its thrust and attitude
+//   and mass properties
 //------------------------------------------------------------------------
 BourgFDM::BourgFDM()
 {
@@ -46,34 +35,32 @@ BourgFDM::BourgFDM()
    // zero the velocity in body space coordinates
    velocity_body = Vector(0.0f, 0.0f, 0.0f);
 
-   // Set these to false at first, you can control later using the keyboard
+   // not stallings and no flaps
    stalling = false;
    flaps = false;
 
-   // set initial orientation
+   // initial orientation
    const float iRoll{}, iPitch{}, iYaw{};
    orientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
 
-   // calculate the plane's mass properties
+   // calculate mass properties
    calc_mass_properties();
 }
 
+//------------------------------------------------------------------------
+// update model using Euler's method
+//------------------------------------------------------------------------
 void BourgFDM::update(const float dt)
 {
-   //------------------------------------------------------------------------
-   // update model using Euler's method
-   //------------------------------------------------------------------------
+   //----------------------
+   // compute translation
+   //----------------------
 
-   // Take care of translation first:
-   // (If this body were a particle, this is all you would need to do.)
-
-   Vector Ae;
-
-   // calculate all of the forces and moments on the airplane:
+   // calculate all of the forces and moments on the airplane
    calc_loads();
 
-   // calculate the acceleration of the airplane in earth space:
-   Ae = force / mass;
+   // calculate the acceleration of the airplane in earth space
+   Vector Ae{force / mass};
 
    // calculate the velocity of the airplane in earth space:
    velocity += Ae * dt;
@@ -81,45 +68,19 @@ void BourgFDM::update(const float dt)
    // calculate the position of the airplane in earth space:
    position += velocity * dt;
 
-   // experimental...
-   /*
-      if (vPosition.z <= 0.0f) {
-         vVelocity.z = -vVelocity.z;
-         vPosition.z = 0.0f;
-      }
-   */
-   // ...end experimental stuff
-
-      // Now handle the rotations:
-   Matrix3x3 mAngularVelocity;
-   float mag{};
-
-   // make a matrix out of the angular velocity vector:
-   mAngularVelocity = make_angular_velocity_matrix(angular_velocity);
+   //----------------------
+   // compute rotation
+   //----------------------
 
    // testing...
    angular_velocity += inertia_inverse * (moment - (angular_velocity^(inertia * angular_velocity))) * dt;
 
-   p1 = (moment - (angular_velocity ^ (inertia * angular_velocity)));
-   p2 = (moment - mAngularVelocity * inertia * angular_velocity);
-
-   p1 -= p2;
-   // ... end testing
-
-      // calculate the angular velocity of the airplane in body space:
-      //vtemp = -(Vector)(mAngularVelocity * Airplane.mInertia * Airplane.vAngularVelocity);
-      /*
-      Airplane.vAngularVelocity += Airplane.mInertiaInverse *
-                                   (Airplane.vMoments -
-                                    mAngularVelocity * Airplane.mInertia * Airplane.vAngularVelocity)
-                                    * dt;
-      */
-      // calculate the new rotation quaternion:
+   // update the rotation quaternion:
    orientation += (orientation * angular_velocity) * (0.5f * dt);
 
-   // now normalize the orientation quaternion:
-   mag = orientation.magnitude();
-   if (mag != 0) {
+   // normalize the orientation quaternion
+   const float mag{orientation.magnitude()};
+   if (mag != 0.0f) {
       orientation /= mag;
    }
 
@@ -131,46 +92,42 @@ void BourgFDM::update(const float dt)
    speed = velocity.magnitude();
 
    // get the Euler angles for our information
-   Vector u{ MakeEulerAnglesFromQ(orientation) };
+   Vector u{MakeEulerAnglesFromQ(orientation)};
    euler_angles.x = u.x;  // roll
    euler_angles.y = u.y;  // pitch
    euler_angles.z = u.z;  // yaw
 }
 
+//------------------------------------------------------------------------
+//  update model using modified Euler's method -- midpoint method
+//------------------------------------------------------------------------
 void BourgFDM::update2(const float dt)
 {
-   //------------------------------------------------------------------------
-   //  update model using modified Euler's method -- midpoint method
-   //------------------------------------------------------------------------
-
-   // Take care of translation first:
-   // (If this body were a particle, this is all you would need to do.)
-
-   Vector Ae;
-   Vector Vdot;
-   Vector Pdot;
+   //----------------------
+   // compute translation
+   //----------------------
 
    // calculate all of the forces and moments on the airplane:
    calc_loads();
 
    // calculate the acceleration of the airplane in earth space:
-   Ae = force / mass;
+   Vector Ae{force / mass};
 
    // calculate the velocity of the airplane in earth space:
-   Vdot = Ae * (dt/2.0f);
-   Pdot = velocity + Vdot * (dt/2.0f);
+   Vector Vdot{Ae * (dt/2.0f)};
+   Vector Pdot{velocity + Vdot * (dt/2.0f)};
 
    velocity += Vdot * dt;
 
    // calculate the position of the airplane in earth space:
    position += Pdot * dt;
 
-   // Now handle the rotations:
-   Matrix3x3 mAngularVelocity;
-   float mag{};
+   //----------------------
+   // compute rotation
+   //----------------------
 
    // make a matrix out of the angular velocity vector:
-   mAngularVelocity = make_angular_velocity_matrix(angular_velocity);
+   Matrix3x3 mAngularVelocity{make_angular_velocity_matrix(angular_velocity)};
 
    // calculate the angular velocity of the airplane in body space:
    // vtemp = -(Vector)(mAngularVelocity * Airplane.mInertia * Airplane.vAngularVelocity);
@@ -180,8 +137,8 @@ void BourgFDM::update2(const float dt)
    orientation += (orientation * angular_velocity) * (0.5f * dt);
 
    // now normalize the orientation quaternion:
-   mag = orientation.magnitude();
-   if (mag != 0) {
+   float mag{orientation.magnitude()};
+   if (mag != 0.0f) {
       orientation /= mag;
    }
 
@@ -289,9 +246,8 @@ void BourgFDM::calc_mass_properties()
    element[7].area = 84.0f;
    element[7].flap = 0;
 
-   // Calculate the vector normal (perpendicular) to each lifting surface.
-   // This is required when calculating the relative air velocity for
-   // lift and drag calculations.
+   // determine the vector normal (perpendicular) to each lifting surface (this is
+   // required when calculating the relative air velocity for lift and drag calculations)
    for (int i{}; i< 8; i++) {
       float in{DegreesToRadians(element[i].incidence_angle)};
       float di{DegreesToRadians(element[i].dihedral_angle)};
@@ -301,7 +257,7 @@ void BourgFDM::calc_mass_properties()
       element[i].normal.normalize();
    }
 
-   // calculate total mass
+   // update total mass
    mass = 0.0f;
    for (int i{}; i< 8; i++) {
       mass += element[i].mass;
@@ -334,7 +290,7 @@ void BourgFDM::calc_mass_properties()
       Iyz += element[i].mass * (element[i].cg_coord.y * element[i].cg_coord.z);
    }
 
-   // setup the airplane's mass and its inertia matrix and take the inverse of the inertia matrix
+   // setup mass and its inertia matrix and take the inverse of the inertia matrix
    inertia.e11 = Ixx;  inertia.e12 = -Ixy; inertia.e13 = -Ixz;
    inertia.e21 = -Ixy; inertia.e22 = Iyy;  inertia.e23 = -Iyz;
    inertia.e31 = -Ixz; inertia.e32 = -Iyz; inertia.e33 = Izz;
@@ -343,23 +299,23 @@ void BourgFDM::calc_mass_properties()
 }
 
 //------------------------------------------------------------------------
-// This function calculates all of the forces and moments acting on the
-// plane at any given time.
+// calculates all of the forces and moments acting on the plane
+// at any given time
 //------------------------------------------------------------------------
 void BourgFDM::calc_loads()
 {
-   // reset forces and moments:
+   // reset forces and moments
    force = Vector(0.0f, 0.0f, 0.0f);
    moment = Vector(0.0f, 0.0f, 0.0f);
 
    Vector Fb;   // total force
    Vector Mb;   // total moment
 
-   // Define the thrust vector, which acts through the plane's CG
+   // define the thrust vector, which acts through the plane's CG
    Vector thrust(1.0f, 0.0f, 0.0f);
    thrust *= thrust_force;
 
-   // Calculate forces and moments in body space:
+   // calculate forces and moments in body space
    Vector vDragVector;
 
    stalling = false;
@@ -375,38 +331,36 @@ void BourgFDM::calc_loads()
          element[i].normal.normalize();
       }
 
-      // Calculate local velocity at element
-      // The local velocity includes the velocity due to linear motion of the airplane, 
-      // plus the velocity at each element due to the rotation of the airplane.
+      // determine local velocity at element (the local velocity includes the
+      // velocity due to linear motion of the airplane, plus the velocity at
+      // each element due to the rotation of the airplane
       Vector vtmp{angular_velocity^element[i].cg_coord}; // rotational part
       Vector vLocalVelocity{velocity_body + vtmp};
 
-      // Calculate local air speed
+      // calculate local air speed
       float fLocalSpeed{vLocalVelocity.magnitude()};
 
-      // Find the direction in which drag will act.
-      // Drag always acts inline with the relative velocity but in the opposing direction
+      // determine direction in which drag will act (drag always acts inline
+      // with the relative velocity but in the opposing direction
       if (fLocalSpeed > 1.0) {
          vDragVector = -vLocalVelocity/fLocalSpeed;
       }
 
-      // Find the direction in which lift will act.
-      // Lift is always perpendicular to the drag vector
+      // determine direction in which lift will act (lift is
+      // always perpendicular to the drag vector
       Vector vLiftVector{(vDragVector^element[i].normal)^vDragVector};
       float tmp{vLiftVector.magnitude()};
       vLiftVector.normalize();
 
-      // Find the angle of attack.
-      // The attack angle is the angle between the lift vector and the
-      // element normal vector. Note, the sine of the attack angle,
-      // is equal to the cosine of the angle between the drag vector and
-      // the normal vector.
+      // determine angle of attack (the angle between the lift vector and the
+      // element normal vector) Note: the sine of the attack angle, is equal
+      // to the cosine of the angle between the drag vector and the normal vector
       tmp = vDragVector * element[i].normal;
       if (tmp > 1.) tmp = 1;
       if (tmp < -1) tmp = -1;
       float fAttackAngle{RadiansToDegrees(static_cast<float>(std::asin(tmp)))};
 
-      // Determine the resultant force (lift and drag) on the element.
+      // determine the resultant force (lift and drag) on the element
       tmp = 0.5f * rho * fLocalSpeed*fLocalSpeed * element[i].area;		
       Vector vResultant;
       if (i == 6) { // Tail/rudder
@@ -418,26 +372,23 @@ void BourgFDM::calc_loads()
          vResultant = (vLiftVector * lift_coefficient(fAttackAngle, element[i].flap) +
                        vDragVector * drag_coefficient(fAttackAngle, element[i].flap) ) * tmp;
       }
-      // Check for stall.
-      // We can easily determine when stalled by noting when the coefficient
-      // of lift is zero. In reality stall warning devices give warnings well
-      // before the lift goes to zero to give the pilot time to correct.
+      // determine when stalled by noting when the coefficient of lift is zero
       if (i<=3) {
          if (lift_coefficient(fAttackAngle, element[i].flap) == 0) {
             stalling = true;
          }
       }
 
-      // Keep a running total of these resultant forces (total force)
+      // keep a running total of these resultant forces (total force)
       Fb += vResultant;
 
-      // Calculate the moment about the CG of this element's force
+      // calculate the moment about the CG of this element's force
       // and keep a running total of these moments (total moment)
       vtmp = element[i].cg_coord^vResultant;
       Mb += vtmp;
    }
 
-   // Now add the thrust
+   // add the thrust
    Fb += thrust;
 
    // convert force from model space to earth space
@@ -446,29 +397,7 @@ void BourgFDM::calc_loads()
    // apply gravity (g is defined as -32.174 ft/s^2)
    force.z += g * mass;
 
-   // experimental spring connecting the plane to a point 2000 ft above the earth-space origin.
-   /*
-   float dist;
-   Vector vSpring;
-
-   vSpring+=Airplane.vPosition;
-   vSpring.z-=2000;
-   dist = vSpring.Magnitude();
-   vSpring.Normalize();
-   vSpring.Reverse();
-
-   vSpring*=(10.0f*dist);
-
-   Airplane.vForces += vSpring;
-   */
-   // end experimental stuff
-
    moment += Mb;
-
-// testing...
-   //Airplane.vMoments = QVRotate(Airplane.qOrientation, Airplane.vMoments);
-// ... end testing
-
 }
 
 Vector BourgFDM::get_body_Z_axis_vector()
@@ -491,9 +420,9 @@ Matrix3x3 BourgFDM::make_angular_velocity_matrix(const Vector& u)
 }
 
 //------------------------------------------------------------------------
-//  Given the attack angle and the status of the flaps, this function
-//  returns the appropriate lift coefficient for a cambered airfoil with
-//  a plain trailing edge flap (+/- 15 degree deflection).
+// given the attack angle and the status of the flaps, this function
+// returns the appropriate lift coefficient for a cambered airfoil with
+// a plain trailing edge flap (+/- 15 degree deflection)
 //------------------------------------------------------------------------
 float BourgFDM::lift_coefficient(const float angle, const int flaps)
 {
@@ -523,22 +452,22 @@ float BourgFDM::lift_coefficient(const float angle, const int flaps)
 }
 
 //------------------------------------------------------------------------
-//  Given the attack angle and the status of the flaps, this function
-//  returns the appropriate drag coefficient for a cambered airfoil with
-//  a plain trailing edge flap (+/- 15 degree deflection).
+// given the attack angle and the status of the flaps, this function
+// returns the appropriate drag coefficient for a cambered airfoil with
+// a plain trailing edge flap (+/- 15 degree deflection)
 //------------------------------------------------------------------------
 float BourgFDM::drag_coefficient(const float angle, const int flaps)
 {
-   float cdf0[9] = {0.01f, 0.0074f, 0.004f, 0.009f, 0.013f, 0.023f, 0.05f, 0.12f, 0.21f};
-   float cdfd[9] = {0.0065f, 0.0043f, 0.0055f, 0.0153f, 0.0221f, 0.0391f, 0.1f, 0.195f, 0.3f};
-   float cdfu[9] = {0.005f, 0.0043f, 0.0055f, 0.02601f, 0.03757f, 0.06647f, 0.13f, 0.18f, 0.25f};
-   float a[9]    = {-8.0f, -4.0f, 0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
+   const float cdf0[9] = {0.01f, 0.0074f, 0.004f, 0.009f, 0.013f, 0.023f, 0.05f, 0.12f, 0.21f};
+   const float cdfd[9] = {0.0065f, 0.0043f, 0.0055f, 0.0153f, 0.0221f, 0.0391f, 0.1f, 0.195f, 0.3f};
+   const float cdfu[9] = {0.005f, 0.0043f, 0.0055f, 0.02601f, 0.03757f, 0.06647f, 0.13f, 0.18f, 0.25f};
+   const float a[9]    = {-8.0f, -4.0f, 0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
 
    float cd{0.75};
    for (int i{}; i<8; i++) {
       if ( (a[i] <= angle) && (a[i+1] > angle) ) {
          switch (flaps) {
-            case 0:// flaps not deflected
+            case 0:  // flaps not deflected
                cd = cdf0[i] - (a[i] - angle) * (cdf0[i] - cdf0[i+1]) / (a[i] - a[i+1]);
                break;
             case -1: // flaps down
@@ -555,14 +484,14 @@ float BourgFDM::drag_coefficient(const float angle, const int flaps)
 }
 
 //------------------------------------------------------------------------
-//  Given the attack angle this function returns the proper lift coefficient
-//  for a symmetric (no camber) airfoil without flaps.
+// given the attack angle this function returns the proper lift coefficient
+// for a symmetric (no camber) airfoil without flaps
 //------------------------------------------------------------------------
 float BourgFDM::rudder_lift_coefficient(const float angle)
 {
-   float clf0[7] = {0.16f, 0.456f, 0.736f, 0.968f, 1.144f, 1.12f, 0.8f};
-   float a[7]    = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
-   float aa{static_cast<float>(std::fabs(angle))};
+   const float clf0[7] = {0.16f, 0.456f, 0.736f, 0.968f, 1.144f, 1.12f, 0.8f};
+   const float a[7]    = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
+   const float aa{static_cast<float>(std::fabs(angle))};
 
    float cl{};
    for (int i{}; i<6; i++) {
@@ -576,14 +505,14 @@ float BourgFDM::rudder_lift_coefficient(const float angle)
 }
 
 //------------------------------------------------------------------------
-//  Given the attack angle this function returns the proper drag coefficient
-//  for a symmetric (no camber) airfoil without flaps.
+// given the attack angle this function returns the proper drag coefficient
+// for a symmetric (no camber) airfoil without flaps
 //------------------------------------------------------------------------
 float BourgFDM::rudder_drag_coefficient(const float angle)
 {
-   float cdf0[7] = {0.0032f, 0.0072f, 0.0104f, 0.0184f, 0.04f, 0.096f, 0.168f};
-   float a[7]	 = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
-   float aa{static_cast<float>(std::fabs(angle))};
+   const float cdf0[7] = {0.0032f, 0.0072f, 0.0104f, 0.0184f, 0.04f, 0.096f, 0.168f};
+   const float a[7]    = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
+   const float aa{static_cast<float>(std::fabs(angle))};
 
    float cd{0.75f};
    for (int i{}; i<6; i++) {
