@@ -101,17 +101,26 @@ workspace("physics-game-dev")
       targetsuffix("_d")
       defines { "WIN32", "_DEBUG" }
 
-createMFCProject("ch02-cannon", "cannon")
-createMFCProject("ch02-particle-explosion", "particle-explosion")
-createMFCProject("ch04-cannon2", "cannon2")
-createMFCProject("ch06-cannon3", "cannon3")
-createMFCProject("ch08-falling-particles", "falling-particles")
-createMFCProject("ch09-rigid-body-2D", "rigid-body-2D")
-createMFCProject("ch13-cloth-sim", "cloth-sim")
-createMFCProject("ch17-hover", "hover")
+   project "common"
+      kind("None")
+      location("../" .. _ACTION .. "/projects/%{prj.name}")
+      targetname "common"
+      files {
+         "../../common/**.h*",
+         "../../common/**.c*"
+      }
 
-createConsoleProject("chXX-volume", "volume")
+   createMFCProject("ch02-cannon", "cannon")
+   createMFCProject("ch02-particle-explosion", "particle-explosion")
+   createMFCProject("ch04-cannon2", "cannon2")
+   createMFCProject("ch06-cannon3", "cannon3")
+   createMFCProject("ch08-falling-particles", "falling-particles")
+   createMFCProject("ch09-rigid-body-2D", "rigid-body-2D")
+   createMFCProject("ch13-cloth-sim", "cloth-sim")
+   createMFCProject("ch17-hover", "hover")
 
-createMFCProject("ch15-flight-sim", "flight-sim_dx7")
-createConsoleProject("ch15-flight-sim", "flight-sim")
+   createConsoleProject("chXX-volume", "volume")
+
+   createMFCProject("ch15-flight-sim", "flight-sim_dx7")
+   createConsoleProject("ch15-flight-sim", "flight-sim")
 
