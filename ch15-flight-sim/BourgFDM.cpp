@@ -325,8 +325,8 @@ void BourgFDM::calc_loads()
          float in{DegreesToRadians(element[i].incidence_angle)};  // incidence angle
          float di{DegreesToRadians(element[i].dihedral_angle)};   // dihedral angle
          element[i].normal = Vector(static_cast<float>(std::sin(in)), 
-                                     static_cast<float>(std::cos(in) * std::sin(di)),
-                                     static_cast<float>(std::cos(in) * std::cos(di)));     // surface normal vector
+                                    static_cast<float>(std::cos(in) * std::sin(di)),
+                                    static_cast<float>(std::cos(in) * std::cos(di)));     // surface normal vector
          element[i].normal.normalize();
       }
 

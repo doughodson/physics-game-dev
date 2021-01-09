@@ -17,6 +17,7 @@ DX7_IncPath         = "c:/apps/dx7-sdk/include"
 DX7_LibPath         = "c:/apps/dx7-sdk/lib"
 
 COMMON_IncPath      = "../../"
+GTEST_IncPath       = "../../gtest/include"
 
 --
 -- 3rd party library names
@@ -103,11 +104,23 @@ workspace("physics-game-dev")
 
    project "common"
       kind("None")
+      language("C++")
       location("../" .. _ACTION .. "/projects/%{prj.name}")
       targetname "common"
       files {
          "../../common/**.h*",
          "../../common/**.c*"
+      }
+
+   project "gtest"
+      kind("StaticLib")
+      language("C++")
+      location("../" .. _ACTION .. "/projects/%{prj.name}")
+      targetname "gtest"
+      includedirs({GTEST_IncPath, "../../gtest"})
+      files {
+         "../../gtest/**.h*",
+         "../../gtest/**.c*"
       }
 
    createMFCProject("ch02-cannon", "cannon")
