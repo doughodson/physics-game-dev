@@ -18,6 +18,7 @@ DX7_LibPath         = "c:/apps/dx7-sdk/lib"
 
 COMMON_IncPath      = "../../"
 GTEST_IncPath       = "../../gtest/include"
+LibPath             = "../../lib"
 
 --
 -- 3rd party library names
@@ -117,6 +118,7 @@ workspace("physics-game-dev")
       language("C++")
       location("../" .. _ACTION .. "/projects/%{prj.name}")
       targetname "gtest"
+      targetdir(LibPath)
       includedirs({GTEST_IncPath, "../../gtest"})
       files {
          "../../gtest/**.h*",
