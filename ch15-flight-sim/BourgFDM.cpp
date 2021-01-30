@@ -156,22 +156,22 @@ void BourgFDM::update2(const float dt)
 }
 
 //------------------------------------------------------------------------
-//   This model uses a set of eight descrete elements to represent the 
-//   airplane.  The elements are described below:
+//  This model uses a set of eight discrete elements to represent the 
+//  airplane.  The elements are described below:
 //
-//   Element 1: Outboard, Port (left) wing section fitted with ailerons
-//   Element 2: Inboard, Port wing section fitted with landing flaps
-//   Element 3: Inboard, Starboard (right) wing section fitted with landing flaps
-//   Element 4: Outboard, Starboard wing section fitted with ailerons
-//   Element 5: Port elevator fitted with flap
-//   Element 6: Starboard elevator fitted with flap
-//   Element 7: Vertical tail/rudder (no flap the whole thing rotates)
-//   Element 8: The fuselage
+//  Element 1: Outboard, Port (left) wing section fitted with ailerons
+//  Element 2: Inboard, Port wing section fitted with landing flaps
+//  Element 3: Inboard, Starboard (right) wing section fitted with landing flaps
+//  Element 4: Outboard, Starboard wing section fitted with ailerons
+//  Element 5: Port elevator fitted with flap
+//  Element 6: Starboard elevator fitted with flap
+//  Element 7: Vertical tail/rudder (no flap the whole thing rotates)
+//  Element 8: The fuselage
 //
-//	  This function first sets up each element and then goes on to calculate
-//   the combined weight, center of gravity, and inertia tensor for the plane.
-//   Some other properties of each element are also calculated which you'll
-//   need when calculating the lift and drag forces on the plane.
+//  This function first sets up each element and then goes on to calculate
+//  the combined weight, center of gravity, and inertia tensor for the plane.
+//  Some other properties of each element are also calculated which you'll
+//  need when calculating the lift and drag forces on the plane.
 //------------------------------------------------------------------------
 void BourgFDM::calc_mass_properties()
 {
