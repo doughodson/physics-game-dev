@@ -14,7 +14,7 @@ typedef struct TVectorTag
 } TVector;
 
 //-------------------------------------------------------------
-// Now define the variables required for this simulation
+// variables required for this simulation
 //-------------------------------------------------------------
 double Vm;      // Magnitude of muzzle velocity, m/s
 double Alpha;   // Angle from y-axis (upward) to the cannon.
@@ -42,3 +42,5 @@ double tInc;    // The time increment to use when stepping through the simulatio
 
 double g;       // acceleration due to gravity, m/s^2
 
+void InitializeVariables(void);
+int  DoSimulation(void);

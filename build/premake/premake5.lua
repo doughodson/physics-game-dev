@@ -40,7 +40,7 @@ local function createConsoleProject(targetDirPath, targetName)
         "../../" .. targetDirPath .. "/**.c*"
      })
      excludes({
-        "../../" .. targetDirPath .. "/winmain.cpp",
+        "../../" .. targetDirPath .. "/winmain.c*",
         "../../" .. targetDirPath .. "/d3d*.*"
      })
      links({LibWindows})
@@ -60,7 +60,7 @@ local function createMFCProject(targetDirPath, targetName)
         "../../" .. targetDirPath .. "/**.rc"
      })
      excludes({
-        "../../" .. targetDirPath .. "/main.cpp"
+        "../../" .. targetDirPath .. "/main.c*"
      })
      libdirs({ DX7_LibPath })
      links({ LibDX7, LibWindows })
@@ -125,7 +125,9 @@ workspace("physics-game-dev")
          "../../gtest/**.c*"
       }
 
-   createMFCProject("ch02-cannon", "ch02-cannon")
+   createMFCProject("ch02-cannon", "ch02-cannon_mfc")
+   createConsoleProject("ch02-cannon", "ch02-cannon")
+
    createMFCProject("ch02-particle-explosion", "ch02-particle-explosion")
    createMFCProject("ch04-cannon2", "ch04-cannon2")
    createMFCProject("ch06-cannon3", "ch06-cannon3")
