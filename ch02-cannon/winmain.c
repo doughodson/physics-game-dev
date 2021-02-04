@@ -41,13 +41,11 @@ HINSTANCE hinst;
 HWND hMainWindow; 
 
 // Forward declarations for non-window related functions
-//void InitializeVariables(void);
 void DrawTopView(HDC hdc, RECT *r);
 void DrawSideView(HDC hdc, RECT *r);
 void DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
 void DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr);
 void DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
-//int  DoSimulation(void);
 
 //-------------------------------------------------------------
 // This is the applications "main" function. Note that I'm not using a message loop here
@@ -85,7 +83,6 @@ LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     int status;
     RECT r;
     HDC hdc;
-
 
     switch (message) {
         // Initialize the dialog box here:
@@ -157,7 +154,7 @@ LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 			// default values for each variable.
 
 			// Set default values for all variables
-			InitializeVariables();
+			initialize_variables();
 			
 			// Now convert each variable value to a string and
 			// set the appropriate edit control
@@ -299,7 +296,7 @@ LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 					while(status == 0)
 					{
 						// do the next time step
-						status = DoSimulation();
+						status = step_simulation();
 
 						// update the views
 						hdc = GetDC(hTopView);
