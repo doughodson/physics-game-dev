@@ -63,7 +63,7 @@ void init_element_data()
 
 void print_vector(const Vector& v)
 {
-   printf("x:%5.2f y:%5.2f z:%5.2f", v.x, v.y, v.z);
+   printf("x:%8.2f y:%8.2f z:%8.2f", v.x, v.y, v.z);
 }
 
 void print_matrix(const Matrix3x3& m)
