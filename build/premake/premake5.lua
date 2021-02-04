@@ -125,8 +125,10 @@ workspace("physics-game-dev")
          "../../gtest/**.c*"
       }
 
-   createMFCProject("ch02-cannon", "ch02-cannon_mfc")
+   createConsoleProject("ch01-basic-concepts", "ch01-basic-concepts")
+
    createConsoleProject("ch02-cannon", "ch02-cannon")
+   createMFCProject("ch02-cannon", "ch02-cannon_mfc")
 
    createMFCProject("ch02-particle-explosion", "ch02-particle-explosion")
    createMFCProject("ch04-cannon2", "ch04-cannon2")
