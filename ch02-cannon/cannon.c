@@ -1,16 +1,15 @@
-//----------------------------------------------------------------------------------------------------//
-/*
-	PHYSICS FOR GAME DEVELOPERS
-	
-	CHAPTER 2 EXAMPLE PROGRAM
+//-------------------------------------------------------------
+//    PHYSICS FOR GAME DEVELOPERS
+//
+//    CHAPTER 2 EXAMPLE PROGRAM
+//
+//    NAME:       Cannon
+//    PURPOSE:    To demonstrate 3D particle kinematics
+//    BY:	      David Bourg
+//    DATE:       03/01/00
+//    COPYRIGHT:  Copyright 2000 by David Bourg
+//-------------------------------------------------------------
 
-	NAME:		Cannon
-	PURPOSE:	To demonstrate 3D particle kinematics
-	BY:			David Bourg
-	DATE:		03/01/00
-	COPYRIGHT:	Copyright 2000 by David Bourg
-*/
-//----------------------------------------------------------------------------------------------------//
 // Windows Header Files:
 #include <windows.h>
 #include <windef.h>
@@ -30,71 +29,66 @@
 #include "cannon.h"
 
 // Defines:
-#define		MYTOPVIEW	1000
-#define		MYSIDEVIEW	2000
+#define MYTOPVIEW   1000
+#define MYSIDEVIEW  2000
 
 // Forward declarations for window related functions
 LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 // Window related global variables
-HINSTANCE	hinst; 
-HWND		hMainWindow; 
+HINSTANCE hinst; 
+HWND hMainWindow; 
 
 // Forward declarations for non-window related functions
-void	InitializeVariables(void);
-void	DrawTopView(HDC hdc, RECT *r);
-void	DrawSideView(HDC hdc, RECT *r);
-void	DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
-void	DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr);
-void	DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
-int		DoSimulation(void);
+void InitializeVariables(void);
+void DrawTopView(HDC hdc, RECT *r);
+void DrawSideView(HDC hdc, RECT *r);
+void DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
+void DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr);
+void DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
+int  DoSimulation(void);
 
-
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This is the applications "main" function. Note that I'm not using a message loop here
 // since there is no main window. All I do is display a dialog box immediately upon startup
 // and let the dialog handler take care of the messages.
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-//----------------------------------------------------------------------------------------------------//
-{	
-	DLGPROC		dlgprc;
-	int			retval = 0;
+{
+    DLGPROC dlgprc;
+    int retval = 0;
  
     // Display the dialog box and check to make sure it was created:
     dlgprc = (DLGPROC) MakeProcInstance(DemoDlgProc, hInstance);    
     retval = DialogBox(hInstance, MAKEINTRESOURCE(IDD_DEMODIALOG), NULL, dlgprc);	
-	if(retval == -1)
-	{
-		MessageBox(NULL, "Error", "Can't create dialog box.", MB_OK);
-		return FALSE;
-	}
-	FreeProcInstance((FARPROC) dlgprc);
-	
-	
-	// Return false since we never got to a main message loop
-	return (FALSE);
+    if (retval == -1) {
+        MessageBox(NULL, "Error", "Can't create dialog box.", MB_OK);
+        return FALSE;
+    }
+    FreeProcInstance((FARPROC) dlgprc);
+
+    // Return false since we never got to a main message loop
+    return (FALSE);
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This is the message handler function for the main dialog box.  It is responsible for handling
 // any interaction with it's controls and for updating the trajectory views that we'll be displaying.
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-//----------------------------------------------------------------------------------------------------//
 {
-	static	HWND	hTopView;
-	static	HWND	hSideView;
-	WNDCLASSEX		wclass;
-	char			str[16];
-	int				status;
-	RECT			r;
-	HDC				hdc;
-	
+    static HWND hTopView;
+    static HWND hSideView;
+    WNDCLASSEX wclass;
+    char str[16];
+    int status;
+    RECT r;
+    HDC hdc;
 
-	switch (message) {
-		// Initialize the dialog box here:
+
+    switch (message) {
+        // Initialize the dialog box here:
 		case WM_INITDIALOG:
 			// setup a child window class so we can create a couple
 			// of windows to draw the two trajectory views on
@@ -262,7 +256,7 @@ LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
 				case IDC_FIRE:
 					// update the variables with
-					// the values shown in the edit controls			
+					// the values shown in the edit controls
 					GetDlgItemText(hDlg, IDC_VM, str, 15);
 					Vm = atof(str);
 			
@@ -352,13 +346,12 @@ LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     return ( TRUE );
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This is the default message processing function for the two child windows that are created
 // so to draw the trajectory views.
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
-//----------------------------------------------------------------------------------------------------//
-{	
+{
 	PAINTSTRUCT			ps;
 	HDC					hdc;
 	RECT				r;
@@ -388,11 +381,10 @@ LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-//----------------------------------------------------------------------------------------------------//
-// Initialize the global variables required for the simulation.
-//----------------------------------------------------------------------------------------------------//
-void	InitializeVariables(void)
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
+// Initialize the global variables required for the simulation
+//-------------------------------------------------------------
+void InitializeVariables(void)
 {
 	Vm		=	50;		// m/s
 	Alpha	=	25;		// degrees
@@ -416,12 +408,11 @@ void	InitializeVariables(void)
 	g		=	9.8;	// m/(s*s)
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // Here's where we draw the top view of the simulation.  We'll show the cannon location, 
 // the target location, and the shell trajectory.  The scale here is 1 pixel equals 1 meter.
-//----------------------------------------------------------------------------------------------------//
-void	DrawTopView(HDC hdc, RECT *r)
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
+void DrawTopView(HDC hdc, RECT *r)
 {
 	int					w = (r->right - r->left);	// the window width
 	int					h = (r->bottom - r->top);	// the window height
@@ -469,12 +460,11 @@ void	DrawTopView(HDC hdc, RECT *r)
 
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This function draws the side (profile) view of the simulation.  It shows the cannon,
 // the target and the shell trajectory.  Scale is 1 pixel per meter.
-//----------------------------------------------------------------------------------------------------//
-void	DrawSideView(HDC hdc, RECT *r)
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
+void DrawSideView(HDC hdc, RECT *r)
 {
 	int					w = (r->right - r->left);	// the window width
 	int					h = (r->bottom - r->top);	// the window height
@@ -526,12 +516,11 @@ void	DrawSideView(HDC hdc, RECT *r)
 	DrawString(hdc, 5, 20, "Side View", 9, 14);
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This function simply draws a solid line to the given device context, given the line
 // start and end point, its thickness and its color.
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 void DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr)
-//----------------------------------------------------------------------------------------------------//
 {
 	HBRUSH		CurrentBrush;
 	HBRUSH		OldBrush;
@@ -554,11 +543,11 @@ void DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr)
 	DeleteObject(CurrentPen); 
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This function simply draws a filled rectangle to the given device context, given the
 // rectangle dimensions, its border thickness and its border color (the rectangle is filled
 // in black).
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 void DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr)
 {
 	HBRUSH		CurrentBrush;
@@ -581,11 +570,11 @@ void DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr)
 	DeleteObject(CurrentPen); 
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This function simply draws text to the given device context, given the text string
 // and the x,y coordinates of its lower left corner, the number of characters in the string,
 // and the desired point size.
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 void DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz)
 {
 	COLORREF	FColor = RGB(255, 255, 255);
@@ -597,23 +586,21 @@ void DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz)
 	SetBkMode(hdc, TRANSPARENT);		
 	SetTextAlign(hdc, TA_BOTTOM|TA_LEFT);
     
-	hFont = CreateFont(-ptsz, 0, 0, 0, 0, 
-    		0, 0, 0, 0, 0, 0, 0, 0, "MS Serif");
+	hFont = CreateFont(-ptsz, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "MS Serif");
 	hOldFont = SelectObject(hdc, hFont);
-		
+
 	TextOut(hdc, x, y, lpszString, size);    
     
 	SelectObject(hdc, hOldFont); 
 	DeleteObject(hFont); 
 }
 
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 // This function steps the simulation ahead in time. This is where the kinematic properties
 // are calculated.  The function will return 1 when the target is hit, and 2 when the shell
 // hits the ground (x-z plane) before hitting the target, otherwise the function returns 0.
-//----------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------
 int	DoSimulation(void)
-//----------------------------------------------------------------------------------------------------//
 {
 	double	cosX;
 	double	cosY;
@@ -657,30 +644,30 @@ int	DoSimulation(void)
 	ty2 = Y + Height/2;
 	tz1 = Z - Width/2;
 	tz2 = Z + Width/2;
-	
-	// Now check to see if the shell has passed through the target
-	// I'm using a rudimentary collision detection scheme here where
-	// I simply check to see if the shell's coordinates are within the
-	// bounding box of the target.  This works for demo purposes, but
-	// a practical problem is that you may miss a collision if for a given
-	// time step the shell's change in position is large enough to allow 
-	// it to "skip" over the target.
-	// A better approach is to look at the previous time step's position data
-	// and to check the line from the previous postion to the current position
-	// to see if that line intersects the target bounding box.
-	if( (s.i >= tx1 && s.i <= tx2) &&
-		(s.j >= ty1 && s.j <= ty2) &&
-		(s.k >= tz1 && s.k <= tz2) )
-		return 1;
 
-	// Check for collision with ground (x-z plane)
-	if(s.j <= 0)
-		return 2;
+    // Now check to see if the shell has passed through the target
+    // I'm using a rudimentary collision detection scheme here where
+    // I simply check to see if the shell's coordinates are within the
+    // bounding box of the target.  This works for demo purposes, but
+    // a practical problem is that you may miss a collision if for a given
+    // time step the shell's change in position is large enough to allow 
+    // it to "skip" over the target.
+    // A better approach is to look at the previous time step's position data
+    // and to check the line from the previous postion to the current position
+    // to see if that line intersects the target bounding box.
+    if( (s.i >= tx1 && s.i <= tx2) &&
+        (s.j >= ty1 && s.j <= ty2) &&
+        (s.k >= tz1 && s.k <= tz2) )
+        return 1;
 
-	// Cutoff the simulation if it's taking too long
-	// This is so the program does not get stuck in the while loop
-	if(time>3600)
-		return 3;
+    // Check for collision with ground (x-z plane)
+    if (s.j <= 0)
+        return 2;
 
-	return 0;	
+    // Cutoff the simulation if it's taking too long
+    // This is so the program does not get stuck in the while loop
+    if (time>3600)
+        return 3;
+
+    return 0;
 }

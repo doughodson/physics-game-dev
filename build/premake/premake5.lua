@@ -125,17 +125,17 @@ workspace("physics-game-dev")
          "../../gtest/**.c*"
       }
 
-   createMFCProject("ch02-cannon", "cannon")
-   createMFCProject("ch02-particle-explosion", "particle-explosion")
-   createMFCProject("ch04-cannon2", "cannon2")
-   createMFCProject("ch06-cannon3", "cannon3")
-   createMFCProject("ch08-falling-particles", "falling-particles")
-   createMFCProject("ch09-rigid-body-2D", "rigid-body-2D")
-   createMFCProject("ch13-cloth-sim", "cloth-sim")
-   createMFCProject("ch17-hover", "hover")
+   createMFCProject("ch02-cannon", "ch02-cannon")
+   createMFCProject("ch02-particle-explosion", "ch02-particle-explosion")
+   createMFCProject("ch04-cannon2", "ch04-cannon2")
+   createMFCProject("ch06-cannon3", "ch06-cannon3")
+   createMFCProject("ch08-falling-particles", "ch08-falling-particles")
+   createMFCProject("ch09-rigid-body-2D", "ch09-rigid-body-2D")
+   createMFCProject("ch13-cloth-sim", "ch13-cloth-sim")
+   createMFCProject("ch17-hover", "ch17-hover")
 
-   createConsoleProject("chXX-volume", "volume")
+   createConsoleProject("chXX-volume", "chXX-volume")
 
-   createMFCProject("ch15-flight-sim", "flight-sim_dx7")
-   createConsoleProject("ch15-flight-sim", "flight-sim")
+   createMFCProject("ch15-flight-sim", "ch15-flight-sim_dx7")
+   createConsoleProject("ch15-flight-sim", "ch15-flight-sim")
 

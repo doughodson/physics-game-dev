@@ -654,13 +654,12 @@ void DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz)
 	COLORREF	BColor = RGB(0, 0, 0);
 	HFONT		hFont, hOldFont;
 
-	SetTextColor(hdc, FColor);	
+	SetTextColor(hdc, FColor);
 	SetBkColor(hdc, BColor);
-	SetBkMode(hdc, TRANSPARENT);		
+	SetBkMode(hdc, TRANSPARENT);
 	SetTextAlign(hdc, TA_BOTTOM|TA_LEFT);
     
-	hFont = CreateFont(-ptsz, 0, 0, 0, 0, 
-    		0, 0, 0, 0, 0, 0, 0, 0, "MS Serif");
+	hFont = CreateFont(-ptsz, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "MS Serif");
 	hOldFont = SelectObject(hdc, hFont);
 		
 	TextOut(hdc, x, y, lpszString, size);    
