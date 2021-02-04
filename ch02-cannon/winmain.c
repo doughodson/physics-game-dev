@@ -235,9 +235,9 @@ LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 					
 					// re-initialize the time and position of the shell
 					time = 0;
-					s.i = 0;
-					s.j = 0;
-					s.k = 0;
+					pos.i = 0;
+					pos.j = 0;
+					pos.k = 0;
 
 					// Repaint the views
 					hdc = GetDC(hTopView);
@@ -420,8 +420,8 @@ void DrawTopView(HDC hdc, RECT *r)
 	// only after it leaves the barrel in our simulation
 	if(time>0)
 	{
-		x = (int) (s.i);
-		z = (int) (s.k + h/2);
+		x = (int) (pos.i);
+		z = (int) (pos.k + h/2);
 		DrawLine(hdc, x, z, x, z, 2, green);
 	}
 
@@ -477,8 +477,8 @@ void DrawSideView(HDC hdc, RECT *r)
 	// only after it leaves the barrel in our simulation
 	if(time>0)
 	{
-		x = (int) (s.i);
-		y = (int) (-s.j + h);
+		x = (int) (pos.i);
+		y = (int) (-pos.j + h);
 		DrawLine(hdc, x, y, x, y, 2, green);
 	}
 

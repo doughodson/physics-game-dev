@@ -26,7 +26,7 @@ struct Vector    // The shell position (displacement) vector in 3D (i,j,k)
    double i;
    double j;
    double k;
-} s;
+} pos;
 
 double time;     // The time from the instant the shell leaves the cannon, seconds
 double tInc;     // The time increment to use when stepping through the simulation, seconds

@@ -22,9 +22,9 @@ void initialize_variables()
     Width = 15;     // m
     Height = 20;    // m
 
-    s.i = 0;        // m
-    s.j = 0;        // m
-    s.k = 0;        // m
+    pos.i = 0;      // m
+    pos.j = 0;      // m
+    pos.k = 0;      // m
 
     time = 0;       // seconds
     tInc = 0.05;    // seconds
@@ -42,7 +42,7 @@ void print_initial_conditions()
 
 void print_projectile()
 {
-    printf("time: %6.2f: i: %6.2f, j: %6.2f, k: %6.2f\n", time, s.i, s.j, s.k);
+    printf("time: %6.2f: i: %6.2f, j: %6.2f, k: %6.2f\n", time, pos.i, pos.j, pos.k);
 }
 
 //-------------------------------------------------------------
@@ -82,9 +82,9 @@ int step_simulation()
     ze = L * cos((90 - Alpha) * 3.14 / 180) * sin(Gamma * 3.14 / 180);
 
     // Now we can calculate the position vector at this time
-    s.i = Vm * cosX * time + xe;
-    s.j = (Yb + L * cos(Alpha * 3.14 / 180)) + (Vm * cosY * time) - (0.5 * g * time * time);
-    s.k = Vm * cosZ * time + ze;
+    pos.i = Vm * cosX * time + xe;
+    pos.j = (Yb + L * cos(Alpha * 3.14 / 180)) + (Vm * cosY * time) - (0.5 * g * time * time);
+    pos.k = Vm * cosZ * time + ze;
 
     // Check for collision with target
     // Get extents (bounding coordinates) of the target
@@ -105,13 +105,13 @@ int step_simulation()
     // A better approach is to look at the previous time step's position data
     // and to check the line from the previous postion to the current position
     // to see if that line intersects the target bounding box.
-    if ((s.i >= tx1 && s.i <= tx2) &&
-        (s.j >= ty1 && s.j <= ty2) &&
-        (s.k >= tz1 && s.k <= tz2))
+    if ((pos.i >= tx1 && pos.i <= tx2) &&
+        (pos.j >= ty1 && pos.j <= ty2) &&
+        (pos.k >= tz1 && pos.k <= tz2))
         return 1;
 
     // Check for collision with ground (x-z plane)
-    if (s.j <= 0)
+    if (pos.j <= 0)
         return 2;
 
     // Cutoff the simulation if it's taking too long
