@@ -1,17 +1,11 @@
-// Global Variables
-float     T;     // thrust
-float     C;     // drag coefficient
-float     V;     // velocity
-float     M;     // mass
-float     S;     // displacement
 
-.
-.
-.
+#include <cmath>
+
+#include "globals.hpp"
 
 // This function progresses the simulation by dt seconds using
 // Euler's basic method
-void StepSimulation(float dt)
+void euler_basic_method(float dt)
 {
      float     F;     // total force
      float     A;     // acceleration
@@ -19,7 +13,7 @@ void StepSimulation(float dt)
      float     Snew;  // new position at time t + dt
 
      // Calculate the total force
-     F = (T − (C * V));
+     F = (T - (C * V));
 
      // Calculate the acceleration
      A = F / M;
@@ -37,14 +31,11 @@ void StepSimulation(float dt)
      S = Snew;
 }
     
-    
-====================================
-// New global variable
 float     eto;     // truncation error tolerance
 
 // This function progresses the simulation by dt seconds using
 // Euler's basic method with an adaptive step size
-void StepSimulation(float dt)
+void euler_adaptive_step_size(float dt)
 {
      float     F;     // total force
      float     A;     // acceleration
@@ -55,29 +46,29 @@ void StepSimulation(float dt)
      float     et;     // truncation error
 
      // Take one step of size dt to estimate the new velocity
-     F = (T − (C * V));
+     F = (T - (C * V));
      A = F / M;
      V1 = V + A * dt;
 
      // Take two steps of size dt/2 to estimate the new velocity
-     F = (T − (C * V));
+     F = (T - (C * V));
      A = F / M;
      V2 = V + A * (dt/2);
 
-     F = (T − (C * V2));
+     F = (T - (C * V2));
      A = F / M;
      V2 = V2 + A * (dt/2);
 
      // Estimate the truncation error
-     et = absf(V1 − V2);
+     et = std::abs(V1 - V2);
 
      // Estimate a new step size
-     dtnew = dt * SQRT(eto/et);
+     dtnew = dt * std::sqrt(eto/et);
 
 
      if (dtnew < dt)
      { // take at step at the new smaller step size
-          F = (T − (C * V));
+          F = (T - (C * V));
           A = F / M;
           Vnew = V + A * dtnew;
           Snew = S + Vnew * dtnew;
@@ -91,19 +82,16 @@ void StepSimulation(float dt)
      V = Vnew;
      S = Snew;
 }
-    
-    
-====================================
+
 // This function progresses the simulation by dt seconds using
 // the "improved" Euler method
-void StepSimulation(float dt)
+void euler_improved(float dt)
 {
      float     F;     // total force
      float     A;     // acceleration
      float     Vnew;  // new velocity at time t + dt
      float     Snew;  // new position at time t + dt
      float     k1, k2;
-
 
      F = (T - (C * V));
      A = F/M;
@@ -126,18 +114,15 @@ void StepSimulation(float dt)
      S = Snew;
 }
     
-    
-====================================
 // This function progresses the simulation by dt seconds using
 // the Runge-Kutta method
-void StepSimulation(float dt)
+void runge_kutta(float dt)
 {
      float     F;     // total force
      float     A;     // acceleration
      float     Vnew;  // new velocity at time t + dt
      float     Snew;  // new position at time t + dt
      float     k1, k2, k3, k4;
-
 
      F = (T - (C * V));
      A = F/M;

@@ -1,6 +1,9 @@
 
 #include <iostream>
 
+#include "globals.hpp"
+#include "methods.hpp"
+
 int main(int argc, char** argv)
 {
     std::cout << "Hello world\n";
