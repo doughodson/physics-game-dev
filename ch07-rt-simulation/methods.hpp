@@ -1,7 +1,6 @@
 
 #include "ship.hpp"
 
-// integration methods
 void method_exact(Ship*, const float dt);
 void method_euler_basic(Ship*, const float dt);
 void method_euler_adaptive_step_size(Ship*, const float dt);

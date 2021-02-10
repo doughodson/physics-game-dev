@@ -109,27 +109,21 @@ void method_euler_improved(Ship* s, const float dt)
    const float velocity{ s->velocity };
    const float displacement{ s->displacement };
 
-   float F{};     // total force
-   float A{};     // acceleration
-   float Vnew{};  // new velocity at time t + dt
-   float Snew{};  // new position at time t + dt
-   float k1{}, k2{};
-
-   F = (thrust - (drag_coef * velocity));
-   A = F / mass;
-   k1 = dt * A;
+   float F{(thrust - (drag_coef * velocity))};   // total force
+   float A{F / mass};                            // acceleration
+   const float k1{dt * A};
 
    F = (thrust - (drag_coef * (velocity + k1)));
    A = F / mass;
-   k2 = dt * A;
+   const float k2{dt * A};
 
    // Calculate the new velocity at time t + dt
    // where V is the velocity at time t
-   Vnew = velocity + (k1 + k2) / 2;
+   const float Vnew{velocity + (k1 + k2) / 2};
 
    // Calculate the new displacement at time t + dt
    // where S is the displacement at time t
-   Snew = displacement + Vnew * dt;
+   const float Snew{displacement + Vnew * dt};
 
    // update time, velocity and displacement
    s->time += dt;
@@ -139,41 +133,35 @@ void method_euler_improved(Ship* s, const float dt)
 
 void method_runge_kutta(Ship* s, const float dt)
 {
-   // convenience variables
-   const float thrust{ s->thrust };
-   const float drag_coef{ s->drag_coef };
-   const float mass{ s->mass };
-   const float time{ s->time + dt };
-   const float velocity{ s->velocity };
-   const float displacement{ s->displacement };
+    // convenience variables
+    const float thrust{ s->thrust };
+    const float drag_coef{ s->drag_coef };
+    const float mass{ s->mass };
+    const float time{ s->time + dt };
+    const float velocity{ s->velocity };
+    const float displacement{ s->displacement };
 
-   float     F;     // total force
-   float     A;     // acceleration
-   float     Vnew;  // new velocity at time t + dt
-   float     Snew;  // new position at time t + dt
-   float     k1, k2, k3, k4;
-
-    F = (thrust - (drag_coef * velocity));
-    A = F / mass;
-    k1 = dt * A;
+    float F{(thrust - (drag_coef * velocity))};   // total force
+    float A = F / mass;                           // acceleration
+    const float k1{dt * A};
 
     F = (thrust - (drag_coef * (velocity + k1 / 2)));
     A = F / mass;
-    k2 = dt * A;
+    const float k2{dt * A};
 
     F = (thrust - (drag_coef * (velocity + k2 / 2)));
     A = F / mass;
-    k3 = dt * A;
+    const float k3{dt * A};
 
     F = (thrust - (drag_coef * (velocity + k3)));
     A = F / mass;
-    k4 = dt * A;
+    const float k4{dt * A};
 
     // calculate the new velocity at time t + dt where V is the velocity at time t
-    Vnew = velocity + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    const float Vnew{velocity + (k1 + 2 * k2 + 2 * k3 + k4) / 6.0f};
 
     // calculate the new displacement at time t + dt where S is the displacement at time t
-    Snew = displacement + Vnew * dt;
+    const float Snew{displacement + Vnew * dt};
 
     // update time, velocity and displacement
     s->time += dt;
@@ -181,43 +169,3 @@ void method_runge_kutta(Ship* s, const float dt)
     s->displacement = Snew;
 }
 
-/*
-// This function progresses the simulation by dt seconds using
-// the Runge-Kutta method
-void runge_kutta(const float dt)
-{
-     float     F;     // total force
-     float     A;     // acceleration
-     float     Vnew;  // new velocity at time t + dt
-     float     Snew;  // new position at time t + dt
-     float     k1, k2, k3, k4;
-
-     F = (T - (C * V));
-     A = F/M;
-     k1 = dt * A;
-
-     F = (T - (C * (V + k1/2)));
-     A = F/M;
-     k2 = dt * A;
-
-     F = (T - (C * (V + k2/2)));
-     A = F/M;
-     k3 = dt * A;
-
-     F = (T - (C * (V + k3)));
-     A = F/M;
-     k4 = dt * A;
-
-     // Calculate the new velocity at time t + dt
-     // where V is the velocity at time t
-     Vnew = V + (k1 + 2*k2 + 2*k3 + k4) / 6;
-
-     // Calculate the new displacement at time t + dt
-     // where S is the displacement at time t
-     Snew = S + Vnew * dt;
-
-     // Update old velocity and displacement with the new ones
-     V = Vnew;
-     S = Snew;
-}
-*/
