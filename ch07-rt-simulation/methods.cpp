@@ -70,12 +70,12 @@ void method_euler_adaptive_step_size(Ship* s, const float dt)
    // estimate the truncation error
    float et{std::abs(V1 - V2)};
 
-std::printf("truncation error: %5.2f\n", et);
+// std::printf("truncation error: %5.2f\n", et);
 
    // estimate a new step size
    float dtnew{dt * std::sqrt(eto / et)};
 
-   std::printf("dtnew: %5.2f\n", et);
+// std::printf("dtnew: %5.2f\n", et);
 
 
    float Vnew{};   // new velocity at time t + dt

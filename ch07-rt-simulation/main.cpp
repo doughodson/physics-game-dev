@@ -46,11 +46,9 @@ void execute_euler_adaptive_step_size()
    init_book_example(&s_exact);
    init_book_example(&s_method);
    for (float time{}; time <= 43.0; time += dt) {
-      std::cout << "Exact result  : "; print_ship(s_exact);
-      std::cout << "Method result : "; print_ship(s_method);
-      method_exact(&s_exact, dt);
+      print_ship_error(s_exact, s_method);
       method_euler_adaptive_step_size(&s_method, dt);
-      std::cout << std::endl;
+      method_exact(&s_exact, s_method.time);
    }
 }
 
@@ -65,11 +63,9 @@ void execute_euler_improved()
    init_book_example(&s_exact);
    init_book_example(&s_method);
    for (float time{}; time <= 43.0; time += dt) {
-      std::cout << "Exact result  : "; print_ship(s_exact);
-      std::cout << "Method result : "; print_ship(s_method);
-      method_exact(&s_exact, dt);
+      print_ship_error(s_exact, s_method);
       method_euler_improved(&s_method, dt);
-      std::cout << std::endl;
+      method_exact(&s_exact, s_method.time);
    }
 }
 
@@ -93,9 +89,9 @@ void execute_runge_kutta()
 int main(int argc, char** argv)
 {
 //   execute_exact();
-   execute_euler_basic();
-//   execute_euler_adaptive_step_size();
+//   execute_euler_basic();
+   execute_euler_adaptive_step_size();
 //    execute_euler_improved();
-    execute_runge_kutta();
+//    execute_runge_kutta();
     return 0;
 }

@@ -31,7 +31,7 @@ void print_ship_error(const Ship& exact, const Ship& method)
     if (exact.displacement != 0.0) {
         percent_err_dsp = 100.0f * (std::abs(method.displacement - exact.displacement) / exact.displacement);
     }
-    std::printf("Time:%5.2f: Velocity:%6.2f (exact:%6.2f, err:%6.2f%%), Displacement:%6.2f (exact::%6.2f, err:%6.2f%%)\n",
+    std::printf("Time:%6.2f: Velocity:%6.2f (exact:%6.2f, err:%6.2f%%), Displacement:%6.2f (exact::%6.2f, err:%6.2f%%)\n",
                 method.time,
                 method.velocity, exact.velocity, percent_err_vel,
                 method.displacement, exact.displacement, percent_err_dsp);
