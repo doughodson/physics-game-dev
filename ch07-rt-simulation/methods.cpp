@@ -1,41 +1,43 @@
 
 #include <cmath>
+#include <cstdio>
 
 #include "globals.hpp"
 
-// This function progresses the simulation by dt seconds using
-// Euler's basic method
-void euler_basic_method(float dt)
+// compute exact analytical result
+void print_exact_result(const float time)
 {
-     float     F;     // total force
-     float     A;     // acceleration
-     float     Vnew;  // new velocity at time t + dt
-     float     Snew;  // new position at time t + dt
-
-     // Calculate the total force
-     F = (T - (C * V));
-
-     // Calculate the acceleration
-     A = F / M;
-
-     // Calculate the new velocity at time t + dt
-     // where V is the velocity at time t
-     Vnew = V + A * dt;
-
-     // Calculate the new displacement at time t + dt
-     // where S is the displacement at time t
-     Snew = S + Vnew * dt;
-
-     // Update old velocity and displacement with the new ones
-     V = Vnew;
-     S = Snew;
+   float velocity{};
+   float displacement{};
+   float acceleration{};
+   std::printf("Time:%5.2f: Vel:%5.2f, Dist:%5.2f\n", time, velocity, displacement);
 }
-    
-float     eto;     // truncation error tolerance
+
+// this function progresses the simulation by dt seconds using Euler's basic method
+void euler_basic_method(const float dt)
+{
+    // calculate the total force
+    const float F{(T - (C * V))};
+
+    // calculate acceleration
+    const float A{F / M};
+
+    // calculate the new velocity at time t + dt, where V is the velocity at time t
+    const float Vnew{V + A * dt};
+
+    // calculate the new displacement at time t + dt. where S is the displacement at time t
+    const float Snew{S + Vnew * dt};
+
+    // update old velocity and displacement with the new ones
+    V = Vnew;
+    S = Snew;
+}
+
+float eto{};     // truncation error tolerance
 
 // This function progresses the simulation by dt seconds using
 // Euler's basic method with an adaptive step size
-void euler_adaptive_step_size(float dt)
+void euler_adaptive_step_size(const float dt)
 {
      float     F;     // total force
      float     A;     // acceleration
@@ -85,7 +87,7 @@ void euler_adaptive_step_size(float dt)
 
 // This function progresses the simulation by dt seconds using
 // the "improved" Euler method
-void euler_improved(float dt)
+void euler_improved(const float dt)
 {
      float     F;     // total force
      float     A;     // acceleration
@@ -116,7 +118,7 @@ void euler_improved(float dt)
     
 // This function progresses the simulation by dt seconds using
 // the Runge-Kutta method
-void runge_kutta(float dt)
+void runge_kutta(const float dt)
 {
      float     F;     // total force
      float     A;     // acceleration
