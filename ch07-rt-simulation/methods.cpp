@@ -23,17 +23,24 @@ void method_exact(Ship* s, const float time)
 // this function progresses the simulation by dt seconds using Euler's basic method
 void method_euler_basic(Ship* s, const float dt)
 {
+   // convenience variables
+   const float thrust{ s->thrust };
+   const float drag_coef{ s->drag_coef };
+   const float mass{ s->mass };
+   const float velocity{ s->velocity };
+   const float displacement{ s->displacement };
+
    // calculate the total force
-   const float total_force{ (s->thrust - (s->drag_coef * s->velocity)) };
+   const float total_force{ (thrust - (drag_coef * velocity)) };
 
    // calculate acceleration
-   const float acceleration{ total_force / s->mass };
+   const float acceleration{ total_force / mass };
 
    // calculate the new velocity at time t + dt, where V is the velocity at time t
-   const float velocity_new{ s->velocity + acceleration * dt };
+   const float velocity_new{ velocity + acceleration * dt };
 
    // calculate the new displacement at time t + dt. where S is the displacement at time t
-   const float displacement_new{ s->displacement + velocity_new * dt };
+   const float displacement_new{ displacement + velocity_new * dt };
 
    // update time, velocity and displacement
    s->time += dt;
@@ -61,7 +68,7 @@ void method_euler_adaptive_step_size(Ship* s, const float dt)
    // take two steps of size dt/2 to estimate the new velocity
    F = (thrust - (drag_coef * velocity));
    A = F / mass;
-   float V2{ velocity + A * (dt / 2.0f)};   // velocity
+   float V2{velocity + A * (dt / 2.0f)};   // velocity
 
    F = (thrust - (drag_coef * V2));
    A = F / mass;
