@@ -16,6 +16,7 @@ public:
 
 void init_book_example(Ship* s);
 void print_ship(const Ship&);
+void print_ship_error(const Ship&, const Ship&);
 
 #endif
 

@@ -4,15 +4,14 @@
 
 #include "ship.hpp"
 
-void method_exact(Ship* s, const float dt)
+void method_exact(Ship* s, const float time)
 {
    // convenience variables
    const float thrust{s->thrust};
    const float drag_coef{s->drag_coef};
    const float mass{s->mass};
-   const float time{s->time + dt};
    // calculate values
-   const float velocity{ (thrust / drag_coef) - (std::exp(-drag_coef * time / s->mass)) * (time / drag_coef) };
+   const float velocity{ (thrust / drag_coef) - (std::exp(-drag_coef * time / s->mass)) * (thrust / drag_coef) };
    const float displacement{ (thrust / drag_coef) * time + (thrust / drag_coef) * (mass / drag_coef)
                * std::exp(-drag_coef * time / mass) - (thrust / drag_coef) * (mass / drag_coef) };
    // update ship
@@ -42,8 +41,6 @@ void method_euler_basic(Ship* s, const float dt)
    s->displacement = displacement_new;
 }
 
-float eto{};     // truncation error tolerance
-
 void method_euler_adaptive_step_size(Ship* s, const float dt)
 {
    // convenience variables
@@ -53,6 +50,8 @@ void method_euler_adaptive_step_size(Ship* s, const float dt)
    const float time{s->time + dt};
    const float velocity{s->velocity};
    const float displacement{s->displacement};
+
+   float eto{0.001f};     // truncation error tolerance
 
    // take one step of size dt to estimate the new velocity
    float F{(thrust - (drag_coef * velocity))};  // total force
@@ -76,6 +75,9 @@ std::printf("truncation error: %5.2f\n", et);
    // estimate a new step size
    float dtnew{dt * std::sqrt(eto / et)};
 
+   std::printf("dtnew: %5.2f\n", et);
+
+
    float Vnew{};   // new velocity at time t + dt
    float Snew{};   // new position at time t + dt
 
@@ -92,7 +94,7 @@ std::printf("truncation error: %5.2f\n", et);
    }
 
    // update time, velocity and displacement
-   s->time += dt;
+   s->time += dtnew;
    s->velocity = Vnew;
    s->displacement = Snew;
 }
@@ -136,6 +138,46 @@ void euler_improved(const float dt)
 
 void method_runge_kutta(Ship* s, const float dt)
 {
+   // convenience variables
+   const float thrust{ s->thrust };
+   const float drag_coef{ s->drag_coef };
+   const float mass{ s->mass };
+   const float time{ s->time + dt };
+   const float velocity{ s->velocity };
+   const float displacement{ s->displacement };
+
+   float     F;     // total force
+   float     A;     // acceleration
+   float     Vnew;  // new velocity at time t + dt
+   float     Snew;  // new position at time t + dt
+   float     k1, k2, k3, k4;
+
+    F = (thrust - (drag_coef * velocity));
+    A = F / mass;
+    k1 = dt * A;
+
+    F = (thrust - (drag_coef * (velocity + k1 / 2)));
+    A = F / mass;
+    k2 = dt * A;
+
+    F = (thrust - (drag_coef * (velocity + k2 / 2)));
+    A = F / mass;
+    k3 = dt * A;
+
+    F = (thrust - (drag_coef * (velocity + k3)));
+    A = F / mass;
+    k4 = dt * A;
+
+    // calculate the new velocity at time t + dt where V is the velocity at time t
+    Vnew = velocity + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+
+    // calculate the new displacement at time t + dt where S is the displacement at time t
+    Snew = displacement + Vnew * dt;
+
+    // update time, velocity and displacement
+    s->time += dt;
+    s->velocity = Vnew;
+    s->displacement = Snew;
 }
 
 /*
