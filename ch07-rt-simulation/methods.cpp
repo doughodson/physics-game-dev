@@ -3,14 +3,60 @@
 #include <cstdio>
 
 #include "globals.hpp"
+#include "ship.hpp"
+
+float s{};
+
+void init_exact_displacment(const float s1)
+{
+   s = s1;
+}
+
+void exact_method(Ship* s, const float dt)
+{
+   // convenience variables
+   const float thrust{s->thrust};
+   const float drag_coef{s->drag_coef};
+   const float mass{s->mass};
+   const float time{s->time + dt};
+   // calculate values
+   const float velocity{ (thrust / drag_coef) - (std::exp(-drag_coef * time / s->mass)) * (time / drag_coef) };
+   const float displacement{ (thrust / drag_coef) * time + (thrust / drag_coef) * (mass / drag_coef)
+               * std::exp(-drag_coef * time / mass) - (thrust / drag_coef) * (mass / drag_coef) };
+   // update ship
+   s->time = time;
+   s->velocity = velocity;
+   s->displacement = displacement;
+}
 
 // compute exact analytical result
 void print_exact_result(const float time)
 {
-   float velocity{};
-   float displacement{};
-   float acceleration{};
+   static float s{};
+   float velocity{(T/C)-(std::exp(-C*time/M))*(T/C)};
+   float displacement{(T / C) * time + (T / C) * (M / C) * std::exp(-C * time / M) - (T / C) * (M / C)};
    std::printf("Time:%5.2f: Vel:%5.2f, Dist:%5.2f\n", time, velocity, displacement);
+   s += displacement;
+}
+
+void euler_basic_method(Ship* s, const float dt)
+{
+   // calculate the total force
+   const float total_force{ (s->thrust - (s->drag_coef * s->velocity)) };
+
+   // calculate acceleration
+   const float acceleration{ total_force / s->mass };
+
+   // calculate the new velocity at time t + dt, where V is the velocity at time t
+   const float velocity_new{ s->velocity + acceleration * dt };
+
+   // calculate the new displacement at time t + dt. where S is the displacement at time t
+   const float displacement_new{ s->displacement + velocity_new * dt };
+
+   // update time, velocity and displacement
+   s->time += dt;
+   s->velocity = velocity_new;
+   s->displacement = displacement_new;
 }
 
 // this function progresses the simulation by dt seconds using Euler's basic method
@@ -34,6 +80,9 @@ void euler_basic_method(const float dt)
 }
 
 float eto{};     // truncation error tolerance
+
+void euler_adaptive_step_size(Ship* s, const float dt){
+}
 
 // This function progresses the simulation by dt seconds using
 // Euler's basic method with an adaptive step size
@@ -85,6 +134,10 @@ void euler_adaptive_step_size(const float dt)
      S = Snew;
 }
 
+void euler_improved(Ship* s, const float dt)
+{
+}
+
 // This function progresses the simulation by dt seconds using
 // the "improved" Euler method
 void euler_improved(const float dt)
@@ -115,7 +168,11 @@ void euler_improved(const float dt)
      V = Vnew;
      S = Snew;
 }
-    
+
+void runge_kutta(Ship* s, const float dt)
+{
+}
+
 // This function progresses the simulation by dt seconds using
 // the Runge-Kutta method
 void runge_kutta(const float dt)
@@ -154,4 +211,3 @@ void runge_kutta(const float dt)
      V = Vnew;
      S = Snew;
 }
-
