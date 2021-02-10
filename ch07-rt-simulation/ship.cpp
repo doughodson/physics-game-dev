@@ -3,7 +3,7 @@
 #include <cstdio>
 
 // initialize chapter 4 example parameters
-void init_example(Ship* s)
+void init_book_example(Ship* s)
 {
     s->thrust = 20000.0;    // propeller thrust units
     s->drag_coef = 1000.0;  // drag coefficient

@@ -2,17 +2,9 @@
 #include <cmath>
 #include <cstdio>
 
-#include "globals.hpp"
 #include "ship.hpp"
 
-float s{};
-
-void init_exact_displacment(const float s1)
-{
-   s = s1;
-}
-
-void exact_method(Ship* s, const float dt)
+void method_exact(Ship* s, const float dt)
 {
    // convenience variables
    const float thrust{s->thrust};
@@ -29,17 +21,8 @@ void exact_method(Ship* s, const float dt)
    s->displacement = displacement;
 }
 
-// compute exact analytical result
-void print_exact_result(const float time)
-{
-   static float s{};
-   float velocity{(T/C)-(std::exp(-C*time/M))*(T/C)};
-   float displacement{(T / C) * time + (T / C) * (M / C) * std::exp(-C * time / M) - (T / C) * (M / C)};
-   std::printf("Time:%5.2f: Vel:%5.2f, Dist:%5.2f\n", time, velocity, displacement);
-   s += displacement;
-}
-
-void euler_basic_method(Ship* s, const float dt)
+// this function progresses the simulation by dt seconds using Euler's basic method
+void method_euler_basic(Ship* s, const float dt)
 {
    // calculate the total force
    const float total_force{ (s->thrust - (s->drag_coef * s->velocity)) };
@@ -59,85 +42,66 @@ void euler_basic_method(Ship* s, const float dt)
    s->displacement = displacement_new;
 }
 
-// this function progresses the simulation by dt seconds using Euler's basic method
-void euler_basic_method(const float dt)
-{
-    // calculate the total force
-    const float F{(T - (C * V))};
-
-    // calculate acceleration
-    const float A{F / M};
-
-    // calculate the new velocity at time t + dt, where V is the velocity at time t
-    const float Vnew{V + A * dt};
-
-    // calculate the new displacement at time t + dt. where S is the displacement at time t
-    const float Snew{S + Vnew * dt};
-
-    // update old velocity and displacement with the new ones
-    V = Vnew;
-    S = Snew;
-}
-
 float eto{};     // truncation error tolerance
 
-void euler_adaptive_step_size(Ship* s, const float dt){
-}
-
-// This function progresses the simulation by dt seconds using
-// Euler's basic method with an adaptive step size
-void euler_adaptive_step_size(const float dt)
+void method_euler_adaptive_step_size(Ship* s, const float dt)
 {
-     float     F;     // total force
-     float     A;     // acceleration
-     float     Vnew;  // new velocity at time t + dt
-     float     Snew;  // new position at time t + dt
-     float     V1, V2; // temporary velocity variables
-     float     dtnew;  // new time step
-     float     et;     // truncation error
+   // convenience variables
+   const float thrust{s->thrust};
+   const float drag_coef{s->drag_coef};
+   const float mass{s->mass};
+   const float time{s->time + dt};
+   const float velocity{s->velocity};
+   const float displacement{s->displacement};
 
-     // Take one step of size dt to estimate the new velocity
-     F = (T - (C * V));
-     A = F / M;
-     V1 = V + A * dt;
+   // take one step of size dt to estimate the new velocity
+   float F{(thrust - (drag_coef * velocity))};  // total force
+   float A{F / mass};                           // acceleration
+   float V1{velocity + A * dt};                 // velocity
 
-     // Take two steps of size dt/2 to estimate the new velocity
-     F = (T - (C * V));
-     A = F / M;
-     V2 = V + A * (dt/2);
+   // take two steps of size dt/2 to estimate the new velocity
+   F = (thrust - (drag_coef * velocity));
+   A = F / mass;
+   float V2{ velocity + A * (dt / 2)};   // velocity
 
-     F = (T - (C * V2));
-     A = F / M;
-     V2 = V2 + A * (dt/2);
+   F = (thrust - (drag_coef * V2));
+   A = F / mass;
+   V2 = V2 + A * (dt / 2);
 
-     // Estimate the truncation error
-     et = std::abs(V1 - V2);
+   // estimate the truncation error
+   float et{std::abs(V1 - V2)};
 
-     // Estimate a new step size
-     dtnew = dt * std::sqrt(eto/et);
+std::printf("truncation error: %5.2f\n", et);
 
+   // estimate a new step size
+   float dtnew{dt * std::sqrt(eto / et)};
 
-     if (dtnew < dt)
-     { // take at step at the new smaller step size
-          F = (T - (C * V));
-          A = F / M;
-          Vnew = V + A * dtnew;
-          Snew = S + Vnew * dtnew;
-     } else
-     { // original step size is okay
-          Vnew = V1;
-          Snew = S + Vnew * dt;
-     }
+   float Vnew{};   // new velocity at time t + dt
+   float Snew{};   // new position at time t + dt
 
-     // Update old velocity and displacement with the new ones
-     V = Vnew;
-     S = Snew;
+   if (dtnew < dt) { 
+      // take at step at the new smaller step size
+      F = (thrust - (drag_coef * velocity));
+      A = F / mass;
+      Vnew = velocity + A * dtnew;
+      Snew = displacement + Vnew * dtnew;
+   } else {
+      // original step size is okay
+      Vnew = V1;
+      Snew = displacement + Vnew * dt;
+   }
+
+   // update time, velocity and displacement
+   s->time += dt;
+   s->velocity = Vnew;
+   s->displacement = Snew;
 }
 
-void euler_improved(Ship* s, const float dt)
+void method_euler_improved(Ship* s, const float dt)
 {
 }
 
+/*
 // This function progresses the simulation by dt seconds using
 // the "improved" Euler method
 void euler_improved(const float dt)
@@ -168,11 +132,13 @@ void euler_improved(const float dt)
      V = Vnew;
      S = Snew;
 }
+*/
 
-void runge_kutta(Ship* s, const float dt)
+void method_runge_kutta(Ship* s, const float dt)
 {
 }
 
+/*
 // This function progresses the simulation by dt seconds using
 // the Runge-Kutta method
 void runge_kutta(const float dt)
@@ -211,3 +177,4 @@ void runge_kutta(const float dt)
      V = Vnew;
      S = Snew;
 }
+*/

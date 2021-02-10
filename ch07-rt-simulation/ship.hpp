@@ -14,7 +14,7 @@ public:
     float displacement{}; // displacement
 };
 
-void init_example(Ship* s);
+void init_book_example(Ship* s);
 void print_ship(const Ship&);
 
 #endif
