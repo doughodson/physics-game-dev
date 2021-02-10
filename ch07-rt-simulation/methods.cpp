@@ -101,40 +101,41 @@ void method_euler_adaptive_step_size(Ship* s, const float dt)
 
 void method_euler_improved(Ship* s, const float dt)
 {
+   // convenience variables
+   const float thrust{ s->thrust };
+   const float drag_coef{ s->drag_coef };
+   const float mass{ s->mass };
+   const float time{ s->time + dt };
+   const float velocity{ s->velocity };
+   const float displacement{ s->displacement };
+
+   float F{};     // total force
+   float A{};     // acceleration
+   float Vnew{};  // new velocity at time t + dt
+   float Snew{};  // new position at time t + dt
+   float k1{}, k2{};
+
+   F = (thrust - (drag_coef * velocity));
+   A = F / mass;
+   k1 = dt * A;
+
+   F = (thrust - (drag_coef * (velocity + k1)));
+   A = F / mass;
+   k2 = dt * A;
+
+   // Calculate the new velocity at time t + dt
+   // where V is the velocity at time t
+   Vnew = velocity + (k1 + k2) / 2;
+
+   // Calculate the new displacement at time t + dt
+   // where S is the displacement at time t
+   Snew = displacement + Vnew * dt;
+
+   // update time, velocity and displacement
+   s->time += dt;
+   s->velocity = Vnew;
+   s->displacement = Snew;
 }
-
-/*
-// This function progresses the simulation by dt seconds using
-// the "improved" Euler method
-void euler_improved(const float dt)
-{
-     float     F;     // total force
-     float     A;     // acceleration
-     float     Vnew;  // new velocity at time t + dt
-     float     Snew;  // new position at time t + dt
-     float     k1, k2;
-
-     F = (T - (C * V));
-     A = F/M;
-     k1 = dt * A;
-
-     F = (T - (C * (V + k1)));
-     A = F/M;
-     k2 = dt * A;
-
-     // Calculate the new velocity at time t + dt
-     // where V is the velocity at time t
-     Vnew = V + (k1 + k2) / 2;
-
-     // Calculate the new displacement at time t + dt
-     // where S is the displacement at time t
-     Snew = S + Vnew * dt;
-
-     // Update old velocity and displacement with the new ones
-     V = Vnew;
-     S = Snew;
-}
-*/
 
 void method_runge_kutta(Ship* s, const float dt)
 {
