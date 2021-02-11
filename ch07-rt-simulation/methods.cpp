@@ -106,21 +106,21 @@ void method_euler_improved(Ship* s, const float dt)
    const float velocity{ s->velocity };
    const float displacement{ s->displacement };
 
-   float F{(thrust - (drag_coef * velocity))};   // total force
-   float A{F / mass};                            // acceleration
-   const float k1{dt * A};
+   float F{ (thrust - (drag_coef * velocity)) };   // total force
+   float A{ F / mass };                            // acceleration
+   const float k1{ dt * A };
 
    F = (thrust - (drag_coef * (velocity + k1)));
    A = F / mass;
-   const float k2{dt * A};
+   const float k2{ dt * A };
 
    // Calculate the new velocity at time t + dt
    // where V is the velocity at time t
-   const float Vnew{velocity + (k1 + k2) / 2};
+   const float Vnew{ velocity + (k1 + k2) / 2 };
 
    // Calculate the new displacement at time t + dt
    // where S is the displacement at time t
-   const float Snew{displacement + Vnew * dt};
+   const float Snew{ displacement + Vnew * dt };
 
    // update time, velocity and displacement
    s->time += dt;
