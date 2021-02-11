@@ -58,8 +58,6 @@ void method_euler_adaptive_step_size(Ship* s, const float dt)
    const float velocity{s->velocity};
    const float displacement{s->displacement};
 
-   const float eto{0.001f};     // truncation error tolerance
-
    // take one step of size dt to estimate the new velocity
    float F{(thrust - (drag_coef * velocity))};  // total force
    float A{F / mass};                           // acceleration
@@ -77,32 +75,25 @@ void method_euler_adaptive_step_size(Ship* s, const float dt)
    // estimate the truncation error
    float et{std::abs(V1 - V2)};
 
-// std::printf("truncation error: %5.2f\n", et);
-
-   // estimate a new step size
+   // estimate a new step size, given a truncation error tolerance
+   const float eto{ 0.001f };
    float dtnew{dt * std::sqrt(eto / et)};
-
-// std::printf("dtnew: %5.2f\n", et);
-
-   float Vnew{};   // new velocity at time t + dt
-   float Snew{};   // new position at time t + dt
 
    if (dtnew < dt) { 
       // take at step at the new smaller step size
       F = (thrust - (drag_coef * velocity));
       A = F / mass;
-      Vnew = velocity + A * dtnew;
-      Snew = displacement + Vnew * dtnew;
+      // update time, velocity and displacement
+      s->time += dtnew;
+      s->velocity = velocity + A * dtnew;
+      s->displacement = displacement + s->velocity * dtnew;
    } else {
       // original step size is okay
-      Vnew = V1;
-      Snew = displacement + Vnew * dt;
+      // update time, velocity and displacement
+      s->time += dt;
+      s->velocity = V1;
+      s->displacement = displacement + s->velocity * dt;
    }
-
-   // update time, velocity and displacement
-   s->time += dtnew;
-   s->velocity = Vnew;
-   s->displacement = Snew;
 }
 
 void method_euler_improved(Ship* s, const float dt)
