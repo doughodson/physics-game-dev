@@ -1,12 +1,4 @@
 
-//---------------------------------------------------------------------------
-/*
-Book:           Physics for Game Developers, 2nd Edition
-Authors:        David M. Bourg, Bryan Bywalec, Kenneth Humphreys
-Example:        Realtime Particle Simulation, Chapter 8, Example 1
-*/
-//---------------------------------------------------------------------------
-
 #include "physics.hpp"
 #include "time.h"
 #include "particle.hpp"

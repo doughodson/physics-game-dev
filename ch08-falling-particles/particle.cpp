@@ -14,17 +14,15 @@
 #include <commdlg.h>
 #include <wingdi.h> 
 
-extern	bool	ShowVectors;
+extern bool ShowVectors;
 
-#define	_WINWIDTH	1024
-#define	_WINHEIGHT	768
+#include "mfc_utils.hpp"
 
-void	CopyBackBufferToWindow(void);
-void	DrawLine(int x1, int y1, int x2, int y2, int thk, COLORREF clr);
-void	DrawRectangle(RECT* r, int thk, COLORREF borderCLR, COLORREF fillCLR);
-void	DrawEllipse(RECT* r, int thk, COLORREF clr);
-void	ClearBackBuffer(void);
-BOOL	IsKeyDown(short KeyCode);
+#define _WINWIDTH	1024
+#define _WINHEIGHT	768
+
+void DrawLine(int x1, int y1, int x2, int y2, int thk, COLORREF clr);
+void DrawEllipse(RECT* r, int thk, COLORREF clr);
 
 Particle::Particle()
 {

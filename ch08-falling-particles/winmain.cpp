@@ -1,13 +1,11 @@
 
 
-// Windows Header Files
 #include <windows.h>
 #include <windef.h>
 #include <commctrl.h>
 #include <commdlg.h>
 #include <wingdi.h> 
 
-// C RunTime Header Files:
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -17,14 +15,11 @@
 #include "physics.hpp"
 #include "mfc_utils.hpp"
 
-// Local Header Files:
 #include "resource.h"
 
 #include "particle.hpp"
 
-void DrawRectangle(RECT* r, int thk, COLORREF borderCLR, COLORREF fillCLR);
-void DrawEllipse(RECT* r, int thk, COLORREF clr);
-BOOL IsKeyDown(short KeyCode);
+#include "winmain.hpp"
 
 void UpdateSimulation();
 bool Initialize();
@@ -34,15 +29,6 @@ bool CheckForCollisions(Particle* p);
 
 #define APPNAME "Physics for Game Developers Chapter 8 Example"
 
-// Forward declarations for non-window related functions
-void DrawLineToDC(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
-void DrawRectangleToDC(HDC hdc, RECT *r, int thk, COLORREF borderCLR, COLORREF fillCLR);
-void DrawEllipseToDC(HDC hdc, RECT *r, int thk, COLORREF clr);
-void DrawStringToDC(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
-void CreateBackBuffer(void);
-void DeleteBackBuffer(void);
-
-// forward declarations for window related functions
 LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -51,14 +37,14 @@ BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // Window related global variables
-HINSTANCE		hinst; 
-HWND			hMainWindow;
-RECT			MainWindowRect;
-HDC				BackBufferDC;
-HBITMAP			hBackBuffer;
-LPBITMAPINFO	lpBackBufferBitmapInfo;
-bool			Initialized = false;
-int				nShowCmd;
+HINSTANCE hinst; 
+HWND hMainWindow;
+RECT MainWindowRect;
+HDC BackBufferDC;
+HBITMAP hBackBuffer;
+LPBITMAPINFO lpBackBufferBitmapInfo;
+bool Initialized{};
+int nShowCmd{};
 
 bool ShowTrails{};
 bool ShowVectors{};
@@ -73,15 +59,14 @@ bool Chase{};
 
 bool bDoSim{true};
 
-// Forward declarations for non-window related functions
-void	InitializeVariables();
-void	DrawTopView(HDC hdc, RECT *r);
-void	DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
-void	DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr);
-void	DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
+void InitializeVariables();
+void DrawTopView(HDC hdc, RECT *r);
+void DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
+void DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr);
+void DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
 
-extern void UpdateSimulation();
-extern bool Initialize();
+void UpdateSimulation();
+bool Initialize();
 
 //----------------------------------------------------------------------------------------------------
 // this is the applications "main" function. Note that I'm not using a message loop here
