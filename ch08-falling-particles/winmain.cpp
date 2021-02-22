@@ -1,5 +1,4 @@
 
-
 #include <windows.h>
 #include <windef.h>
 #include <commctrl.h>
@@ -20,12 +19,6 @@
 #include "particle.hpp"
 
 #include "winmain.hpp"
-
-void UpdateSimulation();
-bool Initialize();
-void DrawObstacles();
-int GetRandomNumber(int min, int max, bool seed);
-bool CheckForCollisions(Particle* p);
 
 #define APPNAME "Physics for Game Developers Chapter 8 Example"
 
@@ -59,8 +52,6 @@ bool Chase{};
 
 bool bDoSim{true};
 
-void InitializeVariables();
-void DrawTopView(HDC hdc, RECT *r);
 void DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
 void DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr);
 void DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
