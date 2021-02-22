@@ -1,6 +1,6 @@
 
-#ifndef __Particle_HPP__
-#define __Particle_HPP__
+#ifndef __particle_HPP__
+#define __particle_HPP__
 
 #include "common/Vector.hpp"
 
@@ -19,12 +19,10 @@ class Particle
 public:
    Particle();
 
-   // methods
    void CalcLoads();                      // aggregates all the forces acting on the particle
    void UpdateBodyEuler(const double dt); // integrates one time step updating velocity and position
    void Draw();                           // draws the particle
 
-   // data
 	float	fMass{1.0f};        // total mass
 	Vector vPosition;         // position 
 	Vector vVelocity;	        // velocity

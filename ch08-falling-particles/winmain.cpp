@@ -1,13 +1,6 @@
-//---------------------------------------------------------------------------
-/*
-Book:           Physics for Game Developers, 2nd Edition
-Authors:        David M. Bourg, Bryan Bywalec, Kenneth Humphreys
-Example:        Realtime Particle Simulation, Chapter 8, Example 1
-*/
-//---------------------------------------------------------------------------
 
 
-// Windows Header Files:
+// Windows Header Files
 #include <windows.h>
 #include <windef.h>
 #include <commctrl.h>
@@ -21,35 +14,41 @@ Example:        Realtime Particle Simulation, Chapter 8, Example 1
 #include <stdio.h>
 #include <math.h>
 
+#include "physics.hpp"
+#include "mfc_utils.hpp"
+
 // Local Header Files:
 #include "resource.h"
-#include "winmain.h"
 
-#include "main.h"
+#include "particle.hpp"
 
-// Defines:
-#define	APPNAME	"Physics for Game Developers Chapter 8 Example"
+void DrawRectangle(RECT* r, int thk, COLORREF borderCLR, COLORREF fillCLR);
+void DrawEllipse(RECT* r, int thk, COLORREF clr);
+BOOL IsKeyDown(short KeyCode);
+
+void UpdateSimulation();
+bool Initialize();
+void DrawObstacles();
+int GetRandomNumber(int min, int max, bool seed);
+bool CheckForCollisions(Particle* p);
+
+#define APPNAME "Physics for Game Developers Chapter 8 Example"
 
 // Forward declarations for non-window related functions
-void	DrawLineToDC(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
-void	DrawRectangleToDC(HDC hdc, RECT *r, int thk, COLORREF borderCLR, COLORREF fillCLR);
-void	DrawEllipseToDC(HDC hdc, RECT *r, int thk, COLORREF clr);
-void	DrawStringToDC(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
-void	CreateBackBuffer(void);
-void	DeleteBackBuffer(void);
+void DrawLineToDC(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
+void DrawRectangleToDC(HDC hdc, RECT *r, int thk, COLORREF borderCLR, COLORREF fillCLR);
+void DrawEllipseToDC(HDC hdc, RECT *r, int thk, COLORREF clr);
+void DrawStringToDC(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
+void CreateBackBuffer(void);
+void DeleteBackBuffer(void);
 
-
-
-// Forward declarations for window related functions
+// forward declarations for window related functions
 LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 
 BOOL InitApplication(HINSTANCE);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
-
 
 // Window related global variables
 HINSTANCE		hinst; 
@@ -61,48 +60,36 @@ LPBITMAPINFO	lpBackBufferBitmapInfo;
 bool			Initialized = false;
 int				nShowCmd;
 
-/*HINSTANCE	hInst; // current instance
-int			nShowCmd; // current show command	
-char		szAppName[] = APPNAME; // The name of this application
-char		szTitle[]   = APPNAME; // The title bar text
-HWND		hTheMainWindow;
-*/
+bool ShowTrails{};
+bool ShowVectors{};
 
-// globals
+int TargetX{};
+int TargetY{};
 
-bool	ShowTrails;
-bool	ShowVectors;
+bool WideView{};
+bool LimitedView{};
+bool NarrowView{};
+bool Chase{};
 
-int		TargetX;
-int		TargetY;
-
-bool	WideView;
-bool	LimitedView;
-bool	NarrowView;
-bool	Chase;
-
-bool	bDoSim = true;
-
+bool bDoSim{true};
 
 // Forward declarations for non-window related functions
-void	InitializeVariables(void);
+void	InitializeVariables();
 void	DrawTopView(HDC hdc, RECT *r);
 void	DrawLine(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr);
 void	DrawRectangle(HDC hdc, RECT *r, int thk, COLORREF clr);
 void	DrawString(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz);
 
-extern	void UpdateSimulation(void);
-extern	bool Initialize(void);
+extern void UpdateSimulation();
+extern bool Initialize();
 
-//----------------------------------------------------------------------------------------------------//
-// This is the applications "main" function. Note that I'm not using a message loop here
+//----------------------------------------------------------------------------------------------------
+// this is the applications "main" function. Note that I'm not using a message loop here
 // since there is no main window. All I do is display a dialog box immediately upon startup
 // and let the dialog handler take care of the messages.
-//----------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-//----------------------------------------------------------------------------------------------------//
 {	
-
 	MSG msg;
 	HANDLE hAccelTable;		
 
@@ -139,9 +126,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	return (msg.wParam);
 
 	lpCmdLine; // This will prevent 'unused formal parameter' warnings
-
-
-
 }
 
 
@@ -204,19 +188,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return (TRUE);
 }
 
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	
-	int			wmId, wmEvent;   		
-	BOOL		validmenu = FALSE;	
-	int			selection =0;
-	PAINTSTRUCT			ps;
-	HDC			pDC;
-	WPARAM		key;
-	int			w, h;
-	UINT		state;
-	
+	int wmId, wmEvent;   		
+	BOOL validmenu = FALSE;	
+	int selection =0;
+	PAINTSTRUCT ps;
+	HDC pDC;
+	int w, h;
+	UINT state;
+
 	switch (message) {
 
 		case WM_CREATE:
@@ -295,202 +276,69 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return (0);
 }
 
-void	CopyBackBufferToWindow(void)
+void CopyBackBufferToWindow()
 {
-	int	w, h;
-	HDC	dc;
-	
-	dc = GetDC(hMainWindow);
-
-	w = MainWindowRect.right - MainWindowRect.left;
-	h = MainWindowRect.bottom - MainWindowRect.top;
-	BitBlt(dc, 0, 0, w, h, BackBufferDC, 0, 0, SRCCOPY);
-
-	DeleteDC(dc);
-
+    HDC dc{GetDC(hMainWindow)};
+    const int w{MainWindowRect.right - MainWindowRect.left};
+    const int h{MainWindowRect.bottom - MainWindowRect.top};
+    BitBlt(dc, 0, 0, w, h, BackBufferDC, 0, 0, SRCCOPY);
+    DeleteDC(dc);
 }
 
-void	ClearBackBuffer(void)
+void ClearBackBuffer()
 {
-	DrawRectangle(&MainWindowRect, 1, RGB(0,0,0), RGB(255, 255, 255));
+    DrawRectangle(&MainWindowRect, 1, RGB(0, 0, 0), RGB(255, 255, 255));
 }
 
-void CreateBackBuffer(void)
+void CreateBackBuffer()
 {
-		HDC				hdc = GetDC(hMainWindow);		
-		BYTE			*lpbits = NULL; 
-		DWORD			retval = 0;
-		
+    HDC hdc{GetDC(hMainWindow)};
 
-		BackBufferDC = CreateCompatibleDC(hdc);
-          
-		lpBackBufferBitmapInfo =  (LPBITMAPINFO) malloc(sizeof(BITMAPINFOHEADER));
-	
-		lpBackBufferBitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		lpBackBufferBitmapInfo->bmiHeader.biWidth = MainWindowRect.right - MainWindowRect.left;
-		lpBackBufferBitmapInfo->bmiHeader.biHeight = MainWindowRect.bottom - MainWindowRect.top;
-		lpBackBufferBitmapInfo->bmiHeader.biPlanes = 1;
-		lpBackBufferBitmapInfo->bmiHeader.biBitCount = 24;
-		lpBackBufferBitmapInfo->bmiHeader.biCompression = BI_RGB;
-		lpBackBufferBitmapInfo->bmiHeader.biSizeImage = 0;
-		lpBackBufferBitmapInfo->bmiHeader.biXPelsPerMeter = 0;
-		lpBackBufferBitmapInfo->bmiHeader.biYPelsPerMeter = 0;
-		lpBackBufferBitmapInfo->bmiHeader.biClrUsed = 0;
-		lpBackBufferBitmapInfo->bmiHeader.biClrImportant = 0;
-   		
-		hBackBuffer = CreateDIBSection(BackBufferDC, lpBackBufferBitmapInfo, DIB_RGB_COLORS, (void **) &lpbits, NULL, 0);
+    BackBufferDC = CreateCompatibleDC(hdc);
 
-		SelectObject(BackBufferDC, (HBITMAP) hBackBuffer);
+    lpBackBufferBitmapInfo = (LPBITMAPINFO)malloc(sizeof(BITMAPINFOHEADER));
 
-		DrawRectangleToDC(BackBufferDC, &MainWindowRect, 4, RGB(0, 0, 0), RGB(255, 255, 255));
+    lpBackBufferBitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    lpBackBufferBitmapInfo->bmiHeader.biWidth = MainWindowRect.right - MainWindowRect.left;
+    lpBackBufferBitmapInfo->bmiHeader.biHeight = MainWindowRect.bottom - MainWindowRect.top;
+    lpBackBufferBitmapInfo->bmiHeader.biPlanes = 1;
+    lpBackBufferBitmapInfo->bmiHeader.biBitCount = 24;
+    lpBackBufferBitmapInfo->bmiHeader.biCompression = BI_RGB;
+    lpBackBufferBitmapInfo->bmiHeader.biSizeImage = 0;
+    lpBackBufferBitmapInfo->bmiHeader.biXPelsPerMeter = 0;
+    lpBackBufferBitmapInfo->bmiHeader.biYPelsPerMeter = 0;
+    lpBackBufferBitmapInfo->bmiHeader.biClrUsed = 0;
+    lpBackBufferBitmapInfo->bmiHeader.biClrImportant = 0;
+
+    BYTE* lpbits{};
+    hBackBuffer = CreateDIBSection(BackBufferDC, lpBackBufferBitmapInfo, DIB_RGB_COLORS, (void**)&lpbits, NULL, 0);
+
+    SelectObject(BackBufferDC, (HBITMAP)hBackBuffer);
+
+    DrawRectangleToDC(BackBufferDC, &MainWindowRect, 4, RGB(0, 0, 0), RGB(255, 255, 255));
 }
 
-void DeleteBackBuffer(void)
+void DeleteBackBuffer()
 {
-		DeleteDC(BackBufferDC);
-		DeleteObject(hBackBuffer);
-		free(lpBackBufferBitmapInfo);
+    DeleteDC(BackBufferDC);
+    DeleteObject(hBackBuffer);
+    free(lpBackBufferBitmapInfo);
 }
 
-//----------------------------------------------------------------------------------------------------//
-// This function simply draws a solid line to the given device context, given the line
-// start and end point, its thickness and its color.
-//----------------------------------------------------------------------------------------------------//
-void DrawLineToDC(HDC hdc, int h1, int v1, int h2, int v2, int thk, COLORREF clr)
-//----------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------
+// these function draw to the back buffer
+//----------------------------------------------------------------------------------------------------
+void DrawLine(int x1, int y1, int x2, int y2, int thk, COLORREF clr)
 {
-	HBRUSH		CurrentBrush;
-	HBRUSH		OldBrush;
-	HPEN		CurrentPen;
-	HPEN		OldPen;	
-	COLORREF	FColor = clr;
-	COLORREF	BColor = RGB(0, 0, 0);
-				
-	CurrentBrush = CreateSolidBrush(FColor);
-	OldBrush = (HBRUSH) SelectObject( hdc, CurrentBrush);
-	CurrentPen = CreatePen(PS_SOLID, thk, FColor);
-	OldPen = (HPEN) SelectObject(hdc, CurrentPen);
-
-	MoveToEx(hdc, h1, v1, NULL);
-	LineTo(hdc, h2, v2);
- 
- 	SelectObject(hdc, OldBrush);		
-	SelectObject(hdc, OldPen);
-	DeleteObject(CurrentBrush);
-	DeleteObject(CurrentPen); 
+    DrawLineToDC(BackBufferDC, x1, y1, x2, y2, thk, clr);
 }
 
-//----------------------------------------------------------------------------------------------------//
-// This function simply draws a filled rectangle to the given device context, given the
-// rectangle dimensions, its border thickness and its border color (the rectangle is filled
-// in black).
-//----------------------------------------------------------------------------------------------------//
-void DrawRectangleToDC(HDC hdc, RECT *r, int thk, COLORREF borderCLR, COLORREF fillCLR)
+void DrawRectangle(RECT* r, int thk, COLORREF borderCLR, COLORREF fillCLR)
 {
-	HBRUSH		CurrentBrush;
-	HBRUSH		OldBrush;
-	HPEN		CurrentPen;
-	HPEN		OldPen;	
-	COLORREF	FColor = borderCLR;
-	COLORREF	BColor = fillCLR;
-				
-	CurrentBrush = CreateSolidBrush(BColor);
-	OldBrush = (HBRUSH) SelectObject( hdc, CurrentBrush);
-	CurrentPen = CreatePen(PS_SOLID, thk, FColor);
-	OldPen = (HPEN) SelectObject(hdc, CurrentPen);
-
-	Rectangle(hdc, r->left, r->top, r->right, r->bottom);
- 
- 	SelectObject(hdc, OldBrush);		
-	SelectObject(hdc, OldPen);
-	DeleteObject(CurrentBrush);
-	DeleteObject(CurrentPen); 
+    DrawRectangleToDC(BackBufferDC, r, thk, borderCLR, fillCLR);
 }
 
-//----------------------------------------------------------------------------------------------------//
-// This function simply draws a filled rectangle to the given device context, given the
-// rectangle dimensions, its border thickness and its border color (the rectangle is filled
-// in black).
-//----------------------------------------------------------------------------------------------------//
-void DrawEllipseToDC(HDC hdc, RECT *r, int thk, COLORREF clr)
+void DrawEllipse(RECT* r, int thk, COLORREF clr)
 {
-	HBRUSH		CurrentBrush;
-	HBRUSH		OldBrush;
-	HPEN		CurrentPen;
-	HPEN		OldPen;	
-	COLORREF	FColor = clr;
-	COLORREF	BColor = RGB(0, 0, 0);
-				
-	CurrentBrush = CreateSolidBrush(BColor);
-	OldBrush = (HBRUSH) SelectObject( hdc, CurrentBrush);
-	CurrentPen = CreatePen(PS_SOLID, thk, FColor);
-	OldPen = (HPEN) SelectObject(hdc, CurrentPen);
-
-	Ellipse(hdc, r->left, r->top, r->right, r->bottom);
- 
- 	SelectObject(hdc, OldBrush);		
-	SelectObject(hdc, OldPen);
-	DeleteObject(CurrentBrush);
-	DeleteObject(CurrentPen); 
+    DrawEllipseToDC(BackBufferDC, r, thk, clr);
 }
-
-
-//----------------------------------------------------------------------------------------------------//
-// This function simply draws text to the given device context, given the text string
-// and the x,y coordinates of its lower left corner, the number of characters in the string,
-// and the desired point size.
-//----------------------------------------------------------------------------------------------------//
-void DrawStringToDC(HDC hdc, int x, int y, LPCSTR lpszString, int size, int ptsz)
-{
-	COLORREF	FColor = RGB(255, 255, 255);
-	COLORREF	BColor = RGB(0, 0, 0);
-	HFONT		hFont, hOldFont;
-
-	SetTextColor(hdc, FColor);	
-	SetBkColor(hdc, BColor);
-	SetBkMode(hdc, TRANSPARENT);		
-	SetTextAlign(hdc, TA_BOTTOM|TA_LEFT);
-    
-	hFont = CreateFont(-ptsz, 0, 0, 0, 0, 
-    		0, 0, 0, 0, 0, 0, 0, 0, "MS Serif");
-	hOldFont = (HFONT) SelectObject(hdc, hFont);
-		
-	TextOut(hdc, x, y, lpszString, size);    
-    
-	SelectObject(hdc, hOldFont); 
-	DeleteObject(hFont); 
-}
-
-//----------------------------------------------------------------------------------------------------//
-// All of these function draw to the back buffer...
-//----------------------------------------------------------------------------------------------------//
-
-void	DrawLine(int x1, int y1, int x2, int y2, int thk, COLORREF clr)
-{
-	DrawLineToDC(BackBufferDC, x1, y1, x2, y2, thk, clr);
-}
-
-void	DrawRectangle(RECT *r, int thk, COLORREF borderCLR, COLORREF fillCLR)
-{
-	DrawRectangleToDC(BackBufferDC, r, thk, borderCLR, fillCLR);
-}
-
-void	DrawEllipse(RECT *r, int thk, COLORREF clr)
-{
-	DrawEllipseToDC(BackBufferDC, r, thk, clr);
-}
-
-BOOL IsKeyDown(short KeyCode)
-{
-
-	SHORT	retval;
-
-	retval = GetAsyncKeyState(KeyCode);
-
-	if (HIBYTE(retval))
-		return TRUE;
-
-	return FALSE;
-}
-
-
