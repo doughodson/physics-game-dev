@@ -17,12 +17,13 @@ ch15-flight-sim/flight-sim
 .vs/
 .vscode/
 build/vs2019/
+build/vs2022/
 build/gmake/
 *.[oa]
 
 *.exe
 *.lib
 
-!premake*.*
+!premake5-beta1.exe
 
 directX-sdk

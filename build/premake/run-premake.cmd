@@ -15,4 +15,5 @@ del ..\..\lib\*.lib
 rem
 rem create solution/workspace files
 rem
-premake5-alpha15.exe --os=windows --file=premake5.lua vs2019
+premake5-beta1.exe --os=windows --file=premake5.lua vs2019
+premake5-beta1.exe --os=windows --file=premake5.lua vs2022
